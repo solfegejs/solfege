@@ -1,5 +1,5 @@
 {
-    "name"          : "solfege",
+    "name"          : "solfegejs",
     "description"   : "The Solfege NodeJS framework",
     "version"       : "0.0.1",
     "author"        : "neolao <contact@neolao.com>",
