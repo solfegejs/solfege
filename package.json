@@ -1,0 +1,15 @@
+{
+    "name"          : "solfege",
+    "description"   : "The Solfege NodeJS framework",
+    "version"       : "0.0.1",
+    "author"        : "neolao <contact@neolao.com>",
+    "private"       : false,
+    "repository"    : "https://github.com/neolao/solfege.git",
+    "license"       : "MIT",
+    "dependencies"  : 
+    {
+        "express"       : "3.x",
+        "hogan-express" : "*"
+    },
+    "main"          : "index"
+}
