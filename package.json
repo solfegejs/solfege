@@ -1,6 +1,7 @@
 {
     "name"          : "solfegejs",
     "description"   : "The Solfege NodeJS framework",
+    "homepage"      : "http://solfegejs.com",
     "version"       : "0.0.1",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
@@ -9,22 +10,19 @@
 
     "dependencies"  : 
     {
-        "express"       : "3.x",
+        "charm"         : "0.1",
+        "express"       : "3",
         "hogan-express" : "*"
     },
     "devDependencies":
     {
-        "grunt"                 : "~0.4",
-        "grunt-typescript"      : "~0.2",
-        "grunt-contrib-jshint"  : "~0.6",
-        "grunt-contrib-nodeunit": "~0.2",
-        "grunt-contrib-uglify"  : "~0.2",
-        "grunt-contrib-watch"   : "~0.5"
-    },
-
-    "bin":
-    {
-        "solfegejs": "./bin/console.js"
+        "grunt"                 : "0.4",
+        "grunt-typescript"      : "0.2",
+        "grunt-contrib-jshint"  : "0.6",
+        "grunt-contrib-nodeunit": "0.2",
+        "grunt-contrib-uglify"  : "0.2",
+        "grunt-contrib-watch"   : "0.5",
+        "grunt-contrib-yuidoc"  : "*"
     },
 
     "main": "build/solfege.js"
