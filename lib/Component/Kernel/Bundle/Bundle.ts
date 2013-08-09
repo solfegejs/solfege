@@ -1,3 +1,5 @@
+import BundleInterface = module('./BundleInterface');
+
 /**
  * Base class of a bundle
  *
@@ -5,13 +7,14 @@
  * @class Bundle
  * @constructor
  */
-class Bundle
+class Bundle implements BundleInterface
 {
     /**
      * Constructor
      */
     constructor()
     {
+        
     }
 }
 
