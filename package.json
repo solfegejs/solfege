@@ -25,5 +25,5 @@
         "grunt-contrib-yuidoc"  : "*"
     },
 
-    "main": "build/solfege.js"
+    "main": "lib/solfege.js"
 }

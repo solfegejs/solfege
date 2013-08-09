@@ -9,8 +9,8 @@ module.exports = function (grunt) {
         // Generate javascript files based from typescript files
         typescript: {
             base: {
-                src: ['src/**/*.ts'],
-                dest: 'build',
+                src: ['lib/**/*.ts'],
+                dest: 'lib',
                 options: {
                     module: 'Node',
                     target: 'ES5',
@@ -32,7 +32,7 @@ module.exports = function (grunt) {
                 url: '<%= pkg.homepage %>',
                 options: {
                     extension: '.ts',
-                    paths: 'src/',
+                    paths: 'lib/',
                     outdir: 'documentation/'
                 }
             }
@@ -40,7 +40,7 @@ module.exports = function (grunt) {
 
         // Watch file modifications
         watch: {
-            files: ['src/*.ts', 'src/**/*.ts'],
+            files: ['lib/*.ts', 'lib/**/*.ts'],
             tasks: ['typescript', 'yuidoc']
         }
     });
