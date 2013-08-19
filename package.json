@@ -12,6 +12,7 @@
     {
         "charm"         : "0.1",
         "cjson"         : "0.2",
+        "string"        : "1.5",
         "express"       : "3",
         "hogan-express" : "*"
     },

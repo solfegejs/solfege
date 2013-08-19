@@ -1,4 +1,5 @@
 import BundleInterface = module('./Bundle/BundleInterface');
+import Bundle = module('./Bundle/Bundle');
 import ConfigurationLoader = module('../Configuration/Loader');
 
 /**
@@ -18,6 +19,15 @@ class Application
      * @private
      */
     private bundles;
+
+    /**
+     * The root directory of the application
+     *
+     * @property rootDirectory
+     * @type {string}
+     * @private
+     */
+    private rootDirectory;
 
     /**
      * The environment of the runtime
@@ -49,18 +59,26 @@ class Application
     /**
      * Constructor
      *
+     * @param   {string}    root            Root directory of the application
      * @param   {string}    environment     The environment of the runtime
      * @param   {boolean}   debug           Indicates that the debug mode is enabled
      */
-    constructor(environment:string = null, debug:boolean = false)
+    constructor(root:string, environment:string = null, debug:boolean = false)
     {
-        var nodePath = require('path');
+        var nodePath = require('path'),
+            nodeFs = require('fs');
 
         // Set general properties
         this.bundles        = [];
+        this.rootDirectory  = root;
         this.environment    = environment;
         this.debug          = debug;
         this.libDirectory   = nodePath.resolve(__dirname, '..', '..');
+
+        // Check if the root directory exists
+        if (!nodeFs.existsSync(this.rootDirectory)) {
+            throw new Error('The root directory of the application does not exist');
+        }
     }
 
     /**
@@ -70,14 +88,17 @@ class Application
      */
     public loadConfiguration(path:string)
     {
-        var loader:ConfigurationLoader, 
+        var loader:ConfigurationLoader,
             configuration,
-            bundleIndex, bundlePath, bundleClass, bundle:BundleInterface;
+            bundleIndex, bundlePath, bundleClass, bundle:BundleInterface,
+            error;
         
         // Load the configuration file based on the environment
         loader = new ConfigurationLoader();
         loader.addVariable('solfege.lib_dir', this.libDirectory);
         loader.addVariable('solfege.bundle_dir', this.libDirectory + '/Bundle');
+        loader.addVariable('application.root_dir', this.rootDirectory);
+        loader.addVariable('application.bundle_dir', this.rootDirectory + '/bundles');
         configuration = loader.load(path + '/config.json');
 
         // Initialize the bundles
@@ -87,8 +108,15 @@ class Application
                 bundlePath = configuration.bundles[bundleIndex];
 
                 // Instantiate the bundle
-                bundleClass = require(bundlePath);
-                bundle = new bundleClass();
+                try {
+                    bundleClass = require(bundlePath);
+                    bundle = new bundleClass();
+                } catch (error) {
+                    throw new Error('This is not a valid bundle: ' + bundlePath);
+                }
+                if (bundle instanceof Bundle === false) {
+                    throw new Error('This is not a valid bundle: ' + bundlePath);
+                }
 
                 // Register the bundle
                 this.registerBundle(bundle);
