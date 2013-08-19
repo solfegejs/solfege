@@ -30,6 +30,15 @@ class Application
     private rootDirectory;
 
     /**
+     * Configuration
+     *
+     * @property configuration
+     * @type {Object}
+     * @private
+     */
+    private configuration;
+
+    /**
      * The environment of the runtime
      *
      * @property environ
@@ -89,7 +98,6 @@ class Application
     public loadConfiguration(path:string)
     {
         var loader:ConfigurationLoader,
-            configuration,
             bundleIndex, bundlePath, bundleClass, bundle:BundleInterface,
             error;
         
@@ -99,13 +107,13 @@ class Application
         loader.addVariable('solfege.bundle_dir', this.libDirectory + '/Bundle');
         loader.addVariable('application.root_dir', this.rootDirectory);
         loader.addVariable('application.bundle_dir', this.rootDirectory + '/bundles');
-        configuration = loader.load(path + '/config.json');
+        this.configuration = loader.load(path + '/config.json');
 
         // Initialize the bundles
         // @todo Check if Array.isArray(configuration.bundles) is faster
-        if (configuration.bundles instanceof Array) {
-            for (bundleIndex in configuration.bundles) {
-                bundlePath = configuration.bundles[bundleIndex];
+        if (this.configuration.bundles instanceof Array) {
+            for (bundleIndex in this.configuration.bundles) {
+                bundlePath = this.configuration.bundles[bundleIndex];
 
                 // Instantiate the bundle
                 try {
@@ -118,11 +126,23 @@ class Application
                     throw new Error('This is not a valid bundle: ' + bundlePath);
                 }
 
+                // Setup the bundle
+                bundle.setApplication(this);
+
                 // Register the bundle
                 this.registerBundle(bundle);
             }
         }
+    }
 
+    /**
+     * Get the configuration
+     *
+     * @return  {Object}     Configuration
+     */
+    public getConfiguration()
+    {
+        return this.configuration;
     }
 
     /**
@@ -143,6 +163,16 @@ class Application
     public registerBundle(bundle:BundleInterface)
     {
         this.bundles.push(bundle);
+    }
+
+    /**
+     * Get the root directory
+     *
+     * @return  {string}     The root directory
+     */
+    public getRootDirectory()
+    {
+        return this.rootDirectory;
     }
 }
 

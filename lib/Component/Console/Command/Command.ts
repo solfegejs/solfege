@@ -16,7 +16,7 @@ class Command implements CommandInterface
      * @type {string}
      * @private
      */
-    private name;
+    private name:string;
 
     /**
      * The command description
@@ -25,7 +25,7 @@ class Command implements CommandInterface
      * @type {string}
      * @private
      */
-    private description;
+    private description:string;
 
     /**
      * The command function
@@ -34,7 +34,7 @@ class Command implements CommandInterface
      * @type {Function}
      * @private
      */
-    private commandFunction;
+    private commandFunction:Function;
 
     /**
      * Constructor

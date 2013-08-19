@@ -18,7 +18,7 @@ class SampleBundle extends Bundle
         super();
 
         // Add a simple command for the CLI
-        var command = new Command('hello', 'Say "hello"', this.sayHello.bind(this));
+        var command:Command = new Command('hello', 'Say "hello"', this.sayHello.bind(this));
         this.addConsoleCommand(command);
     }
 
@@ -33,7 +33,7 @@ class SampleBundle extends Bundle
             console.log("hello " + name + " from " + this['constructor'].name);
             return;
         }
-        
+
         console.log("hello from " + this['constructor'].name);
     }
 }

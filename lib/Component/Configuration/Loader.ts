@@ -13,10 +13,10 @@ class Loader
      * These variables are replaced by their values when the configuration is loaded.
      *
      * @property variables
-     * @type {object}
+     * @type {Object}
      * @private
      */
-    private variables;
+    private variables:Object;
 
     /**
      * Constructor

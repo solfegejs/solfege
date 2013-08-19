@@ -1,5 +1,6 @@
 import BundleInterface = module('./BundleInterface');
 import CommandInterface = module('../../Console/Command/CommandInterface');
+import Application = module('../Application');
 
 /**
  * Base class of a bundle
@@ -24,8 +25,19 @@ class Bundle implements BundleInterface
      *
      * @property name
      * @type {string}
+     * @private
      */
-    public name;
+    private name:string;
+
+    /**
+     * Application instance
+     *
+     * @property application
+     * @type {Component.Kernel.Application}
+     * @private
+     */
+    private application:Application;
+
 
     /**
      * Constructor
@@ -44,9 +56,39 @@ class Bundle implements BundleInterface
      *
      * @return  {string}     The name
      */
-    public getName()
+    public getName():string
     {
         return this.name;
+    }
+
+    /**
+     * Set the bundle name
+     *
+     * @param   {string}     The name
+     */
+    public setName(name:string)
+    {
+        this.name = name;
+    }
+
+    /**
+     * Get the application instance
+     *
+     * @return  {Component.Kernel.Application}      Application instance
+     */
+    public getApplication():Application
+    {
+        return this.application;
+    }
+
+    /**
+     * Set the application instance
+     *
+     * @param   {Component.Kernel.Application}      application         Application instance
+     */
+    public setApplication(application:Application)
+    {
+        this.application = application;
     }
 
     /**

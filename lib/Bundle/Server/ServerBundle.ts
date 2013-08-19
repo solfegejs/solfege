@@ -1,3 +1,4 @@
+import Application = module('../../Component/Kernel/Application');
 import Bundle = module('../../Component/Kernel/Bundle/Bundle');
 import Command = module('../../Component/Console/Command/Command');
 
@@ -10,6 +11,16 @@ import Command = module('../../Component/Console/Command/Command');
  */
 class ServerBundle extends Bundle
 {
+    /**
+     * Daemon instance
+     *
+     * @property daemon
+     * @type {Object}
+     * @private
+     */
+    private daemon;
+
+
     /**
      * Constructor
      */
@@ -33,7 +44,9 @@ class ServerBundle extends Bundle
      */
     public startServer()
     {
-        console.log("start ...");
+        var daemon = this.getDaemon();
+        
+        daemon.start();
     }
 
     /**
@@ -41,7 +54,70 @@ class ServerBundle extends Bundle
      */
     public stopServer()
     {
-        console.log("stop ...");
+        var daemon = this.getDaemon();
+        
+        daemon.stop();
+    }
+
+    /**
+     * Get the daemon instance
+     */
+    private getDaemon()
+    {
+        if (this.daemon) {
+            return this.daemon;
+        }
+
+        // Initialize "charm"
+        var charm = require('charm')();
+        charm.pipe(process.stdout);
+
+        // Initialize "daemonize2"
+        var sha1 = require('sha1');
+        var application:Application = this.getApplication();
+        var applicationRootDirectory:string = application.getRootDirectory();
+        var applicationName:string = "app_" + sha1(applicationRootDirectory);
+        this.daemon = require("daemonize2").setup({
+            main: __dirname + "/app.js",
+            name: applicationName,
+            pidfile: applicationName + ".pid",
+            silent: true,
+            argv: [
+                applicationRootDirectory
+            ]
+        });
+
+        this.daemon.on("starting", function()
+        {
+            charm.foreground('white').write("Starting web server ... ");
+        });
+        this.daemon.on("started", function(pid)
+        {
+            charm.foreground('green').write("OK (PID: " + pid + ")");
+        });
+        this.daemon.on("stopping", function()
+        {
+            charm.foreground('white').write("Stopping web server ... ");
+        });
+        this.daemon.on("stopped", function(pid)
+        {
+            charm.foreground('green').write("OK (PID: " + pid + ")");
+        });
+        this.daemon.on("running", function(pid)
+        {
+            charm.foreground('yellow').write("The web server is already running. PID: " + pid);
+        });
+        this.daemon.on("notrunning", function()
+        {
+            charm.foreground('yellow').write("The web server is not running.");
+        });
+        this.daemon.on("error", function(error)
+        {
+            charm.foreground('red').write("ERROR\n");
+            charm.foreground('white').write("The web server fail to start: ").foreground('yellow').write(error.message);
+        });
+
+        return this.daemon;
     }
 }
 
