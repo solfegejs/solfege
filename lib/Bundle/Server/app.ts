@@ -12,9 +12,5 @@ var configuration = application.getConfiguration();
 
 // Start the web server
 var serverPort = configuration.server.port;
-var server = http.createServer(function(request, response)
-{
-    response.writeHead(200, {'Content-Type': 'text/plain'});
-    response.end("plop");
-});
+var server = http.createServer(application.handleRequest);
 server.listen(serverPort);

@@ -16,10 +16,18 @@ class SampleBundle extends Bundle
     constructor()
     {
         super();
+    }
 
+    /**
+     * Initialize the console commands
+     */
+    public initializeConsoleCommands()
+    {
         // Add a simple command for the CLI
         var command:Command = new Command('hello', 'Say "hello"', this.sayHello.bind(this));
         this.addConsoleCommand(command);
+
+        super.initializeConsoleCommands();
     }
 
     /**

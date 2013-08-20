@@ -44,7 +44,7 @@ class Application
      * @param   {string}    name        The name of the application
      * @param   {string}    version     The version of the application
      */
-    constructor(name:string = 'UNKNOWN', version:string = 'UNKNOWN')
+    constructor(name:string = "UNKNOWN", version:string = "UNKNOWN")
     {
         this.name       = name;
         this.version    = version;
@@ -97,8 +97,8 @@ class Application
      */
     public displayHelp()
     {
-        var charm = require('charm')(),
-            stringHelper = require('string'),
+        var charm = require("charm")(),
+            stringHelper = require("string"),
             sectionLength:number,
             sectionIndex:number,
             sectionNames:string[], 
@@ -121,22 +121,22 @@ class Application
         charm.pipe(process.stdout);
 
         // Display the name and the version
-        charm.foreground('green');
-        charm.write(this.name + ' ' + this.version);
+        charm.foreground("green");
+        charm.write(this.name + " " + this.version);
         charm.write("\n\n");
 
         // Display the usage
-        charm.foreground('yellow');
+        charm.foreground("yellow");
         charm.write("Usage: \n");
-        charm.foreground('white');
+        charm.foreground("white");
         charm.write("    [options] command [arguments]\n");
 
         // Display the options
         charm.write("\n");
-        charm.foreground('yellow');
+        charm.foreground("yellow");
         charm.write("Options: \n");
-        charm.foreground('green').write("    " + stringHelper("--help").padRight(commandWidth).s + " ");
-        charm.foreground('white').write("Display this help message.\n");
+        charm.foreground("green").write("    " + stringHelper("--help").padRight(commandWidth).s + " ");
+        charm.foreground("white").write("Display this help message.\n");
 
         // Display the available commands
         // The sections are sorted alphabeticaly
@@ -148,7 +148,7 @@ class Application
             section = this.commands[sectionName];
 
             // Display the name of the section
-            charm.foreground('yellow');
+            charm.foreground("yellow");
             charm.write("Commands from " + sectionName + ":\n");
 
             // Sort and display the commands of the current section
@@ -166,10 +166,10 @@ class Application
                 commandDescription = command.getDescription();
 
                 // Display the command name
-                charm.foreground('green').write("    " + stringHelper(commandName).padRight(commandWidth).s + " ");
+                charm.foreground("green").write("    " + stringHelper(commandName).padRight(commandWidth).s + " ");
 
                 // Display the description
-                charm.foreground('white').write(commandDescription);
+                charm.foreground("white").write(commandDescription);
 
                 charm.write("\n");
             }

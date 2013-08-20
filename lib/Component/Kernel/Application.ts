@@ -18,7 +18,7 @@ class Application
      * @type {Array}
      * @private
      */
-    private bundles;
+    private bundles:BundleInterface[];
 
     /**
      * The root directory of the application
@@ -27,7 +27,7 @@ class Application
      * @type {string}
      * @private
      */
-    private rootDirectory;
+    private rootDirectory:string;
 
     /**
      * Configuration
@@ -36,7 +36,7 @@ class Application
      * @type {Object}
      * @private
      */
-    private configuration;
+    private configuration:any;
 
     /**
      * The environment of the runtime
@@ -45,7 +45,7 @@ class Application
      * @type {string}
      * @private
      */
-    private environment;
+    private environment:string;
 
     /**
      * Indicates that the debug mode is enabled
@@ -54,7 +54,7 @@ class Application
      * @type {boolean}
      * @private
      */
-    private debug;
+    private debug:boolean;
 
     /**
      * The directory path of the Solfege library
@@ -62,7 +62,7 @@ class Application
      * @property libDirectory
      * @type {string}
      */
-    public libDirectory;
+    public libDirectory:string;
 
 
     /**
@@ -150,7 +150,7 @@ class Application
      *
      * @return  {Array}     The bundle list
      */
-    public getBundles()
+    public getBundles():BundleInterface[]
     {
         return this.bundles;
     }
@@ -170,9 +170,21 @@ class Application
      *
      * @return  {string}     The root directory
      */
-    public getRootDirectory()
+    public getRootDirectory():string
     {
         return this.rootDirectory;
+    }
+
+    /**
+     * Handle the HTTP request
+     *
+     * @param   {Object}    request        The request
+     * @param   {Object}    response       The response
+     */
+    public handleRequest(request, response)
+    {
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.end("Hello world");
     }
 }
 

@@ -12,15 +12,6 @@ import Application = module('../Application');
 class Bundle implements BundleInterface
 {
     /**
-     * Commands for the CLI
-     *
-     * @property consoleCommands
-     * @type {Array}
-     * @private
-     */
-    private consoleCommands:CommandInterface[];
-
-    /**
      * Bundle name
      *
      * @property name
@@ -38,17 +29,37 @@ class Bundle implements BundleInterface
      */
     private application:Application;
 
+    /**
+     * Indicates that the commands are initialized
+     *
+     * @property isCommandsInitialized
+     * @type {boolean}
+     * @private
+     */
+    private isCommandsInitialized:boolean;
+
+    /**
+     * Commands for the CLI
+     *
+     * @property consoleCommands
+     * @type {Array}
+     * @private
+     */
+    private consoleCommands:CommandInterface[];
+
 
     /**
      * Constructor
      */
     constructor()
     {
-        this.consoleCommands = [];
-
         // Default name
         // Note: I don't write this.constructor in order to pass the TypeScript compiler
         this.name = this["constructor"].name;
+
+        // Initialize the command list
+        this.isCommandsInitialized = false;
+        this.consoleCommands = [];
     }
 
     /**
@@ -102,12 +113,25 @@ class Bundle implements BundleInterface
     }
 
     /**
+     * Initialize the console commands
+     * Override this to initialize the commands when necessary.
+     */
+    public initializeConsoleCommands()
+    {
+        this.isCommandsInitialized = true;
+    }
+
+    /**
      * Get the commands for the CLI
      *
      * @return  {Array}     The command list
      */
     public getConsoleCommands():CommandInterface[]
     {
+        if (!this.isCommandsInitialized) {
+            this.initializeConsoleCommands();
+        }
+
         return this.consoleCommands;
     }
 }
