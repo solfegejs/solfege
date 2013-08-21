@@ -35,12 +35,18 @@ class Loader
     {
         var cjson = require('cjson'),
             cjsonOptions,
-            configuration;
+            configuration, 
+            paths;
 
+        // Get the file order
+        paths = this.getFileOrder(path);
+
+        // Load and merge all the configuration files
         cjsonOptions = {
-            replace: this.variables
+            replace: this.variables,
+            merge: true
         };
-        configuration = cjson.load(path, cjsonOptions);
+        configuration = cjson.load(paths, cjsonOptions);
 
         return configuration;
     }
@@ -56,6 +62,43 @@ class Loader
     public addVariable(name:string, value:string)
     {
         this.variables[name] = value;
+    }
+
+    /**
+     * Get the file order of the importation
+     *
+     * @param   {string}    path        File path
+     * @return  {string[]}              File paths to merge
+     */
+    private getFileOrder(path:string):string[]
+    {
+        var cjson = require('cjson'),
+            cjsonOptions,
+            configuration,
+            importIndex:string, importPath:string,
+            subPaths:string[], 
+            paths:string[];
+
+        // Add the current configuration file
+        paths = [path];
+
+        // Load the content of the current configuration file
+        cjsonOptions = {
+            replace: this.variables
+        };
+        configuration = cjson.load(path, cjsonOptions);
+
+        // For each import, add the sub paths before the current configuration file
+        if (configuration.imports instanceof Array) {
+            for (importIndex in configuration.imports) {
+                importPath = configuration.imports[importIndex];
+
+                subPaths = this.getFileOrder(importPath);
+                paths = subPaths.concat(paths);
+            }
+        }
+
+        return paths;
     }
 }
 

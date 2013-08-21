@@ -18,7 +18,16 @@ class ServerBundle extends Bundle
      * @type {Object}
      * @private
      */
-    private daemon;
+    private daemon:any;
+
+    /**
+     * The environment of the application
+     *
+     * @property environment
+     * @type {string}
+     * @private
+     */
+    private environment:string;
 
 
     /**
@@ -27,6 +36,8 @@ class ServerBundle extends Bundle
     constructor()
     {
         super();
+
+        this.environment = "prod";
     }
 
     /**
@@ -49,11 +60,14 @@ class ServerBundle extends Bundle
 
     /**
      * Start the server
+     *
+     * @param   {string}    environment     The environment of application
      */
-    public startServer()
+    public startServer(environment:string = "prod")
     {
+        this.environment = environment;
+
         var daemon = this.getDaemon();
-        
         daemon.start();
     }
 
@@ -63,7 +77,6 @@ class ServerBundle extends Bundle
     public stopServer()
     {
         var daemon = this.getDaemon();
-        
         daemon.stop();
     }
 
@@ -86,19 +99,21 @@ class ServerBundle extends Bundle
         var application:Application = this.getApplication();
         var applicationRootDirectory:string = application.getRootDirectory();
         var applicationName:string = "app_" + sha1(applicationRootDirectory);
+        var applicationEnvironment:string = this.environment;
         this.daemon = require("daemonize2").setup({
             main: __dirname + "/app.js",
             name: applicationName,
             pidfile: os.tmpdir() + applicationName + ".pid",
             silent: true,
             argv: [
-                applicationRootDirectory
+                applicationRootDirectory,
+                applicationEnvironment
             ]
         });
 
         this.daemon.on("starting", function()
         {
-            charm.foreground("white").write("Starting web server ... ");
+            charm.foreground("white").write("Starting web server (environment: " + applicationEnvironment + ") ... ");
         });
         this.daemon.on("started", function(pid)
         {

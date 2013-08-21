@@ -72,7 +72,7 @@ class Application
      * @param   {string}    environment     The environment of the runtime
      * @param   {boolean}   debug           Indicates that the debug mode is enabled
      */
-    constructor(root:string, environment:string = null, debug:boolean = false)
+    constructor(root:string, environment:string = "prod", debug:boolean = false)
     {
         var nodePath = require('path'),
             nodeFs = require('fs');
@@ -83,6 +83,9 @@ class Application
         this.environment    = environment;
         this.debug          = debug;
         this.libDirectory   = nodePath.resolve(__dirname, '..', '..');
+
+        // Error handler
+        process.on("uncaughtException", this.onErrorUnknown.bind(this));
 
         // Check if the root directory exists
         if (!nodeFs.existsSync(this.rootDirectory)) {
@@ -97,17 +100,25 @@ class Application
      */
     public loadConfiguration(path:string)
     {
-        var loader:ConfigurationLoader,
+        var nodeFs = require("fs"),
+            nodePath = require("path"),
+            loader:ConfigurationLoader,
+            configurationPath:string,
             bundleIndex, bundlePath, bundleClass, bundle:BundleInterface,
             error;
-        
+
         // Load the configuration file based on the environment
+        configurationPath = nodePath.resolve(path + "/config_" + this.environment + ".json");
+        if (!nodeFs.existsSync(configurationPath)) {
+            throw new Error("Missing configuration file: " + configurationPath);
+        }
         loader = new ConfigurationLoader();
         loader.addVariable('solfege.lib_dir', this.libDirectory);
         loader.addVariable('solfege.bundle_dir', this.libDirectory + '/Bundle');
         loader.addVariable('application.root_dir', this.rootDirectory);
+        loader.addVariable('application.config_dir', this.rootDirectory + '/config');
         loader.addVariable('application.bundle_dir', this.rootDirectory + '/bundles');
-        this.configuration = loader.load(path + '/config.json');
+        this.configuration = loader.load(configurationPath);
 
         // Initialize the bundles
         // @todo Check if Array.isArray(configuration.bundles) is faster
@@ -178,13 +189,24 @@ class Application
     /**
      * Handle the HTTP request
      *
-     * @param   {Object}    request        The request
-     * @param   {Object}    response       The response
+     * @param   {Object}    request         The request
+     * @param   {Object}    response        The response
      */
     public handleRequest(request, response)
     {
         response.writeHead(200, {'Content-Type': 'text/plain'});
         response.end("Hello world");
+    }
+
+    /**
+     * An unknown error occurred
+     *
+     * @param   {Object}    error           Error instance
+     */
+    private onErrorUnknown(error)
+    {
+        // @todo Use a log manager
+        console.error(error.message);
     }
 }
 

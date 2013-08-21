@@ -4,7 +4,8 @@ var Application = require('../../Component/Kernel/Application');
 
 // Initialize the application
 var rootDirectory = process.argv[2];
-var application = new Application(rootDirectory);
+var environment = process.argv[3];
+var application = new Application(rootDirectory, environment);
 application.loadConfiguration(rootDirectory + '/config');
 
 // Get the configuration
