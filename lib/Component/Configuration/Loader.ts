@@ -29,6 +29,8 @@ class Loader
     /**
      * Load a configuration file
      *
+     * @todo Load the files only once
+     *
      * @param   {string}    path        File path
      */
     public load(path:string)

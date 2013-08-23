@@ -1,4 +1,5 @@
 import CommandInterface = module('../../Console/Command/CommandInterface');
+import ControllerInterface = module("../Controller/ControllerInterface");
 //import Application = module('../Application');
 
 /**
@@ -17,11 +18,11 @@ interface BundleInterface
     getName():string;
 
     /**
-     * Set the bundle name
+     * Get the bundle path (on the server)
      *
-     * @param   {string}     The name
+     * @return  {string}     Bundle path
      */
-    setName(name:string);
+    getPath():string;
 
     /**
      * Get the application instance
@@ -43,6 +44,14 @@ interface BundleInterface
      * @return  {Array}     The command list
      */
     getConsoleCommands():CommandInterface[];
+
+    /**
+     * Get the controller instance
+     *
+     * @param   {string}                                             name   The controller name
+     * @return  {Component.Kernel.Controller.ControllerInterface}           The controller instance
+     */
+    getController(name:string):ControllerInterface;
 }
 
 export = BundleInterface;

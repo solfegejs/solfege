@@ -13,5 +13,5 @@ var configuration = application.getConfiguration();
 
 // Start the web server
 var serverPort = configuration.server.port;
-var server = http.createServer(application.handleRequest);
+var server = http.createServer(application.handleRequest.bind(application));
 server.listen(serverPort);

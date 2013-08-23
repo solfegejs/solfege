@@ -35,7 +35,7 @@ class ServerBundle extends Bundle
      */
     constructor()
     {
-        super();
+        super(__dirname);
 
         this.environment = "prod";
     }

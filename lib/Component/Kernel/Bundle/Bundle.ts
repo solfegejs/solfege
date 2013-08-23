@@ -1,5 +1,6 @@
 import BundleInterface = module('./BundleInterface');
 import CommandInterface = module('../../Console/Command/CommandInterface');
+import ControllerInterface = module("../Controller/ControllerInterface");
 import Application = module('../Application');
 
 /**
@@ -11,6 +12,15 @@ import Application = module('../Application');
  */
 class Bundle implements BundleInterface
 {
+    /**
+     * Directory path of the bundle
+     *
+     * @property path
+     * @type {string}
+     * @private
+     */
+    private path:string;
+
     /**
      * Bundle name
      *
@@ -50,9 +60,14 @@ class Bundle implements BundleInterface
 
     /**
      * Constructor
+     *
+     * @param   {string}    path        Directory path of the bundle
      */
-    constructor()
+    constructor(path:string)
     {
+        // Directory path of the bundle
+        this.path = path;
+
         // Default name
         // Note: I don't write this.constructor in order to pass the TypeScript compiler
         this.name = this["constructor"].name;
@@ -73,13 +88,13 @@ class Bundle implements BundleInterface
     }
 
     /**
-     * Set the bundle name
+     * Get the bundle path (on the server)
      *
-     * @param   {string}     The name
+     * @return  {string}     Bundle path
      */
-    public setName(name:string)
+    public getPath():string
     {
-        this.name = name;
+        return this.path;
     }
 
     /**
@@ -133,6 +148,28 @@ class Bundle implements BundleInterface
         }
 
         return this.consoleCommands;
+    }
+
+    /**
+     * Get the controller instance
+     *
+     * @param   {string}                                             name   The controller name
+     * @return  {Component.Kernel.Controller.ControllerInterface}           The controller instance
+     */
+    public getController(name:string):ControllerInterface
+    {
+        var controllerClass,
+            controller;
+
+        try {
+            controllerClass = require(this.path + "/Controller/" + name + "Controller");
+            controller = new controllerClass();
+            return controller;
+        } catch (error) {
+
+        }
+
+        return null
     }
 }
 

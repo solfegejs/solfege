@@ -15,7 +15,7 @@ class SampleBundle extends Bundle
      */
     constructor()
     {
-        super();
+        super(__dirname);
     }
 
     /**
