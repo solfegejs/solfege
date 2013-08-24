@@ -264,6 +264,10 @@ class Application
             return;
         }
 
+        // The route updates the request
+        // It can add variables
+        route.updateRequest(request);
+
         // Get the controller instance
         controllerPath = route.getControllerPath();
         controller = this.getController(controllerPath);

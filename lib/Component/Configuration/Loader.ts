@@ -1,3 +1,5 @@
+///<reference path='../../../declarations/node.d.ts'/>
+
 /**
  * Configuration loader
  *

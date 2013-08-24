@@ -72,6 +72,16 @@ class RouteAbstract
     {
         this.controllerPath = path;
     }
+
+    /**
+     * Update request
+     *
+     * @param   {Object}    request         HTTP request
+     */
+    public updateRequest(request)
+    {
+        
+    }
 }
 
 export = RouteAbstract;

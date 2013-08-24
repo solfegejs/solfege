@@ -1,7 +1,7 @@
 import ControllerAbstract = module("../../../Component/Kernel/Controller/ControllerAbstract");
 
 /**
- * The default controller of the bundle "SambleBundle"
+ * The default controller of the bundle "SampleBundle"
  *
  * @namespace Bundle.Sample.Controller
  * @class DefaultController

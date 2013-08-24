@@ -41,6 +41,13 @@ interface RouteInterface
      * @return  {boolean}                   true if the path matches with the pattern, false otherwise
      */
     match(pathInfo:string):boolean;
+
+    /**
+     * Update request
+     *
+     * @param   {Object}    request         HTTP request
+     */
+    updateRequest(request);
 }
 
 export = RouteInterface;

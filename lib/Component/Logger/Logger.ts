@@ -75,9 +75,9 @@ class Logger
      * Log a message
      *
      * @param   {string}    level       The message level
-     * @param   {string}    message     The message
+     * @param   {any}       message     The message
      */
-    public log(level:string, message:string)
+    public log(level:string, message:any)
     {
         this.winston.log(level, message);
     }
@@ -85,9 +85,9 @@ class Logger
     /**
      * Log a message with the level "info"
      *
-     * @param   {string}    message     The message
+     * @param   {any}       message     The message
      */
-    public info(message:string)
+    public info(message:any)
     {
         this.winston.info(message);
     }
