@@ -1,27 +1,9 @@
 module.exports = function (grunt) {
-    grunt.loadNpmTasks('grunt-typescript');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
-        // Generate javascript files based from typescript files
-        typescript: {
-            base: {
-                src: ['lib/**/*.ts'],
-                dest: 'lib',
-                options: {
-                    module: 'Node',
-                    target: 'ES5',
-                    base_path: 'src',
-                    sourcemap: false,
-                    fullSourceMapPath: false,
-                    declaration: false,
-                    comments: false
-                }
-            }
-        },
 
         // Generate documentation
         yuidoc: {
@@ -31,7 +13,7 @@ module.exports = function (grunt) {
                 version: '<%= pkg.version %>',
                 url: '<%= pkg.homepage %>',
                 options: {
-                    extension: '.ts',
+                    extension: '.js',
                     paths: 'lib/',
                     outdir: 'documentation/'
                 }
@@ -40,13 +22,18 @@ module.exports = function (grunt) {
 
         // Watch file modifications
         watch: {
-            files: ['lib/*.ts', 'lib/**/*.ts'],
-            tasks: ['typescript', 'yuidoc']
+            files: ['lib/*.js', 'lib/**/*.js'],
+            tasks: ['yuidoc']
         }
     });
 
+
+
     // Available tasks
+
+    // Task - Watch and compile typescript files
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('compile', ['typescript']);
+
+    // Task - Generate the documentation
     grunt.registerTask('documentation', ['yuidoc']);
 };
