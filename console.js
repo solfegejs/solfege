@@ -1,21 +1,13 @@
-var path    = require('path'),
-    solfege = require('./lib/solfege');
+var solfege = require('./lib/solfege');
+var application = new solfege.kernel.Application(__dirname);
 
-var co = require('co');
+application.addBundle('server', new solfege.bundle.server.HttpServer);
+application.addBundle('console', new solfege.bundle.console.Console);
 
-co(function *() {
-// Initialize the application
-var rootDirectory = process.cwd();
-var application = yield new solfege.kernel.Application(rootDirectory);
-console.log('c: ' + application);
-console.log('d: ' + application.rootDirectory);
+application.start();
 
-})();
-//application.loadConfiguration('./config');
 
 /*
-// Initialize the command line interface
-var cli = new Cli('Solfege', sf.version);
 
 // Add the commands from the bundles
 var bundles = application.getBundles();
