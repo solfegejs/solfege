@@ -12,9 +12,7 @@
 
     "dependencies"  : {
         "co"            : "3.0.2",
-        "thunkify"      : "0.0.1",
         "charm"         : "0.1",
-        "string"        : "1.5",
         "daemonize2"    : "0.4",
         "sha1"          : "1.1",
         "winston"       : "0.7",
