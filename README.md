@@ -1,4 +1,4 @@
-solfege
+Solfege
 =======
 
-The Solfege NodeJS framework
+A framework for NodeJS.
