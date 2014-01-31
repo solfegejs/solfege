@@ -2,28 +2,14 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege NodeJS framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "0.0.1",
+    "version"       : "0.0.2",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
     "license"       : "MIT",
-
     "main"          : "lib/solfege.js",
-
-    "dependencies"  : {
-        "co"            : "3.0.2",
-        "charm"         : "0.1",
-        "daemonize2"    : "0.4",
-        "sha1"          : "1.1",
-        "winston"       : "0.7",
-        "twig"          : "0.5"
-    },
-    "devDependencies": {
-        "grunt"                 : "0.4",
-        "grunt-contrib-jshint"  : "0.6",
-        "grunt-contrib-nodeunit": "0.2",
-        "grunt-contrib-uglify"  : "0.2",
-        "grunt-contrib-watch"   : "0.5",
-        "grunt-contrib-yuidoc"  : "*"
+    "dependencies"  : 
+    {
+        "co"            : "3.0.2"
     }
 }
