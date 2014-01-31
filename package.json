@@ -2,12 +2,16 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege NodeJS framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "0.0.2",
+    "version"       : "0.0.3",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
     "license"       : "MIT",
     "main"          : "lib/solfege.js",
+    "engines"       : 
+    {
+        "node": ">= 0.11.9"
+    },
     "dependencies"  : 
     {
         "co"            : "3.0.2"
