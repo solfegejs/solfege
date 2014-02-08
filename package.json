@@ -1,6 +1,6 @@
 {
     "name"          : "solfegejs",
-    "description"   : "The Solfege NodeJS framework",
+    "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
     "version"       : "1.1.0",
     "author"        : "neolao <contact@neolao.com>",
