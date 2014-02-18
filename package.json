@@ -15,5 +15,14 @@
     "dependencies"  : 
     {
         "co"            : "3.0.2"
+    },
+    "devDependencies":
+    {
+        "chai"          : "*",
+        "mocha"         : "*"
+    },
+    "scripts"       :
+    {
+        "test"          : "mocha"
     }
 }
