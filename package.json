@@ -23,6 +23,6 @@
     },
     "scripts"       :
     {
-        "test"          : "mocha"
+        "test"          : "mocha --harmony --recursive --reporter spec --bail"
     }
 }
