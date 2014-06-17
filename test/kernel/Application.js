@@ -19,12 +19,61 @@ describe('Application', function()
         // Initialize the application
         application = new Application(__dirname);
 
-        // Add a fake bundle to test the Solfege URI
-        application.addBundle('fake', {
-        });
-
         // Start the application
         application.start();
+    }));
+
+
+    /**
+     * Test the addBundle() function
+     */
+    describe('#addBundle()', co(function*()
+    {
+        // Add a basic bundle
+        it('should add a bundle', co(function*()
+        {
+            application.addBundle('a', true);
+            var result = application.getBundle('a');
+            expect(result).to.be.true;
+
+            var bundle = {};
+            application.addBundle('hello', bundle);
+            result = application.getBundle('hello');
+            expect(result).to.equal(bundle);
+        }));
+
+        // Invalid name: it must start by a letter
+        it('should reject the bundle if the name does not start by a letter', co(function*()
+        {
+            should.Throw(function() {
+                application.addBundle('1', true);
+            });
+        }));
+
+        // Invalid name: it must contain only letters, digits and dashes
+        it('should reject the bundle if the name contains characters other than letters, digits or dashes', co(function*()
+        {
+            should.Throw(function() {
+                application.addBundle('a-b!', true);
+            });
+        }));
+
+        // Invalid name: it cannot contain 2 consecutive dashes
+        it('should reject the bundle if the name contains 2 consecutive dashes', co(function*()
+        {
+            should.Throw(function() {
+                application.addBundle('a--b', true);
+            });
+        }));
+
+        // Invalid name: it cannot end by a dash
+        it('should reject the bundle if the name ends by a dash', co(function*()
+        {
+            should.Throw(function() {
+                application.addBundle('a-b-', true);
+            });
+        }));
+
     }));
 
 
