@@ -74,8 +74,131 @@ describe('Application', function()
             });
         }));
 
+        // No arguments
+        it('should throw an error if the method is called without arguments', co(function*()
+        {
+            should.Throw(function() {
+                application.addBundle();
+            });
+        }));
     }));
 
+    /**
+     * Test the parseSolfegeUri() function
+     */
+    describe('#parseSolfegeUri()', co(function*()
+    {
+        // Find the bundle id
+        it('should find the bundle id', co(function*()
+        {
+            var result = application.parseSolfegeUri('@a');
+            expect(result.bundleId).to.equal('a');
+
+            result = application.parseSolfegeUri('@foo.bar');
+            expect(result.bundleId).to.equal('foo');
+
+            result = application.parseSolfegeUri('@lorem.ipsum.dolor');
+            expect(result.bundleId).to.equal('lorem');
+
+            result = application.parseSolfegeUri('@tic.tac.toe:a/b/c.txt');
+            expect(result.bundleId).to.equal('tic');
+        }));
+
+        // Find the bundle
+        it('should find the bundle instance', co(function*()
+        {
+            var bundle = {};
+            application.addBundle('a', bundle);
+
+            var result = application.parseSolfegeUri('@a');
+            expect(result.bundle).to.equal(bundle);
+        }));
+
+        // Find the object path
+        it('should find the object path', co(function*()
+        {
+            var result = application.parseSolfegeUri('@a.b.c.d');
+            expect(result.objectPath).to.equal('b.c.d');
+
+            result = application.parseSolfegeUri('@lorem.ipsum.dolor:my/files/*.png');
+            expect(result.objectPath).to.equal('ipsum.dolor');
+
+            result = application.parseSolfegeUri('@hello');
+            expect(result.objectPath).to.be.undefined;
+        }));
+
+        // Find the object
+        it('should find the object instance', co(function*()
+        {
+            var bundle = {
+                hello: {
+                    world: 'huhu'
+                }
+            };
+            application.addBundle('moo', bundle);
+
+            var result = application.parseSolfegeUri('@moo.hello.world');
+            expect(result.object).to.equal('huhu');
+
+            result = application.parseSolfegeUri('@moo');
+            expect(result.object).to.equal(bundle);
+        }));
+
+        // Find the file pattern
+        it('should find the file pattern', co(function*()
+        {
+            var result = application.parseSolfegeUri('@hello.world:my/files-*.xml');
+            expect(result.filePattern).to.equal('my/files-*.xml');
+        }));
+
+        // Object that does not have __dirname property
+        it('should fail to find a file in an object without __dirname property', co(function*()
+        {
+            var bundle = {
+                arf: {}
+            };
+            application.addBundle('foo', bundle);
+
+            should.Throw(function() {
+                var result = application.parseSolfegeUri('@foo.arf:a.txt');
+            });
+        }));
+
+        // Find the file path
+        it('should find the file', co(function*()
+        {
+            var bundle = {
+                __dirname: __dirname + '/bundleTest'
+            };
+            application.addBundle('foo', bundle);
+
+            var result = application.parseSolfegeUri('@foo:a.txt');
+            expect(result.filePath).to.equal(__dirname + '/bundleTest/a.txt');
+            expect(result.relativeFilePath).to.equal('a.txt');
+        }));
+
+        // Find the file paths
+        it('should find the files', co(function*()
+        {
+            var bundle = {
+                __dirname: __dirname + '/bundleTest'
+            };
+            application.addBundle('foo', bundle);
+
+            var result = application.parseSolfegeUri('@foo:*.txt');
+            expect(result.filePaths).to.deep.equal([
+                __dirname + '/bundleTest/a.txt',
+                __dirname + '/bundleTest/b.txt',
+                __dirname + '/bundleTest/c.txt'
+            ]);
+            expect(result.relativeFilePaths).to.deep.equal([
+                'a.txt',
+                'b.txt',
+                'c.txt'
+            ]);
+        }));
+
+    }));
 
     /**
      * Test the isSolfegeUri() function
@@ -110,8 +233,6 @@ describe('Application', function()
             application.isSolfegeUri('@W').should.be.true;
             application.isSolfegeUri('@3').should.be.false;
         }));
-
-
 
         // String that not start by a @
         it('should reject string that not start by a @', co(function*()
