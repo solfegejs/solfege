@@ -20,10 +20,12 @@
     "devDependencies":
     {
         "chai"          : "*",
-        "mocha"         : "*"
+        "mocha"         : "*",
+        "jsdoc"         : "*"
     },
     "scripts"       :
     {
-        "test"          : "mocha --harmony --recursive --reporter spec --bail"
+        "test"          : "mocha --harmony --recursive --reporter spec --bail",
+        "documentation" : "jsdoc --recurse ./lib --destination ./documentation"
     }
 }
