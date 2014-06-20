@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: util/Class.js</title>
+    <title>JSDoc: Namespace: Node</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,52 +17,91 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: util/Class.js</h1>
+    <h1 class="page-title">Namespace: Node</h1>
 
     
 
 
+
+<section>
+
+<header>
+    <h2>
+        <span class="ancestors"><a href="solfege.html">solfege</a><a href="solfege.util.html">.util</a>.</span>
     
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @module solfege.util.Class
- */
-var assert = require('assert');
+    Node
+    </h2>
+    
+</header>
 
-/**
- * Create a class
- *
- * @param   {Function}  constructor     - The constructor
- * @param   {String}    name            - The name
- * @param   {Function}  [parentClass]   - The class to inherit
- */
-module.exports.create = function(constructor, name, parentClass)
-{
-    // Check parameters
-    assert.strictEqual(typeof constructor, 'function', 'The constructor must be a function');
-    assert.strictEqual(typeof name, 'string', 'The name must be a string');
+<article>
+    <div class="container-overview">
+    
 
-    // Extends a class
-    if (parentClass) {
-        assert.strictEqual(typeof parentClass, 'function', 'The constructor must be a function');
-        constructor.prototype.__proto__ = parentClass.prototype;
-    }
+    
+        
+
+        
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js__.html">util/Node/index.js</a>, <a href="index.js__.html#line1">line 1</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
 
 
-    var proto = constructor.prototype;
+        
+    
+    </div>
 
-    // Define the default string representation
-    proto.toString = function()
-    {
-        return '{' + name + '}';
-    };
+    
 
-    return constructor;
-};
-</code></pre>
-        </article>
-    </section>
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
