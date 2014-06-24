@@ -241,4 +241,62 @@ describe('Application', function()
             expect(result).to.be.false;
         }));
     }));
+
+
+
+    /**
+     * Test the resolveSolfegeUri() function
+     */
+    describe('#resolveSolfegeUri()', co(function*()
+    {
+
+        // Find the file path
+        it('should return file path', co(function*()
+        {
+            var bundle = {
+                __dirname: __dirname + '/bundleTest'
+            };
+            application.addBundle('foo', bundle);
+
+            var result = application.resolveSolfegeUri('@foo:a.txt');
+            expect(result).to.equal(__dirname + '/bundleTest/a.txt');
+        }));
+
+        // Find the file paths
+        it('should return file paths', co(function*()
+        {
+            var bundle = {
+                __dirname: __dirname + '/bundleTest'
+            };
+            application.addBundle('foo', bundle);
+
+            var result = application.resolveSolfegeUri('@foo:*.txt');
+            expect(result).to.deep.equal([
+                __dirname + '/bundleTest/a.txt',
+                __dirname + '/bundleTest/b.txt',
+                __dirname + '/bundleTest/c.txt'
+            ]);
+        }));
+
+        // Find an object instance
+        it('should return object instance', co(function*()
+        {
+            var bar = {
+                a: 1,
+                b: 2,
+                c: {
+                    d: '4',
+                    e: 42
+                }
+            };
+            application.addBundle('foo', bar);
+
+            var result = application.resolveSolfegeUri('@foo');
+            expect(result).to.equal(bar);
+
+            result = application.resolveSolfegeUri('@foo.c');
+            expect(result).to.equal(bar.c);
+        }));
+    }));
+
 });
