@@ -299,4 +299,54 @@ describe('Application', function()
         }));
     }));
 
+
+    /**
+     * Test the getBundleFromSolfegeUri() function
+     */
+    describe('#getBundleFromSolfegeUri()', co(function*()
+    {
+
+        // The target is a file
+        it('should return the bundle instance if the URI targets a file', co(function*()
+        {
+            var bundle = {
+                __dirname: __dirname + '/bundleTest'
+            };
+            application.addBundle('foo', bundle);
+
+            var result = application.getBundleFromSolfegeUri('@foo:a.txt');
+            expect(result).to.equal(bundle);
+        }));
+
+        // The target are files
+        it('should return the bundle instance if the URI targets files', co(function*()
+        {
+            var bundle = {
+                __dirname: __dirname + '/bundleTest'
+            };
+            application.addBundle('foo', bundle);
+
+            var result = application.getBundleFromSolfegeUri('@foo:*.txt');
+            expect(result).to.equal(bundle);
+        }));
+
+        // The target is an object
+        it('should return the bundle instance if the URI targets an object', co(function*()
+        {
+            var bar = {
+                a: 1,
+                b: 2,
+                c: {
+                    d: '4',
+                    e: 42
+                }
+            };
+            application.addBundle('foo', bar);
+
+            result = application.getBundleFromSolfegeUri('@foo.c');
+            expect(result).to.equal(bar);
+        }));
+    }));
+
+
 });
