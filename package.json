@@ -2,7 +2,7 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "1.3.4",
+    "version"       : "1.3.5",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
@@ -10,7 +10,7 @@
     "main"          : "lib/solfege.js",
     "engines"       : 
     {
-        "node": ">= 0.11.9"
+        "node": ">= 0.11.11"
     },
     "dependencies"  : 
     {
