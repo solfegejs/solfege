@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: solfege.js</title>
+    <title>JSDoc: Source: util/Object.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: solfege.js</h1>
+    <h1 class="page-title">Source: util/Object.js</h1>
 
     
 
@@ -27,46 +27,58 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @namespace solfege
+ * @module solfege.util.Object
  */
-
-// Check the node version
-var currentVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-if (currentVersion &lt; 0.11) {
-    console.error('SolfegeJS requires Node version 0.11+');
-    process.exit(1);
-}
-
-// Check Harmony
-if (typeof Proxy === 'undefined') {
-    console.error('SolfegeJS requires Node Harmony');
-    process.exit(1);
-}
+var assert = require('assert');
 
 
-// Create a package
-var description = require('../package.json');
-var ObjectProxy = require('./util/ObjectProxy');
-var getters = {
-    /**
-     * String representation of the package
-     *
-     * @return  {string}    The string representation
-     */
-    toString: function () {
-        return 'SolfegeJS ' + description.version;
-    },
+/**
+ * Define a constant
+ *
+ * @param   {Object}    target  The target object
+ * @param   {String}    name    The constant name
+ * @param   {*}         value   The constant value
+ */
+module.exports.define = function(target, name, value)
+{
+    // Check parameters
+    assert.strictEqual(typeof name, 'string', 'The name must be a string');
 
-    /**
-     * The version
-     *
-     * @type {string}
-     */
-    version: description.version
+    Object.defineProperty(target, name, {
+        get: function() {
+            return value;
+        }
+    });
 };
-var solfege = ObjectProxy.createPackage(__dirname, getters);
 
-module.exports = solfege;
+/**
+ * Merge objects
+ *
+ * @example
+ * var merged = solfege.util.Object.merge(object1, object2, object3);
+ *
+ * @param   {...Object} object  An object
+ */
+module.exports.merge = function()
+{
+    var items = Array.prototype.slice.call(arguments);
+    var result = items.shift();
+    var count = items.length;
+
+    if (count > 0 &amp;&amp; (typeof result !== 'object' || result instanceof Array)) {
+        return items.pop();
+    }
+
+    for (var index = 0; index &lt; count; ++index) {
+        var item = items[index];
+
+        for (var key in item) {
+            result[key] = arguments.callee(result[key], item[key]);
+        }
+    }
+
+    return result;
+};
 </code></pre>
         </article>
     </section>

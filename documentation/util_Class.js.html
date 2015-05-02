@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: solfege.js</title>
+    <title>JSDoc: Source: util/Class.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: solfege.js</h1>
+    <h1 class="page-title">Source: util/Class.js</h1>
 
     
 
@@ -27,46 +27,40 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @namespace solfege
+ * @module solfege.util.Class
  */
+var assert = require('assert');
 
-// Check the node version
-var currentVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-if (currentVersion &lt; 0.11) {
-    console.error('SolfegeJS requires Node version 0.11+');
-    process.exit(1);
-}
+/**
+ * Create a class
+ *
+ * @param   {Function}  constructor     - The constructor
+ * @param   {String}    name            - The name
+ * @param   {Function}  [parentClass]   - The class to inherit
+ */
+module.exports.create = function(constructor, name, parentClass)
+{
+    // Check parameters
+    assert.strictEqual(typeof constructor, 'function', 'The constructor must be a function');
+    assert.strictEqual(typeof name, 'string', 'The name must be a string');
 
-// Check Harmony
-if (typeof Proxy === 'undefined') {
-    console.error('SolfegeJS requires Node Harmony');
-    process.exit(1);
-}
+    // Extends a class
+    if (parentClass) {
+        assert.strictEqual(typeof parentClass, 'function', 'The constructor must be a function');
+        constructor.prototype.__proto__ = parentClass.prototype;
+    }
 
 
-// Create a package
-var description = require('../package.json');
-var ObjectProxy = require('./util/ObjectProxy');
-var getters = {
-    /**
-     * String representation of the package
-     *
-     * @return  {string}    The string representation
-     */
-    toString: function () {
-        return 'SolfegeJS ' + description.version;
-    },
+    var proto = constructor.prototype;
 
-    /**
-     * The version
-     *
-     * @type {string}
-     */
-    version: description.version
+    // Define the default string representation
+    proto.toString = function()
+    {
+        return '{' + name + '}';
+    };
+
+    return constructor;
 };
-var solfege = ObjectProxy.createPackage(__dirname, getters);
-
-module.exports = solfege;
 </code></pre>
         </article>
     </section>

@@ -2,7 +2,7 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "1.3.5",
+    "version"       : "1.4.0",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
@@ -25,7 +25,7 @@
     },
     "scripts"       :
     {
-        "test"          : "mocha --harmony --recursive --reporter spec --bail",
+        "test"          : "mocha --harmony --harmony-proxies --recursive --reporter spec --bail",
         "documentation" : "jsdoc --recurse ./lib --destination ./documentation"
     }
 }

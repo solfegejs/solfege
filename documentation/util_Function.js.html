@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: solfege.js</title>
+    <title>JSDoc: Source: util/Function.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: solfege.js</h1>
+    <h1 class="page-title">Source: util/Function.js</h1>
 
     
 
@@ -27,46 +27,62 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @namespace solfege
+ * @module solfege.util.Function
  */
-
-// Check the node version
-var currentVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-if (currentVersion &lt; 0.11) {
-    console.error('SolfegeJS requires Node version 0.11+');
-    process.exit(1);
-}
-
-// Check Harmony
-if (typeof Proxy === 'undefined') {
-    console.error('SolfegeJS requires Node Harmony');
-    process.exit(1);
-}
+var assert = require('assert');
 
 
-// Create a package
-var description = require('../package.json');
-var ObjectProxy = require('./util/ObjectProxy');
-var getters = {
-    /**
-     * String representation of the package
-     *
-     * @return  {string}    The string representation
-     */
-    toString: function () {
-        return 'SolfegeJS ' + description.version;
-    },
+/**
+ * Bind a generator function
+ *
+ * @param   {Object}    scope   The scope object
+ * @param   {Function}  target  The generator function
+ * @return  {Function}          The binded function
+ */
+module.exports.bindGenerator = function(scope, target)
+{
+    // Check parameters
+    assert.strictEqual(typeof target, 'function', 'The target must be a function');
 
-    /**
-     * The version
-     *
-     * @type {string}
-     */
-    version: description.version
+    return function*() {
+        return yield target.apply(scope, arguments);
+    };
 };
-var solfege = ObjectProxy.createPackage(__dirname, getters);
 
-module.exports = solfege;
+
+/**
+ * Create a thunk of a function
+ *
+ * &lt;p>The last argument of the function must be the callback.&lt;/p>
+ * &lt;p>The first argument of the callback must be the error object.&lt;/p>
+ *
+ * @param   {Function}  func    The function
+ * @return  {Function}          The thunk
+ */
+module.exports.createThunk = function(func)
+{
+    // Check parameter
+    assert.strictEqual(typeof func, 'function', 'The func must be a function');
+
+    return function() {
+        var self = this;
+        var args = [];
+
+        for (var index = 0, total = arguments.length; index &lt; total; ++index) {
+            args[index] = arguments[index];
+        }
+
+        return function(done) {
+            args.push(done);
+
+            try {
+                func.apply(self, args);
+            } catch (error) {
+                done(error);
+            }
+        }
+    }
+};
 </code></pre>
         </article>
     </section>

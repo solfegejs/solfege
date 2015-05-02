@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: solfege.js</title>
+    <title>JSDoc: Source: kernel/Services.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: solfege.js</h1>
+    <h1 class="page-title">Source: kernel/Services.js</h1>
 
     
 
@@ -26,47 +26,78 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * @namespace solfege
+            <pre class="prettyprint source linenums"><code>// Check the global scope
+if (global.hasOwnProperty('solfegeServices')) {
+    module.exports = global.solfegeServices;
+} else {
+
+
+var solfege = require('../solfege');
+var assert = require('assert');
+
+/**
+ * The service container
+ *
+ * @class   solfege.kernel.Services
  */
+var Services = solfege.util.Class.create(function()
+{
+    // Initialize the list
+    this.list = {};
 
-// Check the node version
-var currentVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-if (currentVersion &lt; 0.11) {
-    console.error('SolfegeJS requires Node version 0.11+');
-    process.exit(1);
-}
-
-// Check Harmony
-if (typeof Proxy === 'undefined') {
-    console.error('SolfegeJS requires Node Harmony');
-    process.exit(1);
-}
+}, 'solfege.kernel.Services');
+var proto = Services.prototype;
 
 
-// Create a package
-var description = require('../package.json');
-var ObjectProxy = require('./util/ObjectProxy');
-var getters = {
-    /**
-     * String representation of the package
-     *
-     * @return  {string}    The string representation
-     */
-    toString: function () {
-        return 'SolfegeJS ' + description.version;
-    },
+/**
+ * The service list
+ *
+ * @private
+ * @member  {Object} solfege.kernel.Services.prototype.list
+ */
+proto.list;
 
-    /**
-     * The version
-     *
-     * @type {string}
-     */
-    version: description.version
+/**
+ * Register a service
+ *
+ * @public
+ * @method  solfege.kernel.Services.prototype.register
+ * @param   {String} id - The service id
+ * @param   {*} instance - The service instance
+ */
+proto.register = function(id, instance)
+{
+    // Check the id
+    assert.strictEqual(typeof id, 'string', 'The id must be a string');
+
+    this.list[id] = instance;
 };
-var solfege = ObjectProxy.createPackage(__dirname, getters);
 
-module.exports = solfege;
+/**
+ * Get a service instance
+ *
+ * @public
+ * @method  solfege.kernel.Services.prototype.get
+ * @param   {String} id - The service id
+ * @return  {*} The service instance
+ */
+proto.get = function(id)
+{
+    // Check the id
+    assert.strictEqual(typeof id, 'string', 'The id must be a string');
+
+    return this.list[id];
+};
+
+
+
+// Build the singleton and register it in the global scope
+var singleton = new Services();
+global.solfegeServices = singleton;
+module.exports = singleton;
+
+
+}
 </code></pre>
         </article>
     </section>

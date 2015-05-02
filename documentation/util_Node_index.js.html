@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: solfege.js</title>
+    <title>JSDoc: Source: util/Node/index.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: solfege.js</h1>
+    <h1 class="page-title">Source: util/Node/index.js</h1>
 
     
 
@@ -27,46 +27,14 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @namespace solfege
+ * @namespace solfege.util.Node
  */
 
-// Check the node version
-var currentVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-if (currentVersion &lt; 0.11) {
-    console.error('SolfegeJS requires Node version 0.11+');
-    process.exit(1);
-}
+var ObjectProxy = require('../ObjectProxy');
 
-// Check Harmony
-if (typeof Proxy === 'undefined') {
-    console.error('SolfegeJS requires Node Harmony');
-    process.exit(1);
-}
+var currentPackage = ObjectProxy.createPackage(__dirname);
 
-
-// Create a package
-var description = require('../package.json');
-var ObjectProxy = require('./util/ObjectProxy');
-var getters = {
-    /**
-     * String representation of the package
-     *
-     * @return  {string}    The string representation
-     */
-    toString: function () {
-        return 'SolfegeJS ' + description.version;
-    },
-
-    /**
-     * The version
-     *
-     * @type {string}
-     */
-    version: description.version
-};
-var solfege = ObjectProxy.createPackage(__dirname, getters);
-
-module.exports = solfege;
+module.exports = currentPackage;
 </code></pre>
         </article>
     </section>
