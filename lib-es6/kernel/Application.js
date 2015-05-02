@@ -1,32 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: kernel/Application.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: kernel/Application.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>let assert = require('assert');
+let assert = require('assert');
 let solfege = require('../solfege');
 let co = require('co');
 
@@ -217,7 +189,7 @@ export default class Application extends solfege.kernel.EventEmitter
      * @public
      * @method  solfege.kernel.Application.prototype.isSolfegeUri
      * @param   {String} uri - The solfege URI
-     * @return  {Boolean} &lt;code>true&lt;/code> if the URI is a Solfege URI, &lt;code>false&lt;/code> otherwise
+     * @return  {Boolean} <code>true</code> if the URI is a Solfege URI, <code>false</code> otherwise
      */
     isSolfegeUri(uri)
     {
@@ -233,18 +205,18 @@ export default class Application extends solfege.kernel.EventEmitter
     /**
      * Parse a solfege URI
      *
-     * &lt;p>The available parts:&lt;/p>
-     * &lt;ul>
-     *     &lt;li>&lt;code>bundleId&lt;/code>&lt;/li>
-     *     &lt;li>&lt;code>bundle&lt;/code>&lt;/li>
-     *     &lt;li>&lt;code>objectPath&lt;/code>&lt;/li>
-     *     &lt;li>&lt;code>object&lt;/code>&lt;/li>
-     *     &lt;li>&lt;code>filePattern&lt;/code>&lt;/li>
-     *     &lt;li>&lt;code>relativeFilePath&lt;/code>&lt;/li>
-     *     &lt;li>&lt;code>relativeFilePaths&lt;/code>&lt;/li>
-     *     &lt;li>&lt;code>filePath&lt;/code>&lt;/li>
-     *     &lt;li>&lt;code>filePaths&lt;/code>&lt;/li>
-     * &lt;/ul>
+     * <p>The available parts:</p>
+     * <ul>
+     *     <li><code>bundleId</code></li>
+     *     <li><code>bundle</code></li>
+     *     <li><code>objectPath</code></li>
+     *     <li><code>object</code></li>
+     *     <li><code>filePattern</code></li>
+     *     <li><code>relativeFilePath</code></li>
+     *     <li><code>relativeFilePaths</code></li>
+     *     <li><code>filePath</code></li>
+     *     <li><code>filePaths</code></li>
+     * </ul>
      *
      * @public
      * @method  solfege.kernel.Application.prototype.parseSolfegeUri
@@ -263,7 +235,7 @@ export default class Application extends solfege.kernel.EventEmitter
         var result = {};
 
         // Bundle
-        if (parts &amp;&amp; parts[1]) {
+        if (parts && parts[1]) {
             // Get the bundle id
             result.bundleId = parts[1];
 
@@ -279,7 +251,7 @@ export default class Application extends solfege.kernel.EventEmitter
         }
 
         // Object
-        if (parts &amp;&amp; parts[2]) {
+        if (parts && parts[2]) {
             // Get the object path
             result.objectPath = parts[2];
 
@@ -307,7 +279,7 @@ export default class Application extends solfege.kernel.EventEmitter
         }
 
         // File
-        if (parts &amp;&amp; parts[3]) {
+        if (parts && parts[3]) {
             // Get the file pattern
             result.filePattern = parts[3];
 
@@ -336,7 +308,7 @@ export default class Application extends solfege.kernel.EventEmitter
                     var globPaths = glob.sync(result.filePattern, {
                         cwd: basePath
                     });
-                    if (globPaths &amp;&amp; globPaths.length) {
+                    if (globPaths && globPaths.length) {
                         globPaths.forEach(function(globPath) {
                             relativeFilePaths.push(globPath);
                             absoluteFilePaths.push(modulePath.resolve(basePath, globPath));
@@ -457,10 +429,10 @@ export default class Application extends solfege.kernel.EventEmitter
                 try {
                     // Override the configuration
                     var bundleConfiguration;
-                    if (self.configuration &amp;&amp; self.configuration[bundleId]) {
+                    if (self.configuration && self.configuration[bundleId]) {
                         bundleConfiguration = self.configuration[bundleId];
                     }
-                    if (bundleConfiguration &amp;&amp; typeof bundle.overrideConfiguration === 'function') {
+                    if (bundleConfiguration && typeof bundle.overrideConfiguration === 'function') {
                         if ('GeneratorFunction' !== bundle.overrideConfiguration.constructor.name) {
                             console.error('The bundle ' + bundle + ' must implement a generator function "overrideConfiguration"');
                         } else {
@@ -580,26 +552,3 @@ solfege.util.Object.define(Application, 'REGEXP_SOLFEGE_URI', /^@[a-zA-Z]+(-[a-z
  */
 solfege.util.Object.define(Application, 'REGEXP_SPLIT_SOLFEGE_URI', /^@([^:\.]+)\.?([^:]*):?(.*)$/);
 
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="solfege.util.module_Function.html">Function</a></li><li><a href="solfege.util.module_Object.html">Object</a></li><li><a href="solfege.util.module_ObjectProxy.html">ObjectProxy</a></li><li><a href="solfege.util.Node.module_fs.html">fs</a></li></ul><h3>Classes</h3><ul><li><a href="solfege.kernel.Application.html">Application</a></li><li><a href="solfege.kernel.EventEmitter.html">EventEmitter</a></li><li><a href="solfege.kernel.Services.html">Services</a></li></ul><h3>Namespaces</h3><ul><li><a href="solfege.html">solfege</a></li><li><a href="solfege.kernel.html">kernel</a></li><li><a href="solfege.util.html">util</a></li><li><a href="solfege.util.Node.html">Node</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Sun May 03 2015 00:53:01 GMT+0200 (CEST)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>

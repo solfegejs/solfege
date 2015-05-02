@@ -1,39 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: util/ObjectProxy.js</title>
+'use strict';
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
 
-<body>
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
 
-<div id="main">
-
-    <h1 class="page-title">Source: util/ObjectProxy.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Utils for virtualized objects (proxies)
- *
- * @module solfege.util.ObjectProxy
- */
-
-import fs from 'fs';
-import assert from 'assert';
+_Object$defineProperty(exports, '__esModule', {
+    value: true
+});
 
 /**
  * Create a package
@@ -42,18 +15,30 @@ import assert from 'assert';
  * @param   {Object}    [getters]       The additional getters
  * @param   {Object}    [setters]       The additional setters
  */
-export function createPackage(directoryPath, getters, setters)
-{
-    // Check parameters
-    assert.strictEqual(typeof directoryPath, 'string', 'The directoryPath must be a string');
+exports.createPackage = createPackage;
+/**
+ * Utils for virtualized objects (proxies)
+ *
+ * @module solfege.util.ObjectProxy
+ */
 
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
+
+function createPackage(directoryPath, getters, setters) {
+    // Check parameters
+    _assert2['default'].strictEqual(typeof directoryPath, 'string', 'The directoryPath must be a string');
 
     var cache = {};
 
     var proxy = Proxy.create({
         // Returns a property descriptor for an own property (that is, one directly present on an object, not present by dint of being along an object's prototype chain)
-        getOwnPropertyDescriptor: function(name)
-        {
+        getOwnPropertyDescriptor: function getOwnPropertyDescriptor(name) {
             var property = this.get(name);
             if ('undefined' === typeof property) {
                 return {};
@@ -67,14 +52,12 @@ export function createPackage(directoryPath, getters, setters)
         },
 
         // Returns an array of all properties (enumerable or not) found
-        getOwnPropertyNames: function()
-        {
+        getOwnPropertyNames: function getOwnPropertyNames() {
             return [];
         },
 
         // Define the magic getter
-        get: function(receiver, name)
-        {
+        get: function get(receiver, name) {
             // Check the cache
             if (cache.hasOwnProperty(name)) {
                 return cache[name];
@@ -92,7 +75,7 @@ export function createPackage(directoryPath, getters, setters)
 
             // Return a sub package
             var subPackagePath = directoryPath + '/' + name;
-            if (fs.existsSync(subPackagePath)) {
+            if (_fs2['default'].existsSync(subPackagePath)) {
                 var subPackage = require(subPackagePath);
                 cache[name] = subPackage;
                 return subPackage;
@@ -100,7 +83,7 @@ export function createPackage(directoryPath, getters, setters)
 
             // Return a class
             var classPath = subPackagePath + '.js';
-            if (fs.existsSync(classPath)) {
+            if (_fs2['default'].existsSync(classPath)) {
                 var classReference = require(classPath);
                 cache[name] = classReference;
                 return classReference;
@@ -111,8 +94,7 @@ export function createPackage(directoryPath, getters, setters)
         },
 
         // Define the magic setters
-        set: function(receiver, name, value)
-        {
+        set: function set(receiver, name, value) {
             // Check the additional setters
             if (setters) {
                 for (var setterName in setters) {
@@ -125,8 +107,7 @@ export function createPackage(directoryPath, getters, setters)
         },
 
         // Check if the property exists
-        has: function(name)
-        {
+        has: function has(name) {
             var property = this.get(name);
             if ('undefined' !== typeof property) {
                 return true;
@@ -136,28 +117,6 @@ export function createPackage(directoryPath, getters, setters)
     });
 
     return proxy;
-};
+}
 
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="solfege.util.module_Function.html">Function</a></li><li><a href="solfege.util.module_Object.html">Object</a></li><li><a href="solfege.util.module_ObjectProxy.html">ObjectProxy</a></li><li><a href="solfege.util.Node.module_fs.html">fs</a></li></ul><h3>Classes</h3><ul><li><a href="solfege.kernel.Application.html">Application</a></li><li><a href="solfege.kernel.EventEmitter.html">EventEmitter</a></li><li><a href="solfege.kernel.Services.html">Services</a></li></ul><h3>Namespaces</h3><ul><li><a href="solfege.html">solfege</a></li><li><a href="solfege.kernel.html">kernel</a></li><li><a href="solfege.util.html">util</a></li><li><a href="solfege.util.Node.html">Node</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-beta3</a> on Sun May 03 2015 00:53:01 GMT+0200 (CEST)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>
+;

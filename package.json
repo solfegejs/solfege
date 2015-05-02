@@ -7,7 +7,7 @@
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
     "license"       : "MIT",
-    "main"          : "lib/solfege.js",
+    "main"          : "lib-es5/solfege.js",
     "engines"       : 
     {
         "node": ">= 0.11.11"
@@ -15,17 +15,20 @@
     "dependencies"  : 
     {
         "co"            : "3.0.2",
-        "glob"          : "3.2.8"
+        "glob"          : "3.2.8",
+        "babel-runtime" : "0.9.6"
     },
     "devDependencies":
     {
-        "chai"          : "*",
-        "mocha"         : "*",
-        "jsdoc"         : "*"
+        "babel"         : "5.2.6",
+        "chai"          : "2.3.0",
+        "mocha"         : "2.2.4",
+        "jsdoc"         : "3.3.0-beta3"
     },
     "scripts"       :
     {
         "test"          : "mocha --harmony --harmony-proxies --recursive --reporter spec --bail",
-        "documentation" : "jsdoc --recurse ./lib --destination ./documentation"
+        "documentation" : "jsdoc --recurse ./lib-es6 --destination ./documentation",
+        "es6-watch"     : "node_modules/.bin/babel --optional runtime --watch --out-dir lib-es5 lib-es6"
     }
 }
