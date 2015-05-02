@@ -16,7 +16,7 @@
     {
         "co"            : "3.0.2",
         "glob"          : "3.2.8",
-        "babel-runtime" : "0.9.6"
+        "babel-runtime" : "5.2.6"
     },
     "devDependencies":
     {
