@@ -4,8 +4,8 @@ if (global.hasOwnProperty('solfegeServices')) {
 } else {
 
 
-var solfege = require('../solfege');
-var assert = require('assert');
+var solfege = require("../solfege");
+var assert = require("assert");
 
 /**
  * The service container

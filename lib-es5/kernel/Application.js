@@ -1,24 +1,32 @@
-'use strict';
+"use strict";
 
-var _inherits = require('babel-runtime/helpers/inherits')['default'];
-
-var _get = require('babel-runtime/helpers/get')['default'];
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-_Object$defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var assert = require('assert');
-var solfege = require('../solfege');
-var co = require('co');
+var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
+    property = _x2,
+    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+
+var _assert = require("assert");
+
+var _assert2 = _interopRequireDefault(_assert);
+
+var _solfege = require("../solfege");
+
+var _solfege2 = _interopRequireDefault(_solfege);
+
+var _co = require("co");
+
+var _co2 = _interopRequireDefault(_co);
 
 /**
  * The main class of the SolfegeJS application
@@ -36,7 +44,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
     function Application(rootPath) {
         _classCallCheck(this, Application);
 
-        _get(Object.getPrototypeOf(Application.prototype), 'constructor', this).call(this);
+        _get(Object.getPrototypeOf(Application.prototype), "constructor", this).call(this);
 
         // The root path of the application
         this.rootPath = rootPath;
@@ -54,20 +62,20 @@ var Application = (function (_solfege$kernel$EventEmitter) {
         // Exit handler
         var bindedExitHandler = this.onExit.bind(this);
         var bindedKillHandler = this.onKill.bind(this);
-        process.on('exit', bindedExitHandler);
-        process.on('SIGINT', bindedKillHandler);
+        process.on("exit", bindedExitHandler);
+        process.on("SIGINT", bindedKillHandler);
 
-        process.on('SIGTERM', bindedKillHandler);
-        process.on('SIGHUP', bindedKillHandler);
+        process.on("SIGTERM", bindedKillHandler);
+        process.on("SIGHUP", bindedKillHandler);
 
         // Error handler
-        process.on('uncaughtException', this.onErrorUnknown.bind(this));
+        process.on("uncaughtException", this.onErrorUnknown.bind(this));
     }
 
     _inherits(Application, _solfege$kernel$EventEmitter);
 
     _createClass(Application, [{
-        key: 'nodePath',
+        key: "nodePath",
 
         /**
          * The node path
@@ -79,7 +87,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return process.execPath;
         }
     }, {
-        key: 'nodeArguments',
+        key: "nodeArguments",
 
         /**
          * The node arguments
@@ -95,7 +103,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return this._nodeArguments;
         }
     }, {
-        key: 'commandLine',
+        key: "commandLine",
 
         /**
          * The command line
@@ -113,7 +121,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return this._commandLine;
         }
     }, {
-        key: 'scriptPath',
+        key: "scriptPath",
 
         /**
          * The script path that started the process
@@ -131,7 +139,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return this._scriptPath;
         }
     }, {
-        key: 'scriptArguments',
+        key: "scriptArguments",
 
         /**
          * The script arguments
@@ -149,7 +157,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return this._scriptArguments;
         }
     }, {
-        key: 'addBundle',
+        key: "addBundle",
 
         /**
          * Add a bundle
@@ -161,17 +169,17 @@ var Application = (function (_solfege$kernel$EventEmitter) {
          */
         value: function addBundle(id, bundle) {
             // Check arguments
-            assert.strictEqual(typeof id, 'string', 'The id is required and must be a string');
+            _assert2["default"].strictEqual(typeof id, "string", "The id is required and must be a string");
 
             // Check the id pattern
             if (!Application.REGEXP_BUNDLE_NAME.test(id)) {
-                throw new Error('Invalid bundle name: "' + id + '"');
+                throw new Error("Invalid bundle name: \"" + id + "\"");
             }
 
             this.bundles[id] = bundle;
         }
     }, {
-        key: 'getBundle',
+        key: "getBundle",
 
         /**
          * Get a bundle by its id
@@ -183,12 +191,12 @@ var Application = (function (_solfege$kernel$EventEmitter) {
          */
         value: function getBundle(id) {
             // Check arguments
-            assert.strictEqual(typeof id, 'string', 'The id is required and must be a string');
+            _assert2["default"].strictEqual(typeof id, "string", "The id is required and must be a string");
 
             return this.bundles[id];
         }
     }, {
-        key: 'getBundles',
+        key: "getBundles",
 
         /**
          * Get all bundles
@@ -201,7 +209,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return this.bundles;
         }
     }, {
-        key: 'overrideConfiguration',
+        key: "overrideConfiguration",
 
         /**
          * Override the configuration of the bundles
@@ -214,7 +222,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             this.configuration = configuration;
         }
     }, {
-        key: 'isSolfegeUri',
+        key: "isSolfegeUri",
 
         /**
          * Indicates that an URI is a Solfege URI or not
@@ -226,14 +234,14 @@ var Application = (function (_solfege$kernel$EventEmitter) {
          */
         value: function isSolfegeUri(uri) {
             // Check arguments
-            assert.strictEqual(typeof uri, 'string', 'The URI is required and must be a string');
+            _assert2["default"].strictEqual(typeof uri, "string", "The URI is required and must be a string");
 
             var result = Application.REGEXP_SOLFEGE_URI.test(uri);
 
             return result;
         }
     }, {
-        key: 'parseSolfegeUri',
+        key: "parseSolfegeUri",
 
         /**
          * Parse a solfege URI
@@ -259,8 +267,8 @@ var Application = (function (_solfege$kernel$EventEmitter) {
          */
         value: function parseSolfegeUri(uri, bundleCaller) {
             // Check arguments
-            assert.strictEqual(typeof uri, 'string', 'The URI is required and must be a string');
-            assert.ok(this.isSolfegeUri(uri), 'The URI must be a valid solfege URI');
+            _assert2["default"].strictEqual(typeof uri, "string", "The URI is required and must be a string");
+            _assert2["default"].ok(this.isSolfegeUri(uri), "The URI must be a valid solfege URI");
 
             var parts = Application.REGEXP_SPLIT_SOLFEGE_URI.exec(uri);
             var result = {};
@@ -271,7 +279,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
                 result.bundleId = parts[1];
 
                 // Get the bundle instance
-                if ('this' === result.bundleId) {
+                if ("this" === result.bundleId) {
                     result.bundle = bundleCaller;
                 } else {
                     result.bundle = this.getBundle(result.bundleId);
@@ -288,16 +296,16 @@ var Application = (function (_solfege$kernel$EventEmitter) {
 
                 // Parse the object path
                 if (result.bundle) {
-                    var objectParts = result.objectPath.split('.');
+                    var objectParts = result.objectPath.split(".");
                     result.object = result.bundle;
                     objectParts.every(function (part) {
                         // Skip empty part
-                        if ('' === part) {
+                        if ("" === part) {
                             return true;
                         }
 
                         // If the part is undefined in the current object, then the object path is invalid
-                        if ('undefined' === typeof result.object[part]) {
+                        if ("undefined" === typeof result.object[part]) {
                             result.object = null;
                             return false;
                         }
@@ -317,16 +325,16 @@ var Application = (function (_solfege$kernel$EventEmitter) {
                 // Parse the file pattern
                 if (result.object) {
                     // The object must implement the "__dirname" property
-                    if ('string' !== typeof result.object.__dirname) {
+                    if ("string" !== typeof result.object.__dirname) {
                         if (result.objectPath) {
-                            throw new Error('The target @' + result.bundleId + '.' + result.objectPath + ' must implement the "__dirname" property');
+                            throw new Error("The target @" + result.bundleId + "." + result.objectPath + " must implement the \"__dirname\" property");
                         } else {
-                            throw new Error('The target @' + result.bundleId + ' must implement the "__dirname" property');
+                            throw new Error("The target @" + result.bundleId + " must implement the \"__dirname\" property");
                         }
                     }
 
                     // Resolve the absolute path
-                    var modulePath = require('path');
+                    var modulePath = require("path");
                     var basePath = result.object.__dirname;
                     var relativeFilePath = result.filePattern;
                     var relativeFilePaths = [];
@@ -335,7 +343,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
 
                     // Try glob search and get multiple files
                     try {
-                        var glob = require('glob');
+                        var glob = require("glob");
                         var globPaths = glob.sync(result.filePattern, {
                             cwd: basePath
                         });
@@ -368,7 +376,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return result;
         }
     }, {
-        key: 'resolveSolfegeUri',
+        key: "resolveSolfegeUri",
 
         /**
          * Resolve a solfege URI
@@ -395,7 +403,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return null;
         }
     }, {
-        key: 'getBundleFromSolfegeUri',
+        key: "getBundleFromSolfegeUri",
 
         /**
          * Get the bundle instance from a solfege URI
@@ -419,7 +427,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
 
             // Get the bundle
             var bundle;
-            if ('this' === bundleId) {
+            if ("this" === bundleId) {
                 bundle = bundleCaller;
             } else {
                 bundle = this.getBundle(bundleId);
@@ -433,7 +441,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             return bundle;
         }
     }, {
-        key: 'start',
+        key: "start",
 
         /**
          * Start the application
@@ -445,109 +453,54 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             var self = this;
 
             // Start the generator based flow
-            co(_regeneratorRuntime.mark(function callee$2$0() {
-                var fs, rootPathExists, bundleId, bundle, bundleConfiguration;
-                return _regeneratorRuntime.wrap(function callee$2$0$(context$3$0) {
-                    while (1) switch (context$3$0.prev = context$3$0.next) {
-                        case 0:
-                            fs = solfege.util.Node.fs;
-                            context$3$0.next = 3;
-                            return fs.exists(self.rootPath);
+            _co2["default"](function* () {
+                // Check if the root directory exists
+                var fs = _solfege2["default"].util.Node.fs;
+                var rootPathExists = yield fs.exists(self.rootPath);
+                if (!rootPathExists) {
+                    throw new Error("The root path of the application does not exist");
+                }
 
-                        case 3:
-                            rootPathExists = context$3$0.sent;
+                // Initialize bundles
+                // A bundle can implement a method "setApplication" to get an instance of the application
+                for (var bundleId in self.bundles) {
+                    var bundle = self.bundles[bundleId];
 
-                            if (rootPathExists) {
-                                context$3$0.next = 6;
-                                break;
+                    try {
+                        // Override the configuration
+                        var bundleConfiguration;
+                        if (self.configuration && self.configuration[bundleId]) {
+                            bundleConfiguration = self.configuration[bundleId];
+                        }
+                        if (bundleConfiguration && typeof bundle.overrideConfiguration === "function") {
+                            if ("GeneratorFunction" !== bundle.overrideConfiguration.constructor.name) {
+                                console.error("The bundle " + bundle + " must implement a generator function \"overrideConfiguration\"");
+                            } else {
+                                yield bundle.overrideConfiguration(bundleConfiguration);
                             }
+                        }
 
-                            throw new Error('The root path of the application does not exist');
-
-                        case 6:
-                            context$3$0.t137 = _regeneratorRuntime.keys(self.bundles);
-
-                        case 7:
-                            if ((context$3$0.t138 = context$3$0.t137()).done) {
-                                context$3$0.next = 33;
-                                break;
+                        // Set the application instance
+                        if (typeof bundle.setApplication === "function") {
+                            if ("GeneratorFunction" !== bundle.setApplication.constructor.name) {
+                                console.error("The bundle " + bundle + " must implement a generator function \"setApplication\"");
+                            } else {
+                                yield bundle.setApplication(self);
                             }
-
-                            bundleId = context$3$0.t138.value;
-                            bundle = self.bundles[bundleId];
-                            context$3$0.prev = 10;
-
-                            if (self.configuration && self.configuration[bundleId]) {
-                                bundleConfiguration = self.configuration[bundleId];
-                            }
-
-                            if (!(bundleConfiguration && typeof bundle.overrideConfiguration === 'function')) {
-                                context$3$0.next = 19;
-                                break;
-                            }
-
-                            if (!('GeneratorFunction' !== bundle.overrideConfiguration.constructor.name)) {
-                                context$3$0.next = 17;
-                                break;
-                            }
-
-                            console.error('The bundle ' + bundle + ' must implement a generator function "overrideConfiguration"');
-                            context$3$0.next = 19;
-                            break;
-
-                        case 17:
-                            context$3$0.next = 19;
-                            return bundle.overrideConfiguration(bundleConfiguration);
-
-                        case 19:
-                            if (!(typeof bundle.setApplication === 'function')) {
-                                context$3$0.next = 26;
-                                break;
-                            }
-
-                            if (!('GeneratorFunction' !== bundle.setApplication.constructor.name)) {
-                                context$3$0.next = 24;
-                                break;
-                            }
-
-                            console.error('The bundle ' + bundle + ' must implement a generator function "setApplication"');
-                            context$3$0.next = 26;
-                            break;
-
-                        case 24:
-                            context$3$0.next = 26;
-                            return bundle.setApplication(self);
-
-                        case 26:
-                            context$3$0.next = 31;
-                            break;
-
-                        case 28:
-                            context$3$0.prev = 28;
-                            context$3$0.t139 = context$3$0['catch'](10);
-                            throw new Error('[' + bundleId + '] ' + context$3$0.t139.message);
-
-                        case 31:
-                            context$3$0.next = 7;
-                            break;
-
-                        case 33:
-                            context$3$0.next = 35;
-                            return self.emit(Application.EVENT_BUNDLES_INITIALIZED, self);
-
-                        case 35:
-                            context$3$0.next = 37;
-                            return self.emit(Application.EVENT_START, self);
-
-                        case 37:
-                        case 'end':
-                            return context$3$0.stop();
+                        }
+                    } catch (error) {
+                        // Display the error of the bundle
+                        throw new Error("[" + bundleId + "] " + error.message);
                     }
-                }, callee$2$0, this, [[10, 28]]);
-            }))();
+                }
+                yield self.emit(Application.EVENT_BUNDLES_INITIALIZED, self);
+
+                // Start the application
+                yield self.emit(Application.EVENT_START, self);
+            })();
         }
     }, {
-        key: 'onErrorUnknown',
+        key: "onErrorUnknown",
 
         /**
          * An unknown error occurred
@@ -564,7 +517,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             }
         }
     }, {
-        key: 'onExit',
+        key: "onExit",
 
         /**
          * The application is stopped
@@ -575,22 +528,12 @@ var Application = (function (_solfege$kernel$EventEmitter) {
         value: function onExit() {
             var self = this;
 
-            co(_regeneratorRuntime.mark(function callee$2$0() {
-                return _regeneratorRuntime.wrap(function callee$2$0$(context$3$0) {
-                    while (1) switch (context$3$0.prev = context$3$0.next) {
-                        case 0:
-                            context$3$0.next = 2;
-                            return self.emit(Application.EVENT_END, self);
-
-                        case 2:
-                        case 'end':
-                            return context$3$0.stop();
-                    }
-                }, callee$2$0, this);
-            }))();
+            _co2["default"](function* () {
+                yield self.emit(Application.EVENT_END, self);
+            })();
         }
     }, {
-        key: 'onKill',
+        key: "onKill",
 
         /**
          * The application is killed
@@ -604,9 +547,9 @@ var Application = (function (_solfege$kernel$EventEmitter) {
     }]);
 
     return Application;
-})(solfege.kernel.EventEmitter);
+})(_solfege2["default"].kernel.EventEmitter);
 
-exports['default'] = Application;
+exports["default"] = Application;
 
 /**
  * Event name of the end of the bundles initialization
@@ -614,7 +557,7 @@ exports['default'] = Application;
  * @constant    {String} solfege.kernel.Application.EVENT_BUNDLES_INITALIZED
  * @default     'bundles_initialized'
  */
-solfege.util.Object.define(Application, 'EVENT_BUNDLES_INITIALIZED', 'bundles_initialized');
+_solfege2["default"].util.Object.define(Application, "EVENT_BUNDLES_INITIALIZED", "bundles_initialized");
 
 /**
  * Event name of the application start
@@ -622,7 +565,7 @@ solfege.util.Object.define(Application, 'EVENT_BUNDLES_INITIALIZED', 'bundles_in
  * @constant    {String} solfege.kernel.Application.EVENT_START
  * @default     'start'
  */
-solfege.util.Object.define(Application, 'EVENT_START', 'start');
+_solfege2["default"].util.Object.define(Application, "EVENT_START", "start");
 
 /**
  * Event name of the application end
@@ -630,7 +573,7 @@ solfege.util.Object.define(Application, 'EVENT_START', 'start');
  * @constant    {String} solfege.kernel.Application.EVENT_END
  * @default     'end'
  */
-solfege.util.Object.define(Application, 'EVENT_END', 'end');
+_solfege2["default"].util.Object.define(Application, "EVENT_END", "end");
 
 /**
  * Regular expression of a valid bundle name
@@ -638,7 +581,7 @@ solfege.util.Object.define(Application, 'EVENT_END', 'end');
  * @constant    {RegExp} solfege.kernel.Application.REGEXP_BUNDLE_NAME
  * @default     /^[a-zA-Z]+(-[a-zA-Z0-9]+)*$/
  */
-solfege.util.Object.define(Application, 'REGEXP_BUNDLE_NAME', /^[a-zA-Z]+(-[a-zA-Z0-9]+)*$/);
+_solfege2["default"].util.Object.define(Application, "REGEXP_BUNDLE_NAME", /^[a-zA-Z]+(-[a-zA-Z0-9]+)*$/);
 
 /**
  * Regular expression of a valid Solfege URI
@@ -646,7 +589,7 @@ solfege.util.Object.define(Application, 'REGEXP_BUNDLE_NAME', /^[a-zA-Z]+(-[a-zA
  * @constant    {RegExp} solfege.kernel.Application.REGEXP_SOLFEGE_URI
  * @default     /^@[a-zA-Z]+(-[a-zA-Z0-9]+)*(\.:)?.*$/
  */
-solfege.util.Object.define(Application, 'REGEXP_SOLFEGE_URI', /^@[a-zA-Z]+(-[a-zA-Z0-9]+)*(\.:)?.*$/);
+_solfege2["default"].util.Object.define(Application, "REGEXP_SOLFEGE_URI", /^@[a-zA-Z]+(-[a-zA-Z0-9]+)*(\.:)?.*$/);
 
 /**
  * Regular expression for splitting into parts a Solfege URI
@@ -654,18 +597,5 @@ solfege.util.Object.define(Application, 'REGEXP_SOLFEGE_URI', /^@[a-zA-Z]+(-[a-z
  * @constant    {RegExp} solfege.kernel.Application.REGEXP_SPLIT_SOLFEGE_URI
  * @default     /^@([^:\.]+)\.?([^:]*):?(.*)$/
  */
-solfege.util.Object.define(Application, 'REGEXP_SPLIT_SOLFEGE_URI', /^@([^:\.]+)\.?([^:]*):?(.*)$/);
-module.exports = exports['default'];
-
-// Check if the root directory exists
-
-// Initialize bundles
-// A bundle can implement a method "setApplication" to get an instance of the application
-
-// Override the configuration
-
-// Set the application instance
-
-// Display the error of the bundle
-
-// Start the application
+_solfege2["default"].util.Object.define(Application, "REGEXP_SPLIT_SOLFEGE_URI", /^@([^:\.]+)\.?([^:]*):?(.*)$/);
+module.exports = exports["default"];

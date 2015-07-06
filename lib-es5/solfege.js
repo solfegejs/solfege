@@ -1,15 +1,24 @@
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
+
+// Check the Generator feature
+
+var _generatorDetector = require("node-generator-detector");
+
+var _generatorDetector2 = _interopRequireDefault(_generatorDetector);
 
 // Create a package
-'use strict';
 
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-var _description = require('../package.json');
+var _description = require("../package.json");
 
 var _description2 = _interopRequireDefault(_description);
 
-var _createPackage = require('./util/ObjectProxy');
+var _createPackage = require("./util/ObjectProxy");
 
 /**
  * @namespace solfege
@@ -17,14 +26,18 @@ var _createPackage = require('./util/ObjectProxy');
 
 // Check the node version
 var currentVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
-if (currentVersion < 0.11) {
-    console.error('SolfegeJS requires Node version 0.11+');
+if (currentVersion < 0.12) {
+    console.error("SolfegeJS requires Node version 0.12+");
     process.exit(1);
 }
 
-// Check Harmony
-if (typeof Proxy === 'undefined') {
-    console.error('SolfegeJS requires ES6 Proxy');
+// Check the Proxy feature
+if (typeof Proxy === "undefined") {
+    console.error("SolfegeJS requires ES6 Proxy");
+    process.exit(1);
+}
+if (!_generatorDetector2["default"]()) {
+    console.error("SolfegeJS requires ES6 Generator");
     process.exit(1);
 }
 var getters = {
@@ -34,7 +47,7 @@ var getters = {
      * @return  {string}    The string representation
      */
     toString: function toString() {
-        return 'SolfegeJS ' + _description2['default'].version;
+        return "SolfegeJS " + _description2["default"].version;
     },
 
     /**
@@ -42,8 +55,7 @@ var getters = {
      *
      * @type {string}
      */
-    version: _description2['default'].version
+    version: _description2["default"].version
 };
-var solfege = _createPackage.createPackage(__dirname, getters);
-
-module.exports = solfege;
+exports["default"] = _createPackage.createPackage(__dirname, getters);
+module.exports = exports["default"];

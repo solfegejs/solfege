@@ -1,11 +1,13 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 /**
  * @namespace solfege.util.Node
  */
 
-'use strict';
+var _createPackage = require("../ObjectProxy");
 
-var _createPackage = require('../ObjectProxy');
-
-var currentPackage = _createPackage.createPackage(__dirname);
-
-module.exports = currentPackage;
+exports["default"] = _createPackage.createPackage(__dirname);
+module.exports = exports["default"];

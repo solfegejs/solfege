@@ -1,12 +1,10 @@
 'use strict';
 
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
-
-_Object$defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, '__esModule', {
     value: true
 });
+
+var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
 
 /**
  * Define a constant
@@ -38,7 +36,7 @@ function define(target, name, value) {
     // Check parameters
     _assert2['default'].strictEqual(typeof name, 'string', 'The name must be a string');
 
-    _Object$defineProperty(target, name, {
+    Object.defineProperty(target, name, {
         get: function get() {
             return value;
         }

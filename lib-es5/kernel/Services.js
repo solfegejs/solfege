@@ -1,11 +1,11 @@
+"use strict";
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
 // Check the global scope
-'use strict';
-
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-if (global.hasOwnProperty('solfegeServices')) {
+if (global.hasOwnProperty("solfegeServices")) {
     module.exports = global.solfegeServices;
 } else {
     var solfege;
@@ -13,8 +13,8 @@ if (global.hasOwnProperty('solfegeServices')) {
     var singleton;
 
     (function () {
-        solfege = require('../solfege');
-        assert = require('assert');
+        solfege = require("../solfege");
+        assert = require("assert");
 
         /**
          * The service container
@@ -35,7 +35,7 @@ if (global.hasOwnProperty('solfegeServices')) {
             }
 
             _createClass(Services, [{
-                key: 'register',
+                key: "register",
 
                 /**
                  * Register a service
@@ -47,12 +47,12 @@ if (global.hasOwnProperty('solfegeServices')) {
                  */
                 value: function register(id, instance) {
                     // Check the id
-                    assert.strictEqual(typeof id, 'string', 'The id must be a string');
+                    assert.strictEqual(typeof id, "string", "The id must be a string");
 
                     this.list[id] = instance;
                 }
             }, {
-                key: 'get',
+                key: "get",
 
                 /**
                  * Get a service instance
@@ -64,7 +64,7 @@ if (global.hasOwnProperty('solfegeServices')) {
                  */
                 value: function get(id) {
                     // Check the id
-                    assert.strictEqual(typeof id, 'string', 'The id must be a string');
+                    assert.strictEqual(typeof id, "string", "The id must be a string");
 
                     return this.list[id];
                 }

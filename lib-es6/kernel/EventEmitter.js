@@ -1,5 +1,5 @@
-var solfege = require('../solfege');
-var assert = require('assert');
+import solfege from "../solfege";
+import assert from "assert";
 
 /**
  * An event emitter written with generators

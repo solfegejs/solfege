@@ -2,33 +2,35 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "1.4.0",
+    "version"       : "1.4.1",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
     "license"       : "MIT",
     "main"          : "lib-es5/solfege.js",
-    "engines"       : 
+    "engines"       :
     {
-        "node": ">= 0.11.11"
+        "node": ">= 0.12"
     },
-    "dependencies"  : 
+    "dependencies"  :
     {
-        "co"            : "3.0.2",
-        "glob"          : "3.2.8",
-        "babel-runtime" : "5.2.6"
+        "co"                      : "4.5.*",
+        "glob"                    : "5.0.*",
+        "babel-runtime"           : "5.2.*",
+        "node-generator-detector" : "0.2.1"
     },
     "devDependencies":
     {
-        "babel"         : "5.2.6",
-        "chai"          : "2.3.0",
-        "mocha"         : "2.2.4",
-        "jsdoc"         : "3.3.0-beta3"
+        "babel"         : "5.2.*",
+        "chai"          : "2.3.*",
+        "mocha"         : "2.2.*",
+        "jsdoc"         : "3.3.*"
     },
     "scripts"       :
     {
         "test"          : "mocha --harmony --harmony-proxies --recursive --reporter spec --bail",
         "documentation" : "jsdoc --recurse ./lib-es6 --destination ./documentation",
-        "es6-watch"     : "node_modules/.bin/babel --optional runtime --watch --out-dir lib-es5 lib-es6"
+        "es6-watch"     : "babel --blacklist=regenerator --watch --out-dir lib-es5 lib-es6",
+        "es6-compile"   : "babel --blacklist=regenerator --out-dir lib-es5 lib-es6"
     }
 }

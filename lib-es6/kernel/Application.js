@@ -1,6 +1,6 @@
-let assert = require('assert');
-let solfege = require('../solfege');
-let co = require('co');
+import assert from "assert";
+import solfege from "../solfege";
+import co from "co";
 
 /**
  * The main class of the SolfegeJS application
@@ -259,7 +259,7 @@ export default class Application extends solfege.kernel.EventEmitter
             if (result.bundle) {
                 var objectParts = result.objectPath.split('.');
                 result.object = result.bundle;
-                objectParts.every(function(part) {
+                objectParts.every(part => {
                     // Skip empty part
                     if ('' === part) {
                         return true;
@@ -309,7 +309,7 @@ export default class Application extends solfege.kernel.EventEmitter
                         cwd: basePath
                     });
                     if (globPaths && globPaths.length) {
-                        globPaths.forEach(function(globPath) {
+                        globPaths.forEach(globPath => {
                             relativeFilePaths.push(globPath);
                             absoluteFilePaths.push(modulePath.resolve(basePath, globPath));
                         });

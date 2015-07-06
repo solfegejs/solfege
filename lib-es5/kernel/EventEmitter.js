@@ -1,21 +1,22 @@
-'use strict';
+"use strict";
 
-var _createClass = require('babel-runtime/helpers/create-class')['default'];
-
-var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
-
-var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
-
-var _Map = require('babel-runtime/core-js/map')['default'];
-
-var _regeneratorRuntime = require('babel-runtime/regenerator')['default'];
-
-_Object$defineProperty(exports, '__esModule', {
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var solfege = require('../solfege');
-var assert = require('assert');
+var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _solfege = require("../solfege");
+
+var _solfege2 = _interopRequireDefault(_solfege);
+
+var _assert = require("assert");
+
+var _assert2 = _interopRequireDefault(_assert);
 
 /**
  * An event emitter written with generators
@@ -32,11 +33,11 @@ var EventEmitter = (function () {
         _classCallCheck(this, EventEmitter);
 
         // Initialize the map of listeners
-        this.listeners = new _Map();
+        this.listeners = new Map();
     }
 
     _createClass(EventEmitter, [{
-        key: 'emit',
+        key: "emit",
 
         /**
          * Emit an event
@@ -46,54 +47,29 @@ var EventEmitter = (function () {
          * @param   {String} name - The event name
          * @param   {...*} parameter - A parameter
          */
-        value: _regeneratorRuntime.mark(function emit(name) {
-            var eventListeners,
-                handlerArguments,
-                argumentCount,
-                argumentIndex,
-                listenerCount,
-                listenerIndex,
-                handler,
-                args$2$0 = arguments;
-            return _regeneratorRuntime.wrap(function emit$(context$2$0) {
-                while (1) switch (context$2$0.prev = context$2$0.next) {
-                    case 0:
-                        // Check the parameters
-                        assert.strictEqual(typeof name, 'string', 'The name must be a string');
+        value: function* emit(name) {
+            // Check the parameters
+            _assert2["default"].strictEqual(typeof name, "string", "The name must be a string");
 
-                        eventListeners = this.getEventListeners(name);
-                        handlerArguments = [];
-                        argumentCount = args$2$0.length;
+            // Get the listeners
+            var eventListeners = this.getEventListeners(name);
 
-                        for (argumentIndex = 1; argumentIndex < argumentCount; ++argumentIndex) {
-                            handlerArguments.push(args$2$0[argumentIndex]);
-                        }
+            // Build the handler arguments
+            var handlerArguments = [];
+            var argumentCount = arguments.length;
+            for (var argumentIndex = 1; argumentIndex < argumentCount; ++argumentIndex) {
+                handlerArguments.push(arguments[argumentIndex]);
+            }
 
-                        listenerCount = eventListeners.length;
-                        listenerIndex = 0;
-
-                    case 7:
-                        if (!(listenerIndex < listenerCount)) {
-                            context$2$0.next = 13;
-                            break;
-                        }
-
-                        handler = eventListeners[listenerIndex];
-                        return context$2$0.delegateYield(handler.apply(this, handlerArguments), 't52', 10);
-
-                    case 10:
-                        ++listenerIndex;
-                        context$2$0.next = 7;
-                        break;
-
-                    case 13:
-                    case 'end':
-                        return context$2$0.stop();
-                }
-            }, emit, this);
-        })
+            // Execute each handler
+            var listenerCount = eventListeners.length;
+            for (var listenerIndex = 0; listenerIndex < listenerCount; ++listenerIndex) {
+                var handler = eventListeners[listenerIndex];
+                yield* handler.apply(this, handlerArguments);
+            }
+        }
     }, {
-        key: 'on',
+        key: "on",
 
         /**
          * Add a listener
@@ -105,17 +81,17 @@ var EventEmitter = (function () {
          */
         value: function on(name, handler) {
             // Check the name
-            assert.strictEqual(typeof name, 'string', 'The name must be a string');
+            _assert2["default"].strictEqual(typeof name, "string", "The name must be a string");
 
             // Check the handler
-            assert.strictEqual(typeof handler, 'function', 'The event handler must be a generator function');
-            assert.strictEqual(handler.constructor.name, 'GeneratorFunction', 'The event handler must be a generator function');
+            _assert2["default"].strictEqual(typeof handler, "function", "The event handler must be a generator function");
+            _assert2["default"].strictEqual(handler.constructor.name, "GeneratorFunction", "The event handler must be a generator function");
 
             var eventListeners = this.getEventListeners(name);
             eventListeners.push(handler);
         }
     }, {
-        key: 'getEventListeners',
+        key: "getEventListeners",
 
         /**
          * Get the listeners of an event name
@@ -127,7 +103,7 @@ var EventEmitter = (function () {
          */
         value: function getEventListeners(name) {
             // Check the name
-            assert.strictEqual(typeof name, 'string', 'The name must be a string');
+            _assert2["default"].strictEqual(typeof name, "string", "The name must be a string");
 
             var eventListeners;
 
@@ -145,9 +121,5 @@ var EventEmitter = (function () {
     return EventEmitter;
 })();
 
-exports['default'] = EventEmitter;
-module.exports = exports['default'];
-// Get the listeners
-
-// Build the handler arguments
-// Execute each handler
+exports["default"] = EventEmitter;
+module.exports = exports["default"];
