@@ -1,10 +1,19 @@
+/**
+ * @module solfege.util.Function
+ */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
+exports.bindGenerator = bindGenerator;
+exports.createThunk = createThunk;
 
-var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
 
 /**
  * Bind a generator function
@@ -13,25 +22,6 @@ var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj
  * @param   {Function}  target  The generator function
  * @return  {Function}          The binded function
  */
-exports.bindGenerator = bindGenerator;
-
-/**
- * Create a thunk of a function
- *
- * <p>The last argument of the function must be the callback.</p>
- * <p>The first argument of the callback must be the error object.</p>
- *
- * @param   {Function}  func    The function
- * @return  {Function}          The thunk
- */
-exports.createThunk = createThunk;
-/**
- * @module solfege.util.Function
- */
-
-var _assert = require('assert');
-
-var _assert2 = _interopRequireDefault(_assert);
 
 function bindGenerator(scope, target) {
     // Check parameters
@@ -43,6 +33,17 @@ function bindGenerator(scope, target) {
 }
 
 ;
+
+/**
+ * Create a thunk of a function
+ *
+ * <p>The last argument of the function must be the callback.</p>
+ * <p>The first argument of the callback must be the error object.</p>
+ *
+ * @param   {Function}  func    The function
+ * @return  {Function}          The thunk
+ */
+
 function createThunk(func) {
     // Check parameter
     _assert2['default'].strictEqual(typeof func, 'function', 'The func must be a function');

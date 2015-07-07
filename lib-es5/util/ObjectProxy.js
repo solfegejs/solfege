@@ -1,24 +1,17 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', {
-    value: true
-});
-
-var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
-
-/**
- * Create a package
- *
- * @param   {string}    directoryPath   The directory path of the package
- * @param   {Object}    [getters]       The additional getters
- * @param   {Object}    [setters]       The additional setters
- */
-exports.createPackage = createPackage;
 /**
  * Utils for virtualized objects (proxies)
  *
  * @module solfege.util.ObjectProxy
  */
+
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+exports.createPackage = createPackage;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _fs = require('fs');
 
@@ -27,6 +20,14 @@ var _fs2 = _interopRequireDefault(_fs);
 var _assert = require('assert');
 
 var _assert2 = _interopRequireDefault(_assert);
+
+/**
+ * Create a package
+ *
+ * @param   {string}    directoryPath   The directory path of the package
+ * @param   {Object}    [getters]       The additional getters
+ * @param   {Object}    [setters]       The additional setters
+ */
 
 function createPackage(directoryPath, getters, setters) {
     // Check parameters

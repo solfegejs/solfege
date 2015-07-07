@@ -1,10 +1,19 @@
+/**
+ * @module solfege.util.Object
+ */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
+exports.define = define;
+exports.merge = merge;
 
-var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
 
 /**
  * Define a constant
@@ -13,24 +22,6 @@ var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj
  * @param   {String}    name    The constant name
  * @param   {*}         value   The constant value
  */
-exports.define = define;
-
-/**
- * Merge objects
- *
- * @example
- * var merged = solfege.util.Object.merge(object1, object2, object3);
- *
- * @param   {...Object} object  An object
- */
-exports.merge = merge;
-/**
- * @module solfege.util.Object
- */
-
-var _assert = require('assert');
-
-var _assert2 = _interopRequireDefault(_assert);
 
 function define(target, name, value) {
     // Check parameters
@@ -42,6 +33,15 @@ function define(target, name, value) {
         }
     });
 }
+
+/**
+ * Merge objects
+ *
+ * @example
+ * var merged = solfege.util.Object.merge(object1, object2, object3);
+ *
+ * @param   {...Object} object  An object
+ */
 
 function merge() {
     for (var _len = arguments.length, items = Array(_len), _key = 0; _key < _len; _key++) {

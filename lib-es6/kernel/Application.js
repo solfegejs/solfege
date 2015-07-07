@@ -457,7 +457,7 @@ export default class Application extends solfege.kernel.EventEmitter
 
             // Start the application
             yield self.emit(Application.EVENT_START, self);
-        })();
+        });
     }
 
     /**
@@ -489,7 +489,7 @@ export default class Application extends solfege.kernel.EventEmitter
         co(function *()
         {
             yield self.emit(Application.EVENT_END, self);
-        })();
+        });
     }
 
     /**

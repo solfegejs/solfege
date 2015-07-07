@@ -1,5 +1,5 @@
 var solfege = require('../../../lib-es5/solfege');
-var co = require('co');
+var mochaSetup = require('../../mochaSetup');
 var expect = require('chai').expect;
 var should = require('chai').should();
 
@@ -14,23 +14,23 @@ describe('Application', function()
     /**
      * Initialize the test suite
      */
-    before(co(function*()
+    before(function*()
     {
         // Initialize the application
         application = new Application(__dirname);
 
         // Start the application
         application.start();
-    }));
+    });
 
 
     /**
      * Test the addBundle() function
      */
-    describe('#addBundle()', co(function*()
+    describe('#addBundle()', function()
     {
         // Add a basic bundle
-        it('should add a bundle', co(function*()
+        it('should add a bundle', function*()
         {
             application.addBundle('a', true);
             var result = application.getBundle('a');
@@ -40,56 +40,56 @@ describe('Application', function()
             application.addBundle('hello', bundle);
             result = application.getBundle('hello');
             expect(result).to.equal(bundle);
-        }));
+        });
 
         // Invalid name: it must start by a letter
-        it('should reject the bundle if the name does not start by a letter', co(function*()
+        it('should reject the bundle if the name does not start by a letter', function*()
         {
             should.Throw(function() {
                 application.addBundle('1', true);
             });
-        }));
+        });
 
         // Invalid name: it must contain only letters, digits and dashes
-        it('should reject the bundle if the name contains characters other than letters, digits or dashes', co(function*()
+        it('should reject the bundle if the name contains characters other than letters, digits or dashes', function*()
         {
             should.Throw(function() {
                 application.addBundle('a-b!', true);
             });
-        }));
+        });
 
         // Invalid name: it cannot contain 2 consecutive dashes
-        it('should reject the bundle if the name contains 2 consecutive dashes', co(function*()
+        it('should reject the bundle if the name contains 2 consecutive dashes', function*()
         {
             should.Throw(function() {
                 application.addBundle('a--b', true);
             });
-        }));
+        });
 
         // Invalid name: it cannot end by a dash
-        it('should reject the bundle if the name ends by a dash', co(function*()
+        it('should reject the bundle if the name ends by a dash', function*()
         {
             should.Throw(function() {
                 application.addBundle('a-b-', true);
             });
-        }));
+        });
 
         // No arguments
-        it('should throw an error if the method is called without arguments', co(function*()
+        it('should throw an error if the method is called without arguments', function*()
         {
             should.Throw(function() {
                 application.addBundle();
             });
-        }));
-    }));
+        });
+    });
 
     /**
      * Test the parseSolfegeUri() function
      */
-    describe('#parseSolfegeUri()', co(function*()
+    describe('#parseSolfegeUri()', function()
     {
         // Find the bundle id
-        it('should find the bundle id', co(function*()
+        it('should find the bundle id', function*()
         {
             var result = application.parseSolfegeUri('@a');
             expect(result.bundleId).to.equal('a');
@@ -102,20 +102,20 @@ describe('Application', function()
 
             result = application.parseSolfegeUri('@tic.tac.toe:a/b/c.txt');
             expect(result.bundleId).to.equal('tic');
-        }));
+        });
 
         // Find the bundle
-        it('should find the bundle instance', co(function*()
+        it('should find the bundle instance', function*()
         {
             var bundle = {};
             application.addBundle('a', bundle);
 
             var result = application.parseSolfegeUri('@a');
             expect(result.bundle).to.equal(bundle);
-        }));
+        });
 
         // Find the object path
-        it('should find the object path', co(function*()
+        it('should find the object path', function*()
         {
             var result = application.parseSolfegeUri('@a.b.c.d');
             expect(result.objectPath).to.equal('b.c.d');
@@ -125,10 +125,10 @@ describe('Application', function()
 
             result = application.parseSolfegeUri('@hello');
             expect(result.objectPath).to.be.undefined;
-        }));
+        });
 
         // Find the object
-        it('should find the object instance', co(function*()
+        it('should find the object instance', function*()
         {
             var bundle = {
                 hello: {
@@ -142,17 +142,17 @@ describe('Application', function()
 
             result = application.parseSolfegeUri('@moo');
             expect(result.object).to.equal(bundle);
-        }));
+        });
 
         // Find the file pattern
-        it('should find the file pattern', co(function*()
+        it('should find the file pattern', function*()
         {
             var result = application.parseSolfegeUri('@hello.world:my/files-*.xml');
             expect(result.filePattern).to.equal('my/files-*.xml');
-        }));
+        });
 
         // Object that does not have __dirname property
-        it('should fail to find a file in an object without __dirname property', co(function*()
+        it('should fail to find a file in an object without __dirname property', function*()
         {
             var bundle = {
                 arf: {}
@@ -162,10 +162,10 @@ describe('Application', function()
             should.Throw(function() {
                 var result = application.parseSolfegeUri('@foo.arf:a.txt');
             });
-        }));
+        });
 
         // Find the file path
-        it('should find the file', co(function*()
+        it('should find the file', function*()
         {
             var bundle = {
                 __dirname: __dirname + '/bundleTest'
@@ -175,10 +175,10 @@ describe('Application', function()
             var result = application.parseSolfegeUri('@foo:a.txt');
             expect(result.filePath).to.equal(__dirname + '/bundleTest/a.txt');
             expect(result.relativeFilePath).to.equal('a.txt');
-        }));
+        });
 
         // Find the file paths
-        it('should find the files', co(function*()
+        it('should find the files', function*()
         {
             var bundle = {
                 __dirname: __dirname + '/bundleTest'
@@ -196,62 +196,62 @@ describe('Application', function()
                 'b.txt',
                 'c.txt'
             ]);
-        }));
+        });
 
-    }));
+    });
 
     /**
      * Test the isSolfegeUri() function
      */
-    describe('#isSolfegeUri()', co(function*()
+    describe('#isSolfegeUri()', function()
     {
         // Bundle name with only lower case letters
-        it('should detect bundle name with only lower case letters', co(function*()
+        it('should detect bundle name with only lower case letters', function*()
         {
             var result = application.isSolfegeUri('@hello');
             expect(result).to.be.true;
-        }));
+        });
 
         // Bundle name with only upper case letters
-        it('should detect bundle name with only upper case letters', co(function*()
+        it('should detect bundle name with only upper case letters', function*()
         {
             var result = application.isSolfegeUri('@HELLO');
             expect(result).to.be.true;
-        }));
+        });
 
         // Bundle name with lower and upper case letters
-        it('should detect bundle name with lower and upper case letters', co(function*()
+        it('should detect bundle name with lower and upper case letters', function*()
         {
             var result = application.isSolfegeUri('@helloWorld');
             expect(result).to.be.true;
-        }));
+        });
 
         // Bundle name should start by a letter
-        it('should detect only bundle name starts by a letter', co(function*()
+        it('should detect only bundle name starts by a letter', function*()
         {
             application.isSolfegeUri('@h').should.be.true;
             application.isSolfegeUri('@W').should.be.true;
             application.isSolfegeUri('@3').should.be.false;
-        }));
+        });
 
         // String that not start by a @
-        it('should reject string that not start by a @', co(function*()
+        it('should reject string that not start by a @', function*()
         {
             var result = application.isSolfegeUri('hello');
             expect(result).to.be.false;
-        }));
-    }));
+        });
+    });
 
 
 
     /**
      * Test the resolveSolfegeUri() function
      */
-    describe('#resolveSolfegeUri()', co(function*()
+    describe('#resolveSolfegeUri()', function()
     {
 
         // Find the file path
-        it('should return file path', co(function*()
+        it('should return file path', function*()
         {
             var bundle = {
                 __dirname: __dirname + '/bundleTest'
@@ -260,10 +260,10 @@ describe('Application', function()
 
             var result = application.resolveSolfegeUri('@foo:a.txt');
             expect(result).to.equal(__dirname + '/bundleTest/a.txt');
-        }));
+        });
 
         // Find the file paths
-        it('should return file paths', co(function*()
+        it('should return file paths', function*()
         {
             var bundle = {
                 __dirname: __dirname + '/bundleTest'
@@ -276,10 +276,10 @@ describe('Application', function()
                 __dirname + '/bundleTest/b.txt',
                 __dirname + '/bundleTest/c.txt'
             ]);
-        }));
+        });
 
         // Find an object instance
-        it('should return object instance', co(function*()
+        it('should return object instance', function*()
         {
             var bar = {
                 a: 1,
@@ -296,18 +296,18 @@ describe('Application', function()
 
             result = application.resolveSolfegeUri('@foo.c');
             expect(result).to.equal(bar.c);
-        }));
-    }));
+        });
+    });
 
 
     /**
      * Test the getBundleFromSolfegeUri() function
      */
-    describe('#getBundleFromSolfegeUri()', co(function*()
+    describe('#getBundleFromSolfegeUri()', function()
     {
 
         // The target is a file
-        it('should return the bundle instance if the URI targets a file', co(function*()
+        it('should return the bundle instance if the URI targets a file', function*()
         {
             var bundle = {
                 __dirname: __dirname + '/bundleTest'
@@ -316,10 +316,10 @@ describe('Application', function()
 
             var result = application.getBundleFromSolfegeUri('@foo:a.txt');
             expect(result).to.equal(bundle);
-        }));
+        });
 
         // The target are files
-        it('should return the bundle instance if the URI targets files', co(function*()
+        it('should return the bundle instance if the URI targets files', function*()
         {
             var bundle = {
                 __dirname: __dirname + '/bundleTest'
@@ -328,10 +328,10 @@ describe('Application', function()
 
             var result = application.getBundleFromSolfegeUri('@foo:*.txt');
             expect(result).to.equal(bundle);
-        }));
+        });
 
         // The target is an object
-        it('should return the bundle instance if the URI targets an object', co(function*()
+        it('should return the bundle instance if the URI targets an object', function*()
         {
             var bar = {
                 a: 1,
@@ -345,8 +345,8 @@ describe('Application', function()
 
             result = application.getBundleFromSolfegeUri('@foo.c');
             expect(result).to.equal(bar);
-        }));
-    }));
+        });
+    });
 
 
 });

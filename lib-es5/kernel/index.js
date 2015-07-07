@@ -1,13 +1,13 @@
+/**
+ * @namespace solfege.kernel
+ */
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @namespace solfege.kernel
- */
 
-var _createPackage = require("../util/ObjectProxy");
+var _utilObjectProxy = require("../util/ObjectProxy");
 
-exports["default"] = _createPackage.createPackage(__dirname);
+exports["default"] = (0, _utilObjectProxy.createPackage)(__dirname);
 module.exports = exports["default"];

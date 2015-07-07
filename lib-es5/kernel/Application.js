@@ -4,17 +4,15 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { desc = parent = getter = undefined; _again = false; var object = _x,
-    property = _x2,
-    receiver = _x3; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-var _inherits = function (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var _assert = require("assert");
 
@@ -75,88 +73,6 @@ var Application = (function (_solfege$kernel$EventEmitter) {
     _inherits(Application, _solfege$kernel$EventEmitter);
 
     _createClass(Application, [{
-        key: "nodePath",
-
-        /**
-         * The node path
-         *
-         * @public
-         * @member  {String} solfege.kernel.Application.nodePath
-         */
-        get: function () {
-            return process.execPath;
-        }
-    }, {
-        key: "nodeArguments",
-
-        /**
-         * The node arguments
-         *
-         * @public
-         * @member  {String[]} solfege.kernel.Application.nodeArguments
-         */
-        get: function () {
-            if (this._nodeArguments) {
-                return this._nodeArguments;
-            }
-            this._nodeArguments = [].concat(process.execArgv);
-            return this._nodeArguments;
-        }
-    }, {
-        key: "commandLine",
-
-        /**
-         * The command line
-         *
-         * @public
-         * @member  {String[]} solfege.kernel.Application.prototype.commandLine
-         */
-        get: function () {
-            if (this._commandLine) {
-                return this._commandLine;
-            }
-            var commandLine = [this.nodePath].concat(this.nodeArguments);
-            commandLine.push(this.scriptPath);
-            this._commandLine = commandLine.concat(this.scriptArguments);
-            return this._commandLine;
-        }
-    }, {
-        key: "scriptPath",
-
-        /**
-         * The script path that started the process
-         *
-         * @public
-         * @member  {String} solfege.kernel.Application.scriptPath
-         */
-        get: function () {
-            if (this._scriptPath) {
-                return this._scriptPath;
-            }
-            var scriptArguments = [].concat(process.argv);
-            scriptArguments.shift();
-            this._scriptPath = scriptArguments.shift();
-            return this._scriptPath;
-        }
-    }, {
-        key: "scriptArguments",
-
-        /**
-         * The script arguments
-         *
-         * @public
-         * @member  {Array} solfege.kernel.Application.scriptArguments
-         */
-        get: function () {
-            if (this._scriptArguments) {
-                return this._scriptArguments;
-            }
-            this._scriptArguments = [].concat(process.argv);
-            this._scriptArguments.shift();
-            this._scriptArguments.shift();
-            return this._scriptArguments;
-        }
-    }, {
         key: "addBundle",
 
         /**
@@ -453,7 +369,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
             var self = this;
 
             // Start the generator based flow
-            _co2["default"](function* () {
+            (0, _co2["default"])(function* () {
                 // Check if the root directory exists
                 var fs = _solfege2["default"].util.Node.fs;
                 var rootPathExists = yield fs.exists(self.rootPath);
@@ -497,7 +413,7 @@ var Application = (function (_solfege$kernel$EventEmitter) {
 
                 // Start the application
                 yield self.emit(Application.EVENT_START, self);
-            })();
+            });
         }
     }, {
         key: "onErrorUnknown",
@@ -528,9 +444,9 @@ var Application = (function (_solfege$kernel$EventEmitter) {
         value: function onExit() {
             var self = this;
 
-            _co2["default"](function* () {
+            (0, _co2["default"])(function* () {
                 yield self.emit(Application.EVENT_END, self);
-            })();
+            });
         }
     }, {
         key: "onKill",
@@ -543,6 +459,88 @@ var Application = (function (_solfege$kernel$EventEmitter) {
          */
         value: function onKill() {
             process.exit();
+        }
+    }, {
+        key: "nodePath",
+
+        /**
+         * The node path
+         *
+         * @public
+         * @member  {String} solfege.kernel.Application.nodePath
+         */
+        get: function get() {
+            return process.execPath;
+        }
+    }, {
+        key: "nodeArguments",
+
+        /**
+         * The node arguments
+         *
+         * @public
+         * @member  {String[]} solfege.kernel.Application.nodeArguments
+         */
+        get: function get() {
+            if (this._nodeArguments) {
+                return this._nodeArguments;
+            }
+            this._nodeArguments = [].concat(process.execArgv);
+            return this._nodeArguments;
+        }
+    }, {
+        key: "commandLine",
+
+        /**
+         * The command line
+         *
+         * @public
+         * @member  {String[]} solfege.kernel.Application.prototype.commandLine
+         */
+        get: function get() {
+            if (this._commandLine) {
+                return this._commandLine;
+            }
+            var commandLine = [this.nodePath].concat(this.nodeArguments);
+            commandLine.push(this.scriptPath);
+            this._commandLine = commandLine.concat(this.scriptArguments);
+            return this._commandLine;
+        }
+    }, {
+        key: "scriptPath",
+
+        /**
+         * The script path that started the process
+         *
+         * @public
+         * @member  {String} solfege.kernel.Application.scriptPath
+         */
+        get: function get() {
+            if (this._scriptPath) {
+                return this._scriptPath;
+            }
+            var scriptArguments = [].concat(process.argv);
+            scriptArguments.shift();
+            this._scriptPath = scriptArguments.shift();
+            return this._scriptPath;
+        }
+    }, {
+        key: "scriptArguments",
+
+        /**
+         * The script arguments
+         *
+         * @public
+         * @member  {Array} solfege.kernel.Application.scriptArguments
+         */
+        get: function get() {
+            if (this._scriptArguments) {
+                return this._scriptArguments;
+            }
+            this._scriptArguments = [].concat(process.argv);
+            this._scriptArguments.shift();
+            this._scriptArguments.shift();
+            return this._scriptArguments;
         }
     }]);
 

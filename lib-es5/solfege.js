@@ -1,30 +1,30 @@
+/**
+ * @namespace solfege
+ */
+
+// Check the node version
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 // Check the Generator feature
 
-var _generatorDetector = require("node-generator-detector");
+var _nodeGeneratorDetector = require("node-generator-detector");
 
-var _generatorDetector2 = _interopRequireDefault(_generatorDetector);
+var _nodeGeneratorDetector2 = _interopRequireDefault(_nodeGeneratorDetector);
 
 // Create a package
 
-var _description = require("../package.json");
+var _packageJson = require("../package.json");
 
-var _description2 = _interopRequireDefault(_description);
+var _packageJson2 = _interopRequireDefault(_packageJson);
 
-var _createPackage = require("./util/ObjectProxy");
+var _utilObjectProxy = require("./util/ObjectProxy");
 
-/**
- * @namespace solfege
- */
-
-// Check the node version
 var currentVersion = Number(process.version.match(/^v(\d+\.\d+)/)[1]);
 if (currentVersion < 0.12) {
     console.error("SolfegeJS requires Node version 0.12+");
@@ -36,7 +36,7 @@ if (typeof Proxy === "undefined") {
     console.error("SolfegeJS requires ES6 Proxy");
     process.exit(1);
 }
-if (!_generatorDetector2["default"]()) {
+if (!(0, _nodeGeneratorDetector2["default"])()) {
     console.error("SolfegeJS requires ES6 Generator");
     process.exit(1);
 }
@@ -47,7 +47,7 @@ var getters = {
      * @return  {string}    The string representation
      */
     toString: function toString() {
-        return "SolfegeJS " + _description2["default"].version;
+        return "SolfegeJS " + _packageJson2["default"].version;
     },
 
     /**
@@ -55,7 +55,7 @@ var getters = {
      *
      * @type {string}
      */
-    version: _description2["default"].version
+    version: _packageJson2["default"].version
 };
-exports["default"] = _createPackage.createPackage(__dirname, getters);
+exports["default"] = (0, _utilObjectProxy.createPackage)(__dirname, getters);
 module.exports = exports["default"];
