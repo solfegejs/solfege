@@ -2,12 +2,12 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "1.4.2",
+    "version"       : "1.4.3",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
     "license"       : "MIT",
-    "main"          : "lib-es5/solfege.js",
+    "main"          : "lib/solfege.js",
     "engines"       :
     {
         "node": ">= 0.12"
@@ -16,7 +16,6 @@
     {
         "co"                      : "4.5.*",
         "glob"                    : "5.0.*",
-        "babel-runtime"           : "5.2.*",
         "node-generator-detector" : "0.2.1"
     },
     "devDependencies":
@@ -28,9 +27,11 @@
     },
     "scripts"       :
     {
-        "test"          : "mocha --harmony --harmony-proxies --recursive --reporter spec --bail",
-        "documentation" : "jsdoc --recurse ./lib-es6 --destination ./documentation",
-        "es6-watch"     : "babel --blacklist=regenerator --watch --out-dir lib-es5 lib-es6",
-        "es6-compile"   : "babel --blacklist=regenerator --out-dir lib-es5 lib-es6"
+        "test"             : "mocha --harmony --harmony-proxies --recursive --reporter spec --bail",
+        "documentation"    : "jsdoc --recurse ./lib-es6 --destination ./documentation",
+        "es6-watch"        : "babel --blacklist=regenerator --watch --out-dir lib lib-es6",
+        "es6-compile"      : "babel --blacklist=regenerator --out-dir lib lib-es6",
+        "example-compile"  : "babel --blacklist=regenerator --out-dir example/bundle example/bundle-es6",
+        "example"          : "node --harmony --harmony-proxies example/bundle/console.js"
     }
 }

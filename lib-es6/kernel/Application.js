@@ -415,8 +415,8 @@ export default class Application extends solfege.kernel.EventEmitter
         co(function *()
         {
             // Check if the root directory exists
-            var fs = solfege.util.Node.fs;
-            var rootPathExists = yield fs.exists(self.rootPath);
+            let fs = solfege.util.Node.fs;
+            let rootPathExists = yield fs.exists(self.rootPath);
             if (!rootPathExists) {
                 throw new Error('The root path of the application does not exist');
             }

@@ -1,4 +1,4 @@
-import solfege from "../../lib-es5/solfege";
+import solfege from "../../lib/solfege";
 
 export default class MyBundle
 {
@@ -9,13 +9,15 @@ export default class MyBundle
 
     *setApplication(application)
     {
-        var bindGenerator = solfege.util.Function.bindGenerator;
-        application.on(solfege.kernel.Application.EVENT_START, bindGenerator(this, this.onApplicationStart));
+        let bindGenerator = solfege.util.Function.bindGenerator;
+        this.application = application;
+        this.application.on(solfege.kernel.Application.EVENT_START, bindGenerator(this, this.onApplicationStart));
     }
 
     *onApplicationStart()
     {
          console.log(this.woot, "SolfegeJS", solfege.version);
+         console.log("configuration.foo =", this.application.configuration.parameters.foo);
     }
 }
 
