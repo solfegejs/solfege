@@ -1,4 +1,4 @@
-var solfege = require('../../../lib-es5/solfege');
+var solfege = require('../../../lib/solfege');
 var mochaSetup = require('../../mochaSetup');
 var expect = require('chai').expect;
 var should = require('chai').should();
