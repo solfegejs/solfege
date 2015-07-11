@@ -1,4 +1,5 @@
 import solfege from "../../lib/solfege";
+let Application = solfege.kernel.Application;
 
 export default class MyBundle
 {
@@ -7,7 +8,8 @@ export default class MyBundle
         this.woot = "W00t";
     }
 
-    *setApplication(application)
+    // Implement this method to access the solfege application
+    *setApplication(application:Application)
     {
         let bindGenerator = solfege.util.Function.bindGenerator;
         this.application = application;

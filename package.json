@@ -2,7 +2,7 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "1.4.3",
+    "version"       : "1.4.4",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
@@ -21,17 +21,21 @@
     "devDependencies":
     {
         "babel"         : "5.6.*",
+        "babel-plugin-typecheck" : "*",
+        "babel-plugin-closure-elimination": "*",
         "chai"          : "2.3.*",
         "mocha"         : "2.2.*",
-        "jsdoc"         : "3.3.*"
+        "jsdoc"         : "3.3.*",
+        "istanbul-harmony": "0.3.*"
     },
     "scripts"       :
     {
         "test"             : "mocha --harmony --harmony-proxies --recursive --reporter spec --bail",
+        "coverage"         : "node --harmony --harmony-proxies ./node_modules/istanbul-harmony/lib/cli.js cover -- ./node_modules/mocha/bin/_mocha --harmony --harmony-proxies --recursive",
         "documentation"    : "jsdoc --recurse ./lib-es6 --destination ./documentation",
-        "es6-watch"        : "babel --blacklist=regenerator --watch --out-dir lib lib-es6",
-        "es6-compile"      : "babel --blacklist=regenerator --out-dir lib lib-es6",
-        "example-compile"  : "babel --blacklist=regenerator --out-dir example/bundle example/bundle-es6",
+        "es6-watch"        : "babel --blacklist=regenerator --plugins=typecheck,closure-elimination --watch --out-dir lib lib-es6",
+        "es6-compile"      : "babel --blacklist=regenerator --plugins=typecheck,closure-elimination --out-dir lib lib-es6",
+        "example-compile"  : "babel --blacklist=regenerator --plugins=typecheck,closure-elimination --out-dir example/bundle example/bundle-es6",
         "example"          : "node --harmony --harmony-proxies example/bundle/console.js"
     }
 }

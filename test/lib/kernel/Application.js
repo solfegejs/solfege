@@ -23,6 +23,42 @@ describe('Application', function()
         application.start();
     });
 
+    /**
+     * Test the getBundle() method
+     */
+    describe('#getBundle()', function()
+    {
+        // Invalid name: it must start by a letter
+        it('should throw an error if the argument is not a string', function()
+        {
+            should.Throw(function() {
+                application.getBundle(1);
+            });
+        });
+
+    });
+
+    /**
+     * Test the getBundles() method
+     */
+    describe('#getBundles()', function()
+    {
+        // The result is a Map
+        it('should return a Map', function()
+        {
+            var bundles = application.getBundles();
+            expect(bundles).to.be.an.instanceof(Map);
+        });
+
+        it('should return registered bundles', function()
+        {
+            application.addBundle('a', 'a-bundle');
+            application.addBundle('b', 'b-bundle');
+            var bundles = application.getBundles();
+            expect(bundles.get('a')).to.equal('a-bundle');
+            expect(bundles.get('b')).to.equal('b-bundle');
+        });
+    });
 
     /**
      * Test the addBundle() function
@@ -88,6 +124,14 @@ describe('Application', function()
      */
     describe('#parseSolfegeUri()', function()
     {
+        // The argument must be a string
+        it('should throw an error if the argument is not a string', function*()
+        {
+            should.Throw(function() {
+                application.parseSolfegeUri(1);
+            });
+        });
+
         // Find the bundle id
         it('should find the bundle id', function*()
         {
@@ -114,6 +158,14 @@ describe('Application', function()
             expect(result.bundle).to.equal(bundle);
         });
 
+        // Find the bundle caller
+        it('should find the bundle caller instance', function*()
+        {
+            var bundle = {};
+            var result = application.parseSolfegeUri('@this', bundle);
+            expect(result.bundle).to.equal(bundle);
+        });
+
         // Find the object path
         it('should find the object path', function*()
         {
@@ -133,12 +185,20 @@ describe('Application', function()
             var bundle = {
                 hello: {
                     world: 'huhu'
+                },
+                a: {
+                    b: {
+                        c: 'yeah'
+                    }
                 }
             };
             application.addBundle('moo', bundle);
 
             var result = application.parseSolfegeUri('@moo.hello.world');
             expect(result.object).to.equal('huhu');
+
+            result = application.parseSolfegeUri('@moo...a.b.c');
+            expect(result.object).to.equal('yeah');
 
             result = application.parseSolfegeUri('@moo');
             expect(result.object).to.equal(bundle);
@@ -154,6 +214,17 @@ describe('Application', function()
         // Object that does not have __dirname property
         it('should fail to find a file in an object without __dirname property', function*()
         {
+            // Without object path
+            var bundle = {
+            };
+            application.addBundle('foo', bundle);
+
+            should.Throw(function() {
+                var result = application.parseSolfegeUri('@foo:a.txt');
+            });
+
+
+            // With object path
             var bundle = {
                 arf: {}
             };
@@ -239,6 +310,14 @@ describe('Application', function()
         {
             var result = application.isSolfegeUri('hello');
             expect(result).to.be.false;
+        });
+
+        // Not a string
+        it('should throw an error if the argument is not a string', function*()
+        {
+            should.Throw(function() {
+                application.isSolfegeUri(1);
+            });
         });
     });
 
@@ -348,5 +427,30 @@ describe('Application', function()
         });
     });
 
+    /**
+     * Test the overrideConfiguration() method
+     */
+    describe('#overrideConfiguration()', function()
+    {
+        // Normal usage
+        it('should override the configuration', function*()
+        {
+            // First pass
+            application.overrideConfiguration({
+                foo: 'bar'
+            });
+            expect(application.configuration).to.deep.equal({
+                foo: 'bar'
+            });
 
+            // Second pass
+            application.overrideConfiguration({
+                tic: 'tac'
+            });
+            expect(application.configuration).to.deep.equal({
+                tic: 'tac'
+            });
+        });
+
+    });
 });

@@ -14,6 +14,8 @@ var _libSolfege = require("../../lib/solfege");
 
 var _libSolfege2 = _interopRequireDefault(_libSolfege);
 
+var Application = _libSolfege2["default"].kernel.Application;
+
 var MyBundle = (function () {
     function MyBundle() {
         _classCallCheck(this, MyBundle);
@@ -23,7 +25,11 @@ var MyBundle = (function () {
 
     _createClass(MyBundle, [{
         key: "setApplication",
+
+        // Implement this method to access the solfege application
         value: function* setApplication(application) {
+            if (!(application instanceof Application)) throw new TypeError("Value of argument 'application' violates contract.");
+
             var bindGenerator = _libSolfege2["default"].util.Function.bindGenerator;
             this.application = application;
             this.application.on(_libSolfege2["default"].kernel.Application.EVENT_START, bindGenerator(this, this.onApplicationStart));

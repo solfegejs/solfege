@@ -1,6 +1,8 @@
 import assert from "assert";
 import solfege from "../solfege";
 import co from "co";
+import glob from "glob";
+import modulePath from "path";
 
 /**
  * The main class of the SolfegeJS application
@@ -10,11 +12,77 @@ import co from "co";
 export default class Application extends solfege.kernel.EventEmitter
 {
     /**
+     * Event name of the end of the bundles initialization
+     *
+     * @constant    {String} solfege.kernel.Application.EVENT_BUNDLES_INITALIZED
+     * @default     'bundles_initialized'
+     */
+    static get EVENT_BUNDLES_INITIALIZED()
+    {
+        return "bundles_initialized";
+    }
+
+    /**
+     * Event name of the application start
+     *
+     * @constant    {String} solfege.kernel.Application.EVENT_START
+     * @default     'start'
+     */
+    static get EVENT_START()
+    {
+        return "start";
+    }
+
+    /**
+     * Event name of the application end
+     *
+     * @constant    {String} solfege.kernel.Application.EVENT_END
+     * @default     'end'
+     */
+    static get EVENT_END()
+    {
+        return "end";
+    }
+
+    /**
+     * Regular expression of a valid bundle name
+     *
+     * @constant    {RegExp} solfege.kernel.Application.REGEXP_BUNDLE_NAME
+     * @default     /^[a-zA-Z]+(-[a-zA-Z0-9]+)*$/
+     */
+    static get REGEXP_BUNDLE_NAME()
+    {
+        return /^[a-zA-Z]+(-[a-zA-Z0-9]+)*$/
+    }
+
+    /**
+     * Regular expression of a valid Solfege URI
+     *
+     * @constant    {RegExp} solfege.kernel.Application.REGEXP_SOLFEGE_URI
+     * @default     /^@[a-zA-Z]+(-[a-zA-Z0-9]+)*(\.:)?.*$/
+     */
+    static get REGEXP_SOLFEGE_URI()
+    {
+        return /^@[a-zA-Z]+(-[a-zA-Z0-9]+)*(\.:)?.*$/;
+    }
+
+    /**
+     * Regular expression for splitting into parts a Solfege URI
+     *
+     * @constant    {RegExp} solfege.kernel.Application.REGEXP_SPLIT_SOLFEGE_URI
+     * @default     /^@([^:\.]+)\.?([^:]*):?(.*)$/
+     */
+    static get REGEXP_SPLIT_SOLFEGE_URI()
+    {
+        return /^@([^:\.]+)\.?([^:]*):?(.*)$/;
+    }
+
+    /**
      * Constructor
      *
-     * @param   {String} rootPath - Root path of the application
+     * @param   {string} rootPath - Root path of the application
      */
-    constructor(rootPath)
+    constructor(rootPath:string)
     {
         super();
 
@@ -22,7 +90,7 @@ export default class Application extends solfege.kernel.EventEmitter
         this.rootPath = rootPath;
 
         // Registered bundles
-        this.bundles = {};
+        this.bundles = new Map();
 
         // The custom configuration of the bundles
         this.configuration = {};
@@ -30,7 +98,6 @@ export default class Application extends solfege.kernel.EventEmitter
 
         // Set general properties
         this.rootPath = rootPath;
-        this.bundles = {};
 
         // Exit handler
         let bindedExitHandler = this.onExit.bind(this);
@@ -49,7 +116,7 @@ export default class Application extends solfege.kernel.EventEmitter
      * The node path
      *
      * @public
-     * @member  {String} solfege.kernel.Application.nodePath
+     * @member  {string} solfege.kernel.Application.nodePath
      */
     get nodePath()
     {
@@ -127,20 +194,17 @@ export default class Application extends solfege.kernel.EventEmitter
      *
      * @public
      * @method  solfege.kernel.Application.prototype.addBundle
-     * @param   {String} id - The bundle identifier
+     * @param   {string} id - The bundle identifier
      * @param   {*} bundle - The bundle instance
      */
-    addBundle(id, bundle)
+    addBundle(id:string, bundle)
     {
-        // Check arguments
-        assert.strictEqual(typeof id, 'string', 'The id is required and must be a string');
-
         // Check the id pattern
         if (!Application.REGEXP_BUNDLE_NAME.test(id)) {
             throw new Error('Invalid bundle name: "' + id + '"');
         }
 
-        this.bundles[id] = bundle;
+        this.bundles.set(id, bundle);
     }
 
     /**
@@ -148,15 +212,12 @@ export default class Application extends solfege.kernel.EventEmitter
      *
      * @public
      * @method  solfege.kernel.Application.prototype.getBundle
-     * @param   {String} id - The bundle identifier
+     * @param   {string} id - The bundle identifier
      * @return  {*} The bundle instance
      */
-    getBundle(id)
+    getBundle(id:string)
     {
-        // Check arguments
-        assert.strictEqual(typeof id, 'string', 'The id is required and must be a string');
-
-        return this.bundles[id];
+        return this.bundles.get(id);
     }
 
     /**
@@ -164,7 +225,7 @@ export default class Application extends solfege.kernel.EventEmitter
      *
      * @public
      * @method  solfege.kernel.Application.prototype.getBundles
-     * @return  {Object} The bundle list
+     * @return  {Map} The bundle list
      */
     getBundles()
     {
@@ -188,18 +249,12 @@ export default class Application extends solfege.kernel.EventEmitter
      *
      * @public
      * @method  solfege.kernel.Application.prototype.isSolfegeUri
-     * @param   {String} uri - The solfege URI
+     * @param   {string} uri - The solfege URI
      * @return  {Boolean} <code>true</code> if the URI is a Solfege URI, <code>false</code> otherwise
      */
-    isSolfegeUri(uri)
+    isSolfegeUri(uri:string)
     {
-        // Check arguments
-        assert.strictEqual(typeof uri, 'string', 'The URI is required and must be a string');
-
-
-        var result = Application.REGEXP_SOLFEGE_URI.test(uri);
-
-        return result;
+        return Application.REGEXP_SOLFEGE_URI.test(uri);
     }
 
     /**
@@ -220,19 +275,18 @@ export default class Application extends solfege.kernel.EventEmitter
      *
      * @public
      * @method  solfege.kernel.Application.prototype.parseSolfegeUri
-     * @param   {String} uri - The solfege URI
+     * @param   {string} uri - The solfege URI
      * @param   {*} [bundleCaller] - The current bundle instance (required to handle '@this')
      * @return  {Object} The parts
      */
-    parseSolfegeUri(uri, bundleCaller)
+    parseSolfegeUri(uri:string, bundleCaller?)
     {
         // Check arguments
-        assert.strictEqual(typeof uri, 'string', 'The URI is required and must be a string');
         assert.ok(this.isSolfegeUri(uri), 'The URI must be a valid solfege URI');
 
 
-        var parts = Application.REGEXP_SPLIT_SOLFEGE_URI.exec(uri);
-        var result = {};
+        let parts = Application.REGEXP_SPLIT_SOLFEGE_URI.exec(uri);
+        let result = {};
 
         // Bundle
         if (parts && parts[1]) {
@@ -257,7 +311,7 @@ export default class Application extends solfege.kernel.EventEmitter
 
             // Parse the object path
             if (result.bundle) {
-                var objectParts = result.objectPath.split('.');
+                let objectParts = result.objectPath.split('.');
                 result.object = result.bundle;
                 objectParts.every(part => {
                     // Skip empty part
@@ -295,17 +349,15 @@ export default class Application extends solfege.kernel.EventEmitter
                 }
 
                 // Resolve the absolute path
-                var modulePath = require('path');
-                var basePath = result.object.__dirname;
-                var relativeFilePath = result.filePattern;
-                var relativeFilePaths = [];
-                var absoluteFilePath = modulePath.resolve(basePath, result.filePattern);
-                var absoluteFilePaths = [];
+                let basePath = result.object.__dirname;
+                let relativeFilePath = result.filePattern;
+                let relativeFilePaths = [];
+                let absoluteFilePath = modulePath.resolve(basePath, result.filePattern);
+                let absoluteFilePaths = [];
 
                 // Try glob search and get multiple files
                 try {
-                    var glob = require('glob');
-                    var globPaths = glob.sync(result.filePattern, {
+                    let globPaths = glob.sync(result.filePattern, {
                         cwd: basePath
                     });
                     if (globPaths && globPaths.length) {
@@ -343,13 +395,13 @@ export default class Application extends solfege.kernel.EventEmitter
      *
      * @public
      * @method  solfege.kernel.Application.prototype.resolveSolfegeUri
-     * @param   {String} uri - The solfege URI
+     * @param   {string} uri - The solfege URI
      * @param   {*} [bundleCaller] - The current bundle instance (required to handle '@this')
      * @return  {*} The target
      */
-    resolveSolfegeUri(uri, bundleCaller)
+    resolveSolfegeUri(uri:string, bundleCaller?)
     {
-        var parts = this.parseSolfegeUri(uri, bundleCaller);
+        let parts = this.parseSolfegeUri(uri, bundleCaller);
 
         if (parts.filePath) {
             return parts.filePath;
@@ -368,25 +420,25 @@ export default class Application extends solfege.kernel.EventEmitter
      * Get the bundle instance from a solfege URI
      *
      * @method  solfege.kernel.Application.prototype.getBundleFromSolfegeUri
-     * @param   {String} uri - The solfege URI
+     * @param   {string} uri - The solfege URI
      * @param   {*} [bundleCaller] - The current bundle instance (required to handle '@this')
      * @return  {*} The bundle instance
      */
-    getBundleFromSolfegeUri(uri, bundleCaller)
+    getBundleFromSolfegeUri(uri:string, bundleCaller?)
     {
-        var regexp = /^@([a-zA-Z0-9\-]+)(.*)$/;
-        var parts = regexp.exec(uri);
+        let regexp = /^@([a-zA-Z0-9\-]+)(.*)$/;
+        let parts = regexp.exec(uri);
 
         // No bundle found
         if (!parts) {
             return null;
         }
 
-        var bundleId = parts[1];
-        var targetPath = parts[2];
+        let bundleId = parts[1];
+        let targetPath = parts[2];
 
         // Get the bundle
-        var bundle;
+        let bundle;
         if ('this' === bundleId) {
             bundle = bundleCaller;
         } else {
@@ -423,8 +475,7 @@ export default class Application extends solfege.kernel.EventEmitter
 
             // Initialize bundles
             // A bundle can implement a method "setApplication" to get an instance of the application
-            for (var bundleId in self.bundles) {
-                var bundle = self.bundles[bundleId];
+            for (let [bundleId, bundle] of self.bundles.entries()) {
 
                 try {
                     // Override the configuration
@@ -457,6 +508,13 @@ export default class Application extends solfege.kernel.EventEmitter
 
             // Start the application
             yield self.emit(Application.EVENT_START, self);
+        })
+
+        // Handle error
+        .catch(error => {
+            console.error(self.bundles);
+            console.error(error);
+            console.error(error.stack);
         });
     }
 
@@ -484,7 +542,7 @@ export default class Application extends solfege.kernel.EventEmitter
      */
     onExit()
     {
-        var self = this;
+        let self = this;
 
         co(function *()
         {
@@ -503,52 +561,4 @@ export default class Application extends solfege.kernel.EventEmitter
         process.exit();
     }
 }
-
-/**
- * Event name of the end of the bundles initialization
- *
- * @constant    {String} solfege.kernel.Application.EVENT_BUNDLES_INITALIZED
- * @default     'bundles_initialized'
- */
-solfege.util.Object.define(Application, 'EVENT_BUNDLES_INITIALIZED', 'bundles_initialized');
-
-/**
- * Event name of the application start
- *
- * @constant    {String} solfege.kernel.Application.EVENT_START
- * @default     'start'
- */
-solfege.util.Object.define(Application, 'EVENT_START', 'start');
-
-/**
- * Event name of the application end
- *
- * @constant    {String} solfege.kernel.Application.EVENT_END
- * @default     'end'
- */
-solfege.util.Object.define(Application, 'EVENT_END', 'end');
-
-/**
- * Regular expression of a valid bundle name
- *
- * @constant    {RegExp} solfege.kernel.Application.REGEXP_BUNDLE_NAME
- * @default     /^[a-zA-Z]+(-[a-zA-Z0-9]+)*$/
- */
-solfege.util.Object.define(Application, 'REGEXP_BUNDLE_NAME', /^[a-zA-Z]+(-[a-zA-Z0-9]+)*$/);
-
-/**
- * Regular expression of a valid Solfege URI
- *
- * @constant    {RegExp} solfege.kernel.Application.REGEXP_SOLFEGE_URI
- * @default     /^@[a-zA-Z]+(-[a-zA-Z0-9]+)*(\.:)?.*$/
- */
-solfege.util.Object.define(Application, 'REGEXP_SOLFEGE_URI', /^@[a-zA-Z]+(-[a-zA-Z0-9]+)*(\.:)?.*$/);
-
-/**
- * Regular expression for splitting into parts a Solfege URI
- *
- * @constant    {RegExp} solfege.kernel.Application.REGEXP_SPLIT_SOLFEGE_URI
- * @default     /^@([^:\.]+)\.?([^:]*):?(.*)$/
- */
-solfege.util.Object.define(Application, 'REGEXP_SPLIT_SOLFEGE_URI', /^@([^:\.]+)\.?([^:]*):?(.*)$/);
 
