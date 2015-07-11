@@ -1,5 +1,6 @@
 import assert from "assert";
 import solfege from "../solfege";
+import ErrorChain from "../error/ErrorChain";
 import co from "co";
 import glob from "glob";
 import modulePath from "path";
@@ -501,7 +502,7 @@ export default class Application extends solfege.kernel.EventEmitter
                     }
                 } catch (error) {
                     // Display the error of the bundle
-                    throw new Error('[' + bundleId + '] ' + error.message);
+                    throw new ErrorChain(error, 'Bundle "'+bundleId+'" failed');
                 }
             }
             yield self.emit(Application.EVENT_BUNDLES_INITIALIZED, self);
@@ -512,8 +513,7 @@ export default class Application extends solfege.kernel.EventEmitter
 
         // Handle error
         .catch(error => {
-            console.error(self.bundles);
-            console.error(error);
+            console.error(error.message);
             console.error(error.stack);
         });
     }
