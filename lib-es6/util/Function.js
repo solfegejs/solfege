@@ -36,10 +36,10 @@ export function createThunk(func)
     assert.strictEqual(typeof func, 'function', 'The func must be a function');
 
     return function() {
-        var self = this;
-        var args = [];
+        let self = this;
+        let args = [];
 
-        for (var index = 0, total = arguments.length; index < total; ++index) {
+        for (let index = 0, total = arguments.length; index < total; ++index) {
             args[index] = arguments[index];
         }
 
@@ -54,3 +54,4 @@ export function createThunk(func)
         }
     }
 };
+

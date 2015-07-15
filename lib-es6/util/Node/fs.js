@@ -8,101 +8,151 @@ import fs from "fs";
 /**
  * Check if a path exists
  *
- * @param   {String}    filePath    The file path to check
+ * @param   {string}    filePath    The file path to check
  * @return  {Boolean}               true if the file exists, false otherwise
  */
-export function exists(filePath)
+export function exists(filePath:string)
 {
-    // Check parameter
-    assert.strictEqual(typeof filePath, 'string', 'The filePath must be a string');
-
-    // Thunk
-    return function(done)
-    {
-        fs.exists(filePath, function(exists)
-        {
-            done(null, exists);
+    return new Promise(function(resolve, reject) {
+        fs.exists(filePath, function(exists) {
+            resolve(exists);
         });
-    };
-};
+    });
+
+}
 
 /**
  * Get the stats of a file
  *
- * @param   {String}    filePath    The file path to check
+ * @param   {string}    filePath    The file path to check
  * @return  {Object}                The stat object
  */
-let stat = createThunk(fs.stat);
-export function stat(filePath)
+export function stat(filePath:string)
 {
-    return stat(filePath);
+    return new Promise(function(resolve, reject) {
+        fs.stat(filePath, function(error, stats) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(stats);
+        });
+    });
 }
+
 
 /**
  * Reads the contents of a directory
  *
- * @param   {String}    path        The directory path
- * @return  {String[]}              The files in the directory
+ * @param   {string}    path        The directory path
+ * @return  {string[]}              The files in the directory
  */
-let readdir = createThunk(fs.readdir);
 export function readdir(path)
 {
-    return readdir(path);
+    return new Promise(function(resolve, reject) {
+        fs.readdir(path, function(error, files) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(files);
+        });
+    });
 }
 
 /**
  * Read a file
  *
- * @param   {String}    filePath    The file path to read
+ * @param   {string}    filePath    The file path to read
  * @param   {Object}    options     The options
- * @return  {String}                The file content
+ * @return  {string}                The file content
  */
-let readFile = createThunk(fs.readFile);
-export function readFile(filePath, options)
+export function readFile(filePath:string, options)
 {
-    return readFile(filePath, options);
+    return new Promise(function(resolve, reject) {
+        fs.readFile(filePath, options, function(error, data) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(data);
+        });
+    });
 }
 
 /**
  * Write data to a file
  *
- * @param   {String}        filePath    The file path
- * @param   {String|Buffer} data        The data
+ * @param   {string}        filePath    The file path
+ * @param   {string|Buffer} data        The data
  * @param   {Object}        options     The options
  */
-module.exports.writeFile = createThunk(fs.writeFile);
+export function writeFile(filePath:string, data, options)
+{
+    return new Promise(function(resolve, reject) {
+        fs.writeFile(filePath, data, options, function(error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
+    });
+}
+
 
 /**
  * Create a directory
  *
- * @param   {String}    path    The directory path
+ * @param   {string}    path    The directory path
  * @param   {Number}    mode    The mode (defaults to 0777)
  */
-let mkdir = createThunk(fs.mkdir);
-export function mkdir(path)
+export function mkdir(path:string, mode)
 {
-   return mkdir(path);
+    return new Promise(function(resolve, reject) {
+        fs.mkdir(path, mode, function(error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
+    });
 }
 
 /**
  * Delete a directory
  *
- * @param   {String}    path    The directory path
+ * @param   {string}    path    The directory path
  */
-let rmdir = createThunk(fs.rmdir);
-export function rmdir(path)
+export function rmdir(path:string)
 {
-   return rmdir(path);
+    return new Promise(function(resolve, reject) {
+        fs.rmdir(path, mode, function(error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
+    });
 }
 
 /**
  * Delete a file
  *
- * @param   {String}    filePath    The file path
+ * @param   {string}    filePath    The file path
  */
-let unlink = createThunk(fs.unlink);
-export function unlink(filePath)
+export function unlink(filePath:string)
 {
-   return unlink(filePath);
+    return new Promise(function(resolve, reject) {
+        fs.unlink(filePath, function(error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
+    });
 }
 
