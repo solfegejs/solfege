@@ -2,7 +2,7 @@
  * @module solfege.util.Node.fs
  */
 import assert from "assert";
-import {createThunk} from '../Function';
+import {createPromise} from '../Function';
 import fs from "fs";
 
 /**
@@ -20,6 +20,8 @@ export function exists(filePath:string)
     });
 
 }
+
+export let rename = createPromise(fs.rename);
 
 /**
  * Get the stats of a file

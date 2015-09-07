@@ -55,3 +55,42 @@ export function createThunk(func)
     }
 };
 
+/**
+ * Create a primise of a function
+ *
+ * <p>The last argument of the function must be the callback.</p>
+ *
+ * @param   {Function}  func    The function
+ * @return  {Function}          The Promise
+ */
+export function createPromise(func)
+{
+    // Check parameter
+    assert.strictEqual(typeof func, 'function', 'The func must be a function');
+
+    return function() {
+        let self = this;
+        let args = [];
+
+        for (let index = 0, total = arguments.length; index < total; ++index) {
+            args[index] = arguments[index];
+        }
+
+        return new Promise(function(resolve, reject) {
+            args.push(function(error, result) {
+                if (error) {
+                    reject(error);
+                    return;
+                }
+
+                resolve(result);
+            });
+            try {
+                func.apply(self, args);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+};
+

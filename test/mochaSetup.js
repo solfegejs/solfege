@@ -73,7 +73,7 @@ mocha.Runnable.prototype.run = function(fn) {
           }, ms);
         }
         // Use co to run generator to completion
-        co(result).then(function() {
+        co(result).then(function(err) {
           this.duration = new Date - start;
           done();
         }, function(err) {
