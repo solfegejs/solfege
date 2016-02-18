@@ -2,7 +2,7 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "1.4.10",
+    "version"       : "1.5.0",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
@@ -10,7 +10,7 @@
     "main"          : "lib/solfege.js",
     "engines"       :
     {
-        "node": ">= 0.12"
+        "node": ">= 4"
     },
     "dependencies"  :
     {
@@ -35,12 +35,12 @@
         "chai"          : "2.3.*",
         "mocha"         : "2.2.*",
         "jsdoc"         : "3.3.*",
-        "istanbul-harmony": "0.3.*"
+        "istanbul"      : "0.4.*"
     },
     "scripts"       :
     {
         "test"             : "mocha --harmony --harmony-proxies --recursive --reporter spec --bail",
-        "coverage"         : "node --harmony --harmony-proxies ./node_modules/istanbul-harmony/lib/cli.js cover -- ./node_modules/mocha/bin/_mocha --harmony --harmony-proxies --recursive",
+        "coverage"         : "node --harmony --harmony-proxies ./node_modules/istanbul/lib/cli.js cover -- ./node_modules/mocha/bin/_mocha --harmony --harmony-proxies --recursive",
         "documentation"    : "jsdoc --recurse ./lib-es6 --destination ./documentation",
         "es6-watch"        : "babel --watch --out-dir lib lib-es6",
         "es6-compile"      : "babel --out-dir lib lib-es6",
