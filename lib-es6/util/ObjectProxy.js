@@ -5,7 +5,6 @@
  */
 
 import fs from 'fs';
-import assert from 'assert';
 
 /**
  * Create a package
@@ -14,12 +13,8 @@ import assert from 'assert';
  * @param   {Object}    [getters]       The additional getters
  * @param   {Object}    [setters]       The additional setters
  */
-export function createPackage(directoryPath, getters, setters)
+export function createPackage(directoryPath:string, getters, setters)
 {
-    // Check parameters
-    assert.strictEqual(typeof directoryPath, 'string', 'The directoryPath must be a string');
-
-
     var cache = {};
 
     var proxy = Proxy.create({

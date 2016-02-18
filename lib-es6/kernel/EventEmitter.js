@@ -25,11 +25,8 @@ export default class EventEmitter
      * @param   {String} name - The event name
      * @param   {...*} parameter - A parameter
      */
-    *emit(name)
+    *emit(name:string)
     {
-        // Check the parameters
-        assert.strictEqual(typeof name, 'string', 'The name must be a string');
-
         // Get the listeners
         var eventListeners = this.getEventListeners(name);
 
@@ -56,11 +53,8 @@ export default class EventEmitter
      * @param   {String} name - The event name
      * @param   {Function} handler - The listener function
      */
-    on(name, handler)
+    on(name:string, handler)
     {
-        // Check the name
-        assert.strictEqual(typeof name, 'string', 'The name must be a string');
-
         // Check the handler
         assert.strictEqual(typeof handler, 'function', 'The event handler must be a generator function');
         assert.strictEqual(handler.constructor.name, 'GeneratorFunction', 'The event handler must be a generator function');
@@ -77,12 +71,8 @@ export default class EventEmitter
      * @param   {String} name - The event name
      * @return  {Function[]} The listeners
      */
-    getEventListeners(name)
+    getEventListeners(name:string)
     {
-        // Check the name
-        assert.strictEqual(typeof name, 'string', 'The name must be a string');
-
-
         var eventListeners;
 
         if (this.listeners.has(name)) {

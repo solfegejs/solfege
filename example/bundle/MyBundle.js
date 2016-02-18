@@ -1,49 +1,72 @@
-"use strict";
+import solfege from "../../lib/solfege";
+let Application = solfege.kernel.Application;
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var _libSolfege = require("../../lib/solfege");
-
-var _libSolfege2 = _interopRequireDefault(_libSolfege);
-
-var Application = _libSolfege2["default"].kernel.Application;
-
-var MyBundle = (function () {
-    function MyBundle() {
-        _classCallCheck(this, MyBundle);
-
+export default class MyBundle {
+    constructor() {
         this.woot = "W00t";
     }
 
-    _createClass(MyBundle, [{
-        key: "setApplication",
-
-        // Implement this method to access the solfege application
-        value: function* setApplication(application) {
-            if (!(application instanceof Application)) throw new TypeError("Value of argument 'application' violates contract.");
-
-            var bindGenerator = _libSolfege2["default"].util.Function.bindGenerator;
-            this.application = application;
-            this.application.on(_libSolfege2["default"].kernel.Application.EVENT_START, bindGenerator(this, this.onApplicationStart));
+    // Implement this method to access the solfege application
+    *setApplication(application) {
+        if (!(application instanceof Application)) {
+            throw new TypeError("Value of argument \"application\" violates contract.\n\nExpected:\nApplication\n\nGot:\n" + _inspect(application));
         }
-    }, {
-        key: "onApplicationStart",
-        value: function* onApplicationStart() {
-            console.log(this.woot, "SolfegeJS", _libSolfege2["default"].version);
-            console.log("configuration.foo =", this.application.configuration.parameters.foo);
+
+        let bindGenerator = solfege.util.Function.bindGenerator;
+        this.application = application;
+        this.application.on(solfege.kernel.Application.EVENT_START, bindGenerator(this, this.onApplicationStart));
+    }
+
+    *onApplicationStart() {
+        console.log(this.woot, "SolfegeJS", solfege.version);
+        console.log("configuration.foo =", this.application.configuration.parameters.foo);
+    }
+}
+
+function _inspect(input) {
+    function _ref2(key) {
+        return (/^([A-Z_$][A-Z0-9_$]*)$/i.test(key) ? key : JSON.stringify(key)) + ': ' + _inspect(input[key]) + ';';
+    }
+
+    function _ref(item) {
+        return _inspect(item) === first;
+    }
+
+    if (input === null) {
+        return 'null';
+    } else if (input === undefined) {
+        return 'void';
+    } else if (typeof input === 'string' || typeof input === 'number' || typeof input === 'boolean') {
+        return typeof input;
+    } else if (Array.isArray(input)) {
+        if (input.length > 0) {
+            var first = _inspect(input[0]);
+
+            if (input.every(_ref)) {
+                return first.trim() + '[]';
+            } else {
+                return '[' + input.map(_inspect).join(', ') + ']';
+            }
+        } else {
+            return 'Array';
         }
-    }]);
+    } else {
+        var keys = Object.keys(input);
 
-    return MyBundle;
-})();
+        if (!keys.length) {
+            if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
+                return input.constructor.name;
+            } else {
+                return 'Object';
+            }
+        }
 
-exports["default"] = MyBundle;
-module.exports = exports["default"];
+        var entries = keys.map(_ref2).join('\n  ');
+
+        if (input.constructor && input.constructor.name && input.constructor.name !== 'Object') {
+            return input.constructor.name + ' {\n  ' + entries + '\n}';
+        } else {
+            return '{ ' + entries + '\n}';
+        }
+    }
+}

@@ -158,3 +158,88 @@ export function unlink(filePath:string)
     });
 }
 
+/**
+ * Open a file
+ *
+ * @param   {string}    filePath    The file path
+ * @param   {string}    flag        The flag
+ * @param   {integer}   mode        The mode
+ * @return  {integer}               The file descriptor
+ */
+export function open(filePath:string, flag:string, mode?)
+{
+    return new Promise(function(resolve, reject) {
+        fs.open(filePath, flag, mode, function(error, fileDescriptor) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(fileDescriptor);
+        });
+    });
+}
+
+/**
+ * Read data from an opened file
+ *
+ * @param   {integer}   fileDescriptor  The file descriptor
+ * @param   {Buffer}    buffer          The buffer that the data will be written to
+ * @param   {integer}   offset          The offset in the buffer to start writing at
+ * @param   {integer}   length          The number of bytes to read
+ * @param   {integer}   position        Where to begin reading from in the file
+ * @param   {integer}                   The number of bytes read
+ */
+export function read(fileDescriptor, buffer, offset, length, position)
+{
+    return new Promise(function(resolve, reject) {
+        fs.read(fileDescriptor, buffer, offset, length, position, function(error, bytesRead, buffer) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(bytesRead);
+        });
+    });
+}
+
+/**
+ * Write buffer to an opened file
+ *
+ * @param   {integer}   fileDescriptor  The file descriptor
+ * @param   {Buffer}    buffer          The buffer
+ * @param   {integer}   offset          The offset in the buffer
+ * @param   {integer}   length          The number of bytes to write
+ * @param   {integer}   position        Where to begin writting in the file
+ * @param   {integer}                   The number of bytes written
+ */
+export function write(fileDescriptor, buffer, offset, length, position?)
+{
+    return new Promise(function(resolve, reject) {
+        fs.write(fileDescriptor, buffer, offset, length, position, function(error, written, buffer) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve(written);
+        });
+    });
+}
+
+/**
+ * Close an opened file
+ *
+ * @param   {integer}   fileDescriptor  The file descriptor
+ */
+export function close(fileDescriptor)
+{
+    return new Promise(function(resolve, reject) {
+        fs.close(fileDescriptor, function(error) {
+            if (error) {
+                reject(error);
+                return;
+            }
+            resolve();
+        });
+    });
+}
+
