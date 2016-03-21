@@ -1,23 +1,9 @@
 import description from "../package.json";
+import Application from "./kernel/Application";
+import ServiceContainer from "./bundles/ServiceContainer";
 
-let bundles = new Set();
+let application = new Application();
+application.addBundle(new ServiceContainer);
 
-/**
- * Add a bundle to the registry
- *
- * @param   {*}     bundle  - A bundle
- */
-export function addBundle(bundle)
-{
-    // Check the validity
+export default application;
 
-    // Add to the registry
-    bundles.add(bundle);
-};
-
-/**
- * Start the application
- */
-export function start()
-{
-};
