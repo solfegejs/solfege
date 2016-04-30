@@ -1,0 +1,4 @@
+services:
+    # Commands
+    solfege_console_commands:
+        class: "Commands"

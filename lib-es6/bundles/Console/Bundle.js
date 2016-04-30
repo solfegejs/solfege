@@ -2,6 +2,7 @@ import Application from "../../kernel/Application";
 import {bindGenerator} from "../../utils/GeneratorUtil";
 import colors from "colors";
 import minimist from "minimist";
+import CommandCompilerPass from "./DependencyInjection/Compiler/CommandCompilerPass";
 
 /**
  * Console bundle
@@ -38,6 +39,17 @@ export default class Bundle
 
         // Listen the application start
         this.application.on(Application.EVENT_START, bindGenerator(this, this.onStart));
+    }
+
+    /**
+     * Configure service container
+     *
+     * @param   {Container}     container       Service container
+     */
+    *configureContainer(container)
+    {
+        // Add the compiler pass that handle command tags
+        container.addCompilerPass(new CommandCompilerPass());
     }
 
     /**

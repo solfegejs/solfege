@@ -1,0 +1,6 @@
+services:
+    # Debug command
+    solfege_dependency_injection_command_debug:
+        class: "Command/DebugCommand"
+        tags:
+            - { name: "solfege.console.command" }

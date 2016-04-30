@@ -15,7 +15,9 @@
     "dependencies"  :
     {
         "co"            : "^4.6",
+        "yaml"          : "^0.3",
 
+        "co-fs"         : "^1.2",
         "colors"        : "^1.1",
         "minimist"      : "^1.2"
     },
