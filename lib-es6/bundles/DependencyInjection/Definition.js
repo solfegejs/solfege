@@ -1,7 +1,7 @@
 /**
- * Service container
+ * Service definition
  */
-export default class ServiceContainer
+export default class Definition
 {
     /**
      * Constructor

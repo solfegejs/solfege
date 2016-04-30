@@ -1,9 +1,28 @@
 import description from "../package.json";
 import Application from "./kernel/Application";
-import ServiceContainer from "./bundles/ServiceContainer";
+import DependencyInjectionBundle from "./bundles/DependencyInjection/Bundle";
+import ConsoleBundle from "./bundles/Console/Bundle";
 
-let application = new Application();
-application.addBundle(new ServiceContainer);
+export default {
+    // Solfege name
+    name: "SolfegeJS",
 
-export default application;
+    // Solfege version
+    version: description.version,
+
+    // Application class
+    // Use it to instanciate a new application
+    Application: Application,
+
+    // Application factory
+    // Use it to instanciate a new application with default bundles
+    factory: (bundles:Array = []) => {
+        let application = new Application();
+        application.addBundle(new DependencyInjectionBundle());
+        application.addBundle(new ConsoleBundle());
+
+
+        return application;
+    }
+};
 

@@ -1,3 +1,4 @@
 import solfege from "../../lib";
 
-solfege.start();
+let application = solfege.factory();
+application.start('ok');
