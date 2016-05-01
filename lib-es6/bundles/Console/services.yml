@@ -1,4 +1,4 @@
 services:
-    # Commands
-    solfege_console_commands:
-        class: "Commands"
+    # Commands registry
+    solfege_console_commands_registry:
+        class: "CommandsRegistry"

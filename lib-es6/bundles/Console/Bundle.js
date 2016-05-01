@@ -14,8 +14,9 @@ export default class Bundle
      */
     constructor()
     {
-        // Declare application property
+        // Initialize properties
         this.application;
+        this.container;
     }
 
     /**
@@ -48,8 +49,10 @@ export default class Bundle
      */
     *configureContainer(container)
     {
+        this.container = container;
+
         // Add the compiler pass that handle command tags
-        container.addCompilerPass(new CommandCompilerPass());
+        this.container.addCompilerPass(new CommandCompilerPass());
     }
 
     /**
@@ -68,6 +71,10 @@ export default class Bundle
      */
     *displayGlobalHelp()
     {
+        // Get commands
+        let commandsRegistry = yield this.container.get("solfege_console_commands_registry");
+        let commands = commandsRegistry.getCommands();
+
         // Display the header
         let title = "SolfegeJS CLI";
 

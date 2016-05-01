@@ -13,7 +13,8 @@ export default class Definition
         // Initialize properties
         this.id = id;
         this.instance;
-        this.class;
+        this.classPath;
+        this.arguments = new Set();
         this.tags = new Set();
         this.methodCalls = new Set();
     }
@@ -53,9 +54,39 @@ export default class Definition
      *
      * @param   {String}    path    Class path
      */
-    setClass(path:string)
+    setClassPath(path:string)
     {
-        this.class = path;
+        this.classPath = path;
+    }
+
+    /**
+     * Get class path
+     *
+     * @return  {String}            Class path
+     */
+    getClassPath()
+    {
+        return this.classPath;
+    }
+
+    /**
+     * Add constructor argument
+     *
+     * @param   {*}     argument    Class constructor argument
+     */
+    addArgument(argument)
+    {
+        this.arguments.add(argument);
+    }
+
+    /**
+     * Get constructor arguments
+     *
+     * @return  {Set}               Class constructor arguments
+     */
+    getArguments()
+    {
+        return this.arguments;
     }
 
     /**

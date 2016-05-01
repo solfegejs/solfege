@@ -11,7 +11,7 @@ export default class CommandCompilerPass
      */
     *process(container)
     {
-        let definition = container.getDefinition("solfege_console_commands");
+        let definition = container.getDefinition("solfege_console_commands_registry");
 
         let serviceIds = container.findTaggedServiceIds("solfege.console.command");
         for (let serviceId of serviceIds) {

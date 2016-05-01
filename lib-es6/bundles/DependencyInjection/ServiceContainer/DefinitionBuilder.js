@@ -25,7 +25,7 @@ export default class DefinitionBuilder
 
         // Class file path
         if (configuration.class) {
-            definition.setClass(configuration.class);
+            definition.setClassPath(configuration.class);
         }
 
         // Tags

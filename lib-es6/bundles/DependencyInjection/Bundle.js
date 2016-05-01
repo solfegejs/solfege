@@ -47,7 +47,6 @@ export default class Bundle
 
         // Listen the end of bundles initialization
         this.application.on(Application.EVENT_BUNDLES_INITIALIZED, bindGenerator(this, this.onBundlesInitialized));
-        this.application.on(Application.EVENT_START, bindGenerator(this, this.onStart));
 
         // The first service is the container itself
         this.container.register("container", this.container);
@@ -78,9 +77,9 @@ export default class Bundle
     }
 
     /**
-     * Start the application
+     * Boot the bundle
      */
-    *onStart()
+    *boot()
     {
         // Compile
         yield this.container.compile();

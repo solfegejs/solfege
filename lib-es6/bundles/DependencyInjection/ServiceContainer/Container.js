@@ -1,4 +1,5 @@
 import assert from "assert";
+import Reflect from "harmony-reflect";
 import Definition from "./Definition";
 import Reference from "./Reference";
 
@@ -12,11 +13,13 @@ export default class Container
      */
     constructor()
     {
+
         // Initialize definitions
         this.definitions = new Map();
 
         // Initialize compilers
         this.compilers = new Set();
+        this.compiled = false;
     }
 
     /**
@@ -38,7 +41,10 @@ export default class Container
      */
     getDefinition(id:string)
     {
-        return this.definitions.get(id);
+        let definition = this.definitions.get(id);
+        assert.ok(definition instanceof Definition, `Service definition not found: ${id}`);
+
+        return definition;
     }
 
     /**
@@ -117,9 +123,18 @@ export default class Container
      */
     *compile()
     {
+        // The container is compiled only once
+        if (this.compiled) {
+            return;
+        }
+
+        // Process each compiler pass
         for (let compiler of this.compilers) {
             yield compiler.process(this);
         }
+
+        // The container is compiled
+        this.compiled = true;
     }
 
     /**
@@ -128,16 +143,88 @@ export default class Container
      * @param   {String}        id          Service id
      * @return  {*}                         Service instance
      */
-    get(id:string)
+    *get(id:string)
     {
-        let definition = this.getDefinition(id);
-        let instance = definition.getInstance();
+        // The container must be compiled
+        assert.ok(this.compiled, `Unable to get service "${id}", the container is not compiled`);
 
+        // Get the definition
+        let definition = this.getDefinition(id);
+
+        // Get the instance if it exists
+        let instance = definition.getInstance();
         if (instance) {
             return instance;
         }
 
-        throw new Error(`Service ${id} not found`);
+        // Build the instance
+        instance = yield this.buildInstance(definition);
+        return instance;
+    }
 
+    /**
+     * Build definition instance
+     *
+     * @param   {Definition}    definition      Service definition
+     * @return  {*}                             Service instance
+     */
+    *buildInstance(definition:Definition)
+    {
+        let classPath = definition.getClassPath();
+        let classArguments = definition.getArguments();
+
+        // Resolve arguments
+        let classArgumentsResolved = [];
+        for (let classArgument of classArguments) {
+            let classArgumentResolved = yield this.resolveParameter(classArgument);
+            classArgumentsResolved.push(classArgumentResolved);
+        }
+
+        // Instantiate
+        let instance;
+        try {
+            let classObject = require(classPath);
+            instance = Reflect.construct(classObject, classArgumentsResolved);
+        } catch (error) {
+            throw new Error(`Unable to instantiate service "${classPath}": ${error.message}`);
+        }
+
+        // Call methods
+        let methodCalls = definition.getMethodCalls();
+        for (let methodCall of methodCalls) {
+            let {name, parameters} = methodCall;
+            let method = instance[name];
+
+            assert.strictEqual(typeof method, "function", `Method "${name}" not found in ${classPath}`);
+
+            // Resolve parameters
+            let parametersResolved = []
+            for (let parameter of parameters) {
+                let parameterResolved = yield this.resolveParameter(parameter);
+                parametersResolved.push(parameterResolved);
+            }
+
+            // Call the method
+            method.apply(instance, parametersResolved);
+        }
+
+        return instance;
+    }
+
+    /**
+     * Resolve a parameter
+     *
+     * @param   {*}     parameter   The parameter
+     * @return  {*}                 The resolved parameter
+     */
+    *resolveParameter(parameter)
+    {
+        if (parameter instanceof Reference) {
+            let serviceId = parameter.getId();
+            let service = yield this.get(serviceId);
+            return service;
+        }
+
+        return parameter;
     }
 }
