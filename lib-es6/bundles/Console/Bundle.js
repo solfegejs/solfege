@@ -1,5 +1,5 @@
 import Application from "../../kernel/Application";
-import {bindGenerator} from "../../utils/GeneratorUtil";
+import {bindGenerator, isGenerator} from "../../utils/GeneratorUtil";
 import colors from "colors";
 import minimist from "minimist";
 import CommandCompilerPass from "./DependencyInjection/Compiler/CommandCompilerPass";
@@ -63,22 +63,62 @@ export default class Bundle
      */
     *onStart(application, parameters)
     {
-        yield this.displayGlobalHelp();
-    }
-
-    /**
-     * Display global help
-     */
-    *displayGlobalHelp()
-    {
         // Get commands
         let commandsRegistry = yield this.container.get("solfege_console_commands_registry");
         let commands = commandsRegistry.getCommands();
 
+        // Configure commands
+        // and create a map
+        let commandMap = new Map;
+        for (let command of commands) {
+            // Check signature requirements
+            if (!isGenerator(command.configure)) {
+                throw new Error(`Command must implement "configure" method.`);
+            }
+            if (typeof command.getName !== "function") {
+                throw new Error(`Command must implement "getName" method.`);
+            }
+
+            yield command.configure();
+            let name = command.getName();
+            commandMap.set(name, command);
+        }
+
+        // Check if the user executes a command
+        if (parameters.length > 0) {
+            let commandName = parameters[0];
+
+            if (commandMap.has(commandName)) {
+                let command = commandMap.get(commandName);
+
+                // Execute the command
+                yield command.execute();
+                return;
+            }
+        }
+
+
         // Display the header
         let title = "SolfegeJS CLI";
-
         console.info(title.bgBlack.cyan);
         console.info("-".repeat(title.length).bgBlack.cyan+"\n");
+
+        // Display command list
+        yield this.displayAvailableCommands(commands);
+    }
+
+    /**
+     * Display available commands
+     *
+     * @param   {Set}   commands    Commands
+     */
+    *displayAvailableCommands(commands:Set)
+    {
+        for (let command of commands) {
+            let name = command.getName();
+            let description = command.getDescription();
+
+            console.info(`${name.green}   ${description}`);
+        }
     }
 }

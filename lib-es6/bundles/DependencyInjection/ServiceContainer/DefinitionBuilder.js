@@ -1,4 +1,5 @@
 import Definition from "./Definition";
+import Reference from "./Reference";
 
 /**
  * Definition builder
@@ -26,6 +27,21 @@ export default class DefinitionBuilder
         // Class file path
         if (configuration.class) {
             definition.setClassPath(configuration.class);
+        }
+
+        // Class arguments
+        if (configuration.arguments) {
+            for (let argument of configuration.arguments) {
+                // The argument is a service reference
+                if (argument[0] === "@") {
+                    let referenceArgument = new Reference(argument.substr(1));
+                    definition.addArgument(referenceArgument);
+                    continue;
+                }
+
+                // The argument is a string
+                definition.addArgument(argument);
+            }
         }
 
         // Tags

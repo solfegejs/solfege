@@ -1,4 +1,7 @@
 import solfege from "../../lib";
 
 let application = solfege.factory();
-application.start('ok');
+let parameters = process.argv;
+parameters.shift();
+parameters.shift();
+application.start(parameters);

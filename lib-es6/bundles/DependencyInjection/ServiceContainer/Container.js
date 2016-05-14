@@ -48,6 +48,16 @@ export default class Container
     }
 
     /**
+     * Get service definitions
+     *
+     * @return  {Map}       Definitions
+     */
+    getDefinitions()
+    {
+        return this.definitions;
+    }
+
+    /**
      * Register an instantiated service
      *
      * @param   {String}        id          Service id

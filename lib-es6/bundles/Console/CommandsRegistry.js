@@ -1,3 +1,5 @@
+import ContainerAwareCommand from "./Command/ContainerAwareCommand";
+
 /**
  * Commands registry
  */
@@ -5,9 +7,13 @@ export default class CommandsRegistry
 {
     /**
      * Constructor
+     *
+     * @param   {Container}     container   The service container
      */
-    constructor()
+    constructor(container)
     {
+        this.container = container;
+
         // Initialize commands
         this.commands = new Set();
     }
@@ -19,6 +25,10 @@ export default class CommandsRegistry
      */
     addCommand(command)
     {
+        if (command instanceof ContainerAwareCommand) {
+            command.setContainer(this.container);
+        }
+
         this.commands.add(command);
     }
 

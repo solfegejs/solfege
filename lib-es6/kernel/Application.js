@@ -100,8 +100,10 @@ export default class Application extends EventEmitter
 
     /**
      * Start the application
+     *
+     * @param   {Array}     parameters  Application parameters
      */
-    start(...parameters)
+    start(parameters:Array = [])
     {
         let self = this;
 

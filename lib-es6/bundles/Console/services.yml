@@ -2,3 +2,5 @@ services:
     # Commands registry
     solfege_console_commands_registry:
         class: "CommandsRegistry"
+        arguments:
+            - "@container"

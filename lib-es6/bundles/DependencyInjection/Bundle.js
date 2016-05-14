@@ -49,7 +49,8 @@ export default class Bundle
         this.application.on(Application.EVENT_BUNDLES_INITIALIZED, bindGenerator(this, this.onBundlesInitialized));
 
         // The first service is the container itself
-        this.container.register("container", this.container);
+        let definition = this.container.register("container", this.container);
+        definition.setClassPath(`${__dirname}${path.sep}ServiceContainer${path.sep}Container`);
     }
 
 
