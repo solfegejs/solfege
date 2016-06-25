@@ -72,14 +72,14 @@ export default class Bundle
         let commandMap = new Map;
         for (let command of commands) {
             // Check signature requirements
-            if (!isGenerator(command.configure)) {
-                throw new Error(`Command must implement "configure" method.`);
-            }
             if (typeof command.getName !== "function") {
                 throw new Error(`Command must implement "getName" method.`);
             }
 
-            yield command.configure();
+            if (isGenerator(command.configure)) {
+                yield command.configure();
+            }
+
             let name = command.getName();
             commandMap.set(name, command);
         }

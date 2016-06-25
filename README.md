@@ -34,3 +34,9 @@ solfege.addBundle(new MyBundle);
 solfege.start();
 ```
 
+Documentation
+-------------
+
+- [Create a bundle](documentation/create-bundle.md)
+- [Service container](documentation/service-container.md)
+- [Command line interface](documentation/command-line-interface.md)

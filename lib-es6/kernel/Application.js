@@ -82,7 +82,7 @@ export default class Application extends EventEmitter
     addBundle(bundle)
     {
         // Check the validity
-        assert.ok(typeof bundle.getPath, 'function', `The bundle ${bundle} must implement getPath method`);
+        assert.strictEqual(typeof bundle.getPath, 'function', `The bundle ${bundle} must implement getPath method`);
 
         // Add to the registry
         this.bundles.add(bundle);

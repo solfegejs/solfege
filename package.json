@@ -15,7 +15,7 @@
     "dependencies"  :
     {
         "co"                : "^4.6",
-        "yaml"              : "^0.3",
+        "js-yaml"           : "^3.6",
         "harmony-reflect"   : "^1.4",
 
         "co-fs"             : "^1.2",
@@ -43,7 +43,7 @@
     },
     "scripts"       :
     {
-        "test"             : "mocha --harmony --harmony-proxies --recursive --reporter spec --bail",
+        "test"             : "mocha --harmony --harmony-proxies --compilers js:babel-core/register --recursive --reporter spec --bail",
         "coverage"         : "node --harmony --harmony-proxies ./node_modules/istanbul/lib/cli.js cover -- ./node_modules/mocha/bin/_mocha --harmony --harmony-proxies --recursive",
         "documentation"    : "jsdoc --recurse ./lib-es6 --destination ./documentation",
         "watch"            : "babel --watch --out-dir lib lib-es6",
