@@ -1,1 +1,6 @@
-../../../lib-es6/bundles/Console/services.yml
+services:
+    # Commands registry
+    solfege_console_commands_registry:
+        class: "CommandsRegistry"
+        arguments:
+            - "@container"
