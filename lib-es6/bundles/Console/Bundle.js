@@ -116,7 +116,10 @@ export default class Bundle
     {
         for (let command of commands) {
             let name = command.getName();
-            let description = command.getDescription();
+            let description = "";
+            if (typeof command.getDescription === "function") {
+                description = command.getDescription();
+            }
 
             console.info(`${name.green}   ${description}`);
         }

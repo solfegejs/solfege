@@ -9,7 +9,6 @@ Requirements
 ------------
 
 - NodeJS >= 5
-- Babel >= 6
 
 
 Installation
@@ -19,7 +18,6 @@ Installation
 npm install solfegejs
 ```
 
-
 Example
 -------
 
@@ -27,11 +25,12 @@ Example
 import solfege from "solfegejs";
 import MyBundle from "./MyBundle";
 
-// Add bundles
-solfege.addBundle(new MyBundle);
+// Create application
+let application = solfege.factory();
+application.addBundle(new MyBundle);
 
 // Start the application
-solfege.start();
+application.start();
 ```
 
 Documentation

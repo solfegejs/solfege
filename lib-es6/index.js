@@ -21,6 +21,9 @@ export default {
         application.addBundle(new DependencyInjectionBundle());
         application.addBundle(new ConsoleBundle());
 
+        for (let bundle of bundles) {
+            application.addBundle(bundle);
+        }
 
         return application;
     }
