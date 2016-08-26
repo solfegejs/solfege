@@ -105,10 +105,17 @@ export default class Bundle
         for (let serviceId in configuration.services) {
             let serviceConfiguration = configuration.services[serviceId];
 
-            // Class path is relative to configuration file
+            // Class path is relative to configuration file if it exists
             if (serviceConfiguration.class) {
                 let directoryPath = path.dirname(filePath);
-                serviceConfiguration.class = directoryPath + path.sep + serviceConfiguration.class;
+                let classPath =  directoryPath + path.sep + serviceConfiguration.class;
+
+                try {
+                    let classConstructor = require(classPath);
+                    serviceConfiguration.class = classPath;
+                } catch (error) {
+                    serviceConfiguration.class = serviceConfiguration.class;
+                }
             }
 
             // Build definition and register it

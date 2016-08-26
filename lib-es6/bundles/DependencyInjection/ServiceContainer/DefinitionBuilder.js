@@ -26,7 +26,12 @@ export default class DefinitionBuilder
 
         // Class file path
         if (configuration.class) {
-            definition.setClassPath(configuration.class);
+            if (configuration.class[0] === "@") {
+                let classReference = new Reference(configuration.class.substr(1));
+                definition.setClassReference(classReference);
+            } else {
+                definition.setClassPath(configuration.class);
+            }
         }
 
         // Class arguments

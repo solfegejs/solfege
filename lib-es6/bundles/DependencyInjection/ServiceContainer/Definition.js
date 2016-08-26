@@ -1,3 +1,5 @@
+import Reference from "./Reference";
+
 /**
  * Service definition
  */
@@ -14,6 +16,7 @@ export default class Definition
         this.id = id;
         this.instance;
         this.classPath;
+        this.classReference;
         this.arguments = new Set();
         this.tags = new Set();
         this.methodCalls = new Set();
@@ -67,6 +70,26 @@ export default class Definition
     getClassPath()
     {
         return this.classPath;
+    }
+
+    /**
+     * Set class reference
+     *
+     * @param   {Reference}     reference       Class reference
+     */
+    setClassReference(reference:Reference)
+    {
+        this.classReference = reference;
+    }
+
+    /**
+     * Get class reference
+     *
+     * @return  {Reference}                     Class reference
+     */
+    getClassReference()
+    {
+        return this.classReference;
     }
 
     /**

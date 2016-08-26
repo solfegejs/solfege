@@ -172,6 +172,48 @@ export default class Container
         return instance;
     }
 
+
+    /**
+     * Get service class path
+     *
+     * @param   {String}        id          Service id
+     * @return  {String}                    Service class path
+     */
+    *getServiceClassPath(id:string)
+    {
+        // The container must be compiled
+        assert.ok(this.compiled, `Unable to get service "${id}", the container is not compiled`);
+
+        // Get the definition
+        let definition = this.getDefinition(id);
+
+        return yield this.getDefinitionClassPath(definition);
+    }
+
+    /**
+     * Get definition class path
+     *
+     * @param   {Definition}    definition  Service definition
+     * @return  {String}                    Service class path
+     */
+    *getDefinitionClassPath(definition:Definition)
+    {
+        let classPath = definition.getClassPath();
+
+        if (classPath) {
+            return classPath;
+        }
+
+        let classReference = definition.getClassReference();
+        if (classReference instanceof Reference) {
+            let classServiceId = classReference.getId();
+            let classDefinition = this.getDefinition(classServiceId);
+            classPath = yield this.getDefinitionClassPath(classDefinition);
+        }
+
+        return classPath;
+    }
+
     /**
      * Build definition instance
      *
@@ -180,7 +222,7 @@ export default class Container
      */
     *buildInstance(definition:Definition)
     {
-        let classPath = definition.getClassPath();
+        let classPath = yield this.getDefinitionClassPath(definition);
         let classArguments = definition.getArguments();
 
         // Resolve arguments
