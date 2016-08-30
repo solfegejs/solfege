@@ -1,5 +1,6 @@
 import Application from "../../kernel/Application";
-import {bindGenerator, isGenerator} from "../../utils/GeneratorUtil";
+import bindGenerator from "bind-generator";
+import {fn as isGenerator} from "is-generator";
 import colors from "colors";
 import minimist from "minimist";
 import CommandCompilerPass from "./DependencyInjection/Compiler/CommandCompilerPass";

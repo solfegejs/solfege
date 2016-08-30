@@ -1,7 +1,7 @@
 import co from "co";
 import assert from "assert";
+import {fn as isGenerator} from "is-generator";
 import EventEmitter from "./EventEmitter";
-import {isGenerator} from "../utils/GeneratorUtil";
 
 /**
  * An application

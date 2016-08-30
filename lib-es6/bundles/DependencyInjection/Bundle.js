@@ -2,7 +2,8 @@ import path from "path";
 import fs from "co-fs";
 import yaml from "js-yaml";
 import Application from "../../kernel/Application";
-import {bindGenerator, isGenerator} from "../../utils/GeneratorUtil";
+import bindGenerator from "bind-generator";
+import {fn as isGenerator} from "is-generator";
 import Container from "./ServiceContainer/Container";
 import DefinitionBuilder from "./ServiceContainer/DefinitionBuilder";
 
