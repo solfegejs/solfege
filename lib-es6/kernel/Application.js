@@ -1,5 +1,8 @@
-import co from "co";
 import assert from "assert";
+import path from "path";
+import co from "co";
+import fs from "co-fs";
+import yaml from "js-yaml";
 import {fn as isGenerator} from "is-generator";
 import EventEmitter from "./EventEmitter";
 
@@ -15,26 +18,40 @@ export default class Application extends EventEmitter
     {
         super();
 
+        // Configuration file path
+        this.configurationFilePath;
+
         // Initialize the bundle registry
         this.bundles = new Set();
 
         // Exit handler
         let bindedExitHandler = this.onExit.bind(this);
         let bindedKillHandler = this.onKill.bind(this);
-        process.on('exit', bindedExitHandler);
-        process.on('SIGINT', bindedKillHandler);
-        process.on('SIGTERM', bindedKillHandler);
-        process.on('SIGHUP', bindedKillHandler);
+        process.on("exit", bindedExitHandler);
+        process.on("SIGINT", bindedKillHandler);
+        process.on("SIGTERM", bindedKillHandler);
+        process.on("SIGHUP", bindedKillHandler);
 
         // Error handler
-        process.on('uncaughtException', this.onErrorUnknown.bind(this));
+        process.on("uncaughtException", this.onErrorUnknown.bind(this));
+    }
+
+    /**
+     * Event name of the configuration load
+     *
+     * @constant    {String} solfege.kernel.Application.EVENT_CONFIGURATION_LOADED
+     * @default     "configuration_loaded"
+     */
+    static get EVENT_CONFIGURATION_LOADED()
+    {
+        return "configuration_loaded";
     }
 
     /**
      * Event name of the end of the bundles initialization
      *
      * @constant    {String} solfege.kernel.Application.EVENT_BUNDLES_INITALIZED
-     * @default     'bundles_initialized'
+     * @default     "bundles_initialized"
      */
     static get EVENT_BUNDLES_INITIALIZED()
     {
@@ -45,7 +62,7 @@ export default class Application extends EventEmitter
      * Event name of the end of the bundles boot
      *
      * @constant    {String} solfege.kernel.Application.EVENT_BUNDLES_BOOTED
-     * @default     'bundles_booted'
+     * @default     "bundles_booted"
      */
     static get EVENT_BUNDLES_BOOTED()
     {
@@ -56,7 +73,7 @@ export default class Application extends EventEmitter
      * Event name of the application start
      *
      * @constant    {String} solfege.kernel.Application.EVENT_START
-     * @default     'start'
+     * @default     "start"
      */
     static get EVENT_START()
     {
@@ -67,7 +84,7 @@ export default class Application extends EventEmitter
      * Event name of the application end
      *
      * @constant    {String} solfege.kernel.Application.EVENT_END
-     * @default     'end'
+     * @default     "end"
      */
     static get EVENT_END()
     {
@@ -99,6 +116,16 @@ export default class Application extends EventEmitter
     }
 
     /**
+     * Load configuration file
+     *
+     * @param   {string}    filePath    Configuration file path
+     */
+    loadConfiguration(filePath:string)
+    {
+        this.configurationFilePath = path.resolve(filePath);
+    }
+
+    /**
      * Start the application
      *
      * @param   {Array}     parameters  Application parameters
@@ -119,6 +146,21 @@ export default class Application extends EventEmitter
                 yield bundle.initialize(self);
             }
             yield self.emit(Application.EVENT_BUNDLES_INITIALIZED, self);
+
+            // Load configuration file
+            if (typeof self.configurationFilePath === "string") {
+                let configurationFileExists = yield fs.exists(self.configurationFilePath);
+                if (!configurationFileExists) {
+                    throw new Error(`Configuration file not found: ${self.configurationFilePath}`);
+                }
+                let configurationFileContent = yield fs.readFile(self.configurationFilePath, 'utf8');
+                let configuration = yaml.safeLoad(configurationFileContent);
+                let configurationDirectory:string = path.dirname(self.configurationFilePath);
+
+                yield self.emit(Application.EVENT_CONFIGURATION_LOADED, self, configuration, configurationDirectory);
+            } else {
+                yield self.emit(Application.EVENT_CONFIGURATION_LOADED, self, {}, null);
+            }
 
             // Boot registered bundles
             for (let bundle of self.bundles) {

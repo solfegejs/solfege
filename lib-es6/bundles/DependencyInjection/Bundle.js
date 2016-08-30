@@ -46,6 +46,9 @@ export default class Bundle
     {
         this.application = application;
 
+        // Listen the end of configuration loading
+        this.application.on(Application.EVENT_CONFIGURATION_LOADED, bindGenerator(this, this.onConfigurationLoaded));
+
         // Listen the end of bundles initialization
         this.application.on(Application.EVENT_BUNDLES_INITIALIZED, bindGenerator(this, this.onBundlesInitialized));
 
@@ -54,6 +57,18 @@ export default class Bundle
         definition.setClassPath(`${__dirname}${path.sep}ServiceContainer${path.sep}Container`);
     }
 
+    /**
+     * The configuration is loaded
+     *
+     * @param   {solfegejs/kernel/Application}  application     Solfege application
+     * @param   {object}                        configuration   Solfege configuration
+     * @param   {string}                        directory       Configuration directory
+     */
+    *onConfigurationLoaded(application, configuration, directory)
+    {
+        this.container.setConfiguration(configuration);
+        this.container.setConfigurationDirectoryPath(directory);
+    }
 
     /**
      * The bundles are initialized

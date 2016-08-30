@@ -1,0 +1,7 @@
+services:
+    example_configuration:
+        class: "Command/ConfigurationCommand"
+        arguments:
+            - "%parameters.foo"
+        tags:
+            - { name: "solfege.console.command" }

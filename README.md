@@ -33,6 +33,10 @@ application.addBundle(new MyBundle);
 application.start();
 ```
 
+```bash
+node --harmony start.js
+```
+
 Documentation
 -------------
 

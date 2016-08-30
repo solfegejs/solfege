@@ -2,7 +2,7 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "2.0.10",
+    "version"       : "2.0.11",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
@@ -50,8 +50,8 @@
         "documentation"    : "jsdoc --recurse ./lib-es6 --destination ./documentation",
         "watch"            : "babel --watch --out-dir lib lib-es6 --copy-files",
         "compile"          : "babel --out-dir lib lib-es6 --copy-files",
-        "example-compile"  : "babel --out-dir example/bundle example/bundle-es6",
-        "example"          : "node --harmony  example/bundle/console.js"
+        "example-compile"  : "babel --out-dir example/lib example/lib-es6 --copy-files",
+        "example-console"  : "node --harmony  example/lib/console.js"
     },
     "babel": {
         "presets": ["stage-0"],

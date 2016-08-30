@@ -2,6 +2,7 @@ import assert from "assert";
 import Reflect from "harmony-reflect";
 import Definition from "./Definition";
 import Reference from "./Reference";
+import ConfigurationProperty from "./ConfigurationProperty";
 
 /**
  * Service container
@@ -13,6 +14,9 @@ export default class Container
      */
     constructor()
     {
+        // Solfege configuration
+        this.configuration = {};
+        this.configurationDirectoryPath = null;
 
         // Initialize definitions
         this.definitions = new Map();
@@ -20,6 +24,30 @@ export default class Container
         // Initialize compilers
         this.compilers = new Set();
         this.compiled = false;
+    }
+
+    /**
+     * Set the configuration
+     *
+     * @param   {object}    configuration       Solfege configuration
+     */
+    setConfiguration(configuration)
+    {
+        if (typeof configuration !== "object") {
+            configuration = {};
+        }
+
+        this.configuration = configuration;
+    }
+
+    /**
+     * Set the directory path of the configuration file
+     *
+     * @param   {string}    directoryPath       Directory path
+     */
+    setConfigurationDirectoryPath(directoryPath:string)
+    {
+        this.configurationDirectoryPath = directoryPath;
     }
 
     /**
@@ -275,6 +303,24 @@ export default class Container
             let serviceId = parameter.getId();
             let service = yield this.get(serviceId);
             return service;
+        }
+
+        if (parameter instanceof ConfigurationProperty) {
+            let propertyName = parameter.getName();
+            let propertyValue = null;
+
+            // Find the property
+            let propertySplittedName = propertyName.split(".");
+            let property = this.configuration;
+            for (let name of propertySplittedName) {
+                if (!property.hasOwnProperty(name)) {
+                    return null;
+                }
+                property = property[name];
+                propertyValue = property;
+            }
+
+            return propertyValue;
         }
 
         return parameter;
