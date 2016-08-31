@@ -1,3 +1,5 @@
+![Node version](https://img.shields.io/node/v/solfegejs.svg)
+![Version](https://img.shields.io/npm/v/solfegejs.svg)
 [![Build status](https://travis-ci.org/neolao/solfege.svg)](https://travis-ci.org/neolao/solfege)
 [![dependencies Status](https://david-dm.org/neolao/solfege/status.svg)](https://david-dm.org/neolao/solfege)
 [![devDependencies Status](https://david-dm.org/neolao/solfege/dev-status.svg)](https://david-dm.org/neolao/solfege?type=dev)
