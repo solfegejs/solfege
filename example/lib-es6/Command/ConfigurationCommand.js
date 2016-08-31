@@ -9,12 +9,14 @@ export default class ConfigurationCommand extends ContainerAwareCommand
      * Constructor
      * 
      * @param   {string}    foo     Foo property
+     * @param   {uint32}    port    Port property
      */
-    constructor(foo)
+    constructor(foo:string, port:uint32)
     {
         super();
 
         this.foo = foo;
+        this.port = port;
     }
 
     /**
@@ -31,6 +33,7 @@ export default class ConfigurationCommand extends ContainerAwareCommand
      */
     *execute()
     {
-        console.log(this.foo);
+        console.log("foo:", this.foo);
+        console.log("port:", this.port);
     }
 }

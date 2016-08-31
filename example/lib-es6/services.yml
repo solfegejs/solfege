@@ -3,5 +3,6 @@ services:
         class: "Command/ConfigurationCommand"
         arguments:
             - "%parameters.foo"
+            - "%parameters.port"
         tags:
             - { name: "solfege.console.command" }

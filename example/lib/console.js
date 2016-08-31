@@ -15,7 +15,7 @@ var application = _lib2.default.factory();
 application.addBundle(new _Bundle2.default());
 
 // Load configuration file
-application.loadConfiguration(__dirname + "/configuration.yml");
+application.loadConfiguration(__dirname + "/config/production.yml");
 
 // Start the application
 var parameters = process.argv;

@@ -6,7 +6,7 @@ let application = solfege.factory();
 application.addBundle(new MyBundle);
 
 // Load configuration file
-application.loadConfiguration(`${__dirname}/configuration.yml`);
+application.loadConfiguration(`${__dirname}/config/production.yml`);
 
 // Start the application
 let parameters = process.argv;

@@ -2,7 +2,7 @@ import assert from "assert";
 import path from "path";
 import co from "co";
 import fs from "co-fs";
-import yaml from "js-yaml";
+import configYaml from "config-yaml";
 import {fn as isGenerator} from "is-generator";
 import EventEmitter from "./EventEmitter";
 
@@ -153,8 +153,7 @@ export default class Application extends EventEmitter
                 if (!configurationFileExists) {
                     throw new Error(`Configuration file not found: ${self.configurationFilePath}`);
                 }
-                let configurationFileContent = yield fs.readFile(self.configurationFilePath, 'utf8');
-                let configuration = yaml.safeLoad(configurationFileContent);
+                let configuration = configYaml(self.configurationFilePath, {encoding: "utf8"});
                 let configurationDirectory:string = path.dirname(self.configurationFilePath);
 
                 yield self.emit(Application.EVENT_CONFIGURATION_LOADED, self, configuration, configurationDirectory);
