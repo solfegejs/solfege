@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "co-fs";
-import yaml from "js-yaml";
+import configYaml from "config-yaml";
 import Application from "../../kernel/Application";
 import bindGenerator from "bind-generator";
 import {fn as isGenerator} from "is-generator";
@@ -109,10 +109,9 @@ export default class Bundle
      *
      * @param   {String}    filePath    The file path
      */
-    *loadConfigurationFile(filePath)
+    *loadConfigurationFile(filePath:string)
     {
-        let content = yield fs.readFile(filePath, 'utf8');
-        let configuration = yaml.safeLoad(content);
+        let configuration = configYaml(filePath, {encoding: "utf8"});
 
         // Parse the services
         if (typeof configuration.services !== 'object') {
