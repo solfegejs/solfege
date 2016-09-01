@@ -21,16 +21,6 @@ export default class Bundle
     }
 
     /**
-     * Get bundle path
-     *
-     * @return  {String}        The bundle path
-     */
-    getPath()
-    {
-        return __dirname;
-    }
-
-    /**
      * Initialize the bundle
      *
      * @param   {solfegejs/kernel/Application}  application     Solfege application

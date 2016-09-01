@@ -99,7 +99,7 @@ export default class Application extends EventEmitter
     addBundle(bundle)
     {
         // Check the validity
-        assert.strictEqual(typeof bundle.getPath, 'function', `The bundle ${bundle} must implement getPath method`);
+        //assert.strictEqual(typeof bundle.getPath, 'function', `The bundle ${bundle} must implement getPath method`);
 
         // Add to the registry
         this.bundles.add(bundle);
@@ -113,6 +113,49 @@ export default class Application extends EventEmitter
     getBundles()
     {
         return this.bundles;
+    }
+
+    /**
+     * Get bundle file path
+     *
+     * @param   {object}    bundle  THe bundle instance
+     * @return  {string}            The bundle file path
+     */
+    getBundleFilePath(bundle)
+    {
+        try {
+            bundle.constructor();
+        } catch (error) {
+            let result = error.stack.match(/\((.*):\d+:\d+\)/);
+            if (result) {
+                let bundleFilePath = result[1];
+
+                return bundleFilePath;
+            }
+        }
+
+        if (typeof bundle.getPath === "function") {
+            return bundle.getPath();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get bundle directory path
+     *
+     * @param   {object}    bundle  THe bundle instance
+     * @return  {string}            The bundle directory path
+     */
+    getBundleDirectoryPath(bundle)
+    {
+        let filePath = this.getBundleFilePath(bundle);
+
+        if (filePath) {
+            return path.dirname(filePath);
+        }
+
+        return null;
     }
 
     /**
@@ -139,6 +182,7 @@ export default class Application extends EventEmitter
         {
             // Initialize registered bundles
             for (let bundle of self.bundles) {
+
                 if (!isGenerator(bundle.initialize)) {
                     continue;
                 }

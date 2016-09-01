@@ -28,16 +28,6 @@ export default class Bundle
     }
 
     /**
-     * Get bundle path
-     *
-     * @return  {String}        The bundle path
-     */
-    getPath()
-    {
-        return __dirname;
-    }
-
-    /**
      * Initialize the bundle
      *
      * @param   {solfegejs/kernel/Application}  application     Solfege application
@@ -85,7 +75,10 @@ export default class Bundle
             }
 
             // Otherwise, look at the default configuration file
-            let bundlePath = bundle.getPath();
+            let bundlePath = this.application.getBundleDirectoryPath(bundle);
+            if (!bundlePath) {
+                throw new Error("Unable to find bundle directory path");
+            }
             let configurationFile = `${bundlePath}${path.sep}services.yml`;
             if (yield fs.exists(configurationFile)) {
                 yield this.loadConfigurationFile(configurationFile);
