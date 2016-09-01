@@ -18,6 +18,8 @@ my-bundle
 `lib/Bundle.js`
 ---------------
 
+The only required method is `getPath()` that returns root path of the bundle.
+
 ```javascript
 /**
  * My bundle
@@ -30,6 +32,16 @@ export default class Bundle
      */
     constructor()
     {
+    }
+
+    /**
+     * Get bundle path
+     *
+     * @return  {String}        The bundle path
+     */
+    getPath()
+    {
+        return __dirname;
     }
 }
 ```

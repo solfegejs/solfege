@@ -99,7 +99,7 @@ export default class Application extends EventEmitter
     addBundle(bundle)
     {
         // Check the validity
-        //assert.strictEqual(typeof bundle.getPath, 'function', `The bundle ${bundle} must implement getPath method`);
+        assert.strictEqual(typeof bundle.getPath, 'function', `The bundle ${bundle} must implement getPath method`);
 
         // Add to the registry
         this.bundles.add(bundle);
@@ -123,6 +123,8 @@ export default class Application extends EventEmitter
      */
     getBundleFilePath(bundle)
     {
+        /*
+        // This trick works only on NodeJS 5
         try {
             bundle.constructor();
         } catch (error) {
@@ -133,10 +135,7 @@ export default class Application extends EventEmitter
                 return bundleFilePath;
             }
         }
-
-        if (typeof bundle.getPath === "function") {
-            return bundle.getPath();
-        }
+        */
 
         return null;
     }
@@ -149,11 +148,17 @@ export default class Application extends EventEmitter
      */
     getBundleDirectoryPath(bundle)
     {
+        /*
         let filePath = this.getBundleFilePath(bundle);
-
         if (filePath) {
             return path.dirname(filePath);
         }
+        */
+
+        if (typeof bundle.getPath === "function") {
+            return bundle.getPath();
+        }
+
 
         return null;
     }

@@ -9,4 +9,15 @@ export default class Bundle
     constructor()
     {
     }
+
+    /**
+     * Get bundle path
+     *
+     * @return  {String}        The bundle path
+     */
+    getPath()
+    {
+        return __dirname;
+    }
+
 }
