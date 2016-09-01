@@ -45,7 +45,7 @@ export default class Container
      *
      * @param   {string}    directoryPath       Directory path
      */
-    setConfigurationDirectoryPath(directoryPath:string)
+    setConfigurationDirectoryPath(directoryPath)
     {
         this.configurationDirectoryPath = directoryPath;
     }
