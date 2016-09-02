@@ -313,7 +313,8 @@ export default class Container
             let propertySplittedName = propertyName.split(".");
             let property = this.configuration;
             for (let name of propertySplittedName) {
-                if (!property.hasOwnProperty(name)) {
+                if (typeof property !== "object" || !property.hasOwnProperty(name)) {
+                    console.error(`Property not found: ${propertyName}`);
                     return null;
                 }
                 property = property[name];
