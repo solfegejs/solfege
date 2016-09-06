@@ -29,9 +29,9 @@ services:
     my_service:
         class: "MyClass"
         arguments:
-            - "%foo"
-            - "%server.host"
-            - "%server.port"
+            - "%foo%"
+            - "%server.host%"
+            - "%server.port%"
 ```
 
 

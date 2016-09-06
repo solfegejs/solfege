@@ -2,7 +2,7 @@ services:
     example_configuration:
         class: "Command/ConfigurationCommand"
         arguments:
-            - "%parameters.foo"
-            - "%parameters.port"
+            - "%parameters.foo%"
+            - "%parameters.port%"
         tags:
             - { name: "solfege.console.command" }

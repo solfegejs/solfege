@@ -2,7 +2,6 @@ import assert from "assert";
 import Reflect from "harmony-reflect";
 import Definition from "./Definition";
 import Reference from "./Reference";
-import ConfigurationProperty from "./ConfigurationProperty";
 
 /**
  * Service container
@@ -299,15 +298,21 @@ export default class Container
      */
     *resolveParameter(parameter)
     {
+        // If the parameter is a service reference, then return the service instance
         if (parameter instanceof Reference) {
             let serviceId = parameter.getId();
             let service = yield this.get(serviceId);
             return service;
         }
 
-        if (parameter instanceof ConfigurationProperty) {
-            let propertyName = parameter.getName();
-            let propertyValue = null;
+        // The parameter should be a string now
+        if (typeof parameter !== "string") {
+            return parameter;
+        }
+
+        // Replace configuration properties
+        let resolvedParameter = parameter.replace(/%([^%]+)%/g, (match, propertyName) => {
+            let propertyValue = "";
 
             // Find the property
             let propertySplittedName = propertyName.split(".");
@@ -315,15 +320,22 @@ export default class Container
             for (let name of propertySplittedName) {
                 if (typeof property !== "object" || !property.hasOwnProperty(name)) {
                     console.error(`Property not found: ${propertyName}`);
-                    return null;
+                    return "";
                 }
                 property = property[name];
                 propertyValue = property;
             }
 
             return propertyValue;
+        });
+
+
+        // Check number
+        let numberCast = Number(resolvedParameter);
+        if (numberCast == resolvedParameter) {
+            return numberCast;
         }
 
-        return parameter;
+        return resolvedParameter;
     }
 }

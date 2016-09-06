@@ -1,6 +1,5 @@
 import Definition from "./Definition";
 import Reference from "./Reference";
-import ConfigurationProperty from "./ConfigurationProperty";
 
 /**
  * Definition builder
@@ -42,13 +41,6 @@ export default class DefinitionBuilder
                 if (argument[0] === "@") {
                     let referenceArgument = new Reference(argument.substr(1));
                     definition.addArgument(referenceArgument);
-                    continue;
-                }
-
-                // The argument is a configuration property
-                if (argument[0] === "%") {
-                    let configurationArgument = new ConfigurationProperty(argument.substr(1));
-                    definition.addArgument(configurationArgument);
                     continue;
                 }
 
