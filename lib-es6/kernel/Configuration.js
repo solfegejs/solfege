@@ -54,8 +54,14 @@ export default class Configuration
      */
     get(propertyName:string)
     {
-        let propertyValue = undefined;
+        // Defined properties
+        switch (propertyName) {
+            case "configuration_directory_path":
+                return this.getDirectoryPath();
+        }
 
+        // Find the property value
+        let propertyValue = undefined;
         let propertySplittedName = propertyName.split(".");
         let property = this.store;
         for (let name of propertySplittedName) {
