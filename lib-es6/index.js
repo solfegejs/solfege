@@ -2,6 +2,7 @@ import description from "../package.json";
 import Application from "./kernel/Application";
 import DependencyInjectionBundle from "./bundles/DependencyInjection/Bundle";
 import ConsoleBundle from "./bundles/Console/Bundle";
+import ConfigurationBundle from "./bundles/Configuration/Bundle";
 
 export default {
     // Solfege name
@@ -20,6 +21,7 @@ export default {
         let application = new Application();
         application.addBundle(new DependencyInjectionBundle());
         application.addBundle(new ConsoleBundle());
+        application.addBundle(new ConfigurationBundle());
 
         for (let bundle of bundles) {
             application.addBundle(bundle);

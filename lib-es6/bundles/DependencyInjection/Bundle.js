@@ -60,14 +60,12 @@ export default class Bundle
     /**
      * The configuration is loaded
      *
-     * @param   {solfegejs/kernel/Application}  application     Solfege application
-     * @param   {object}                        configuration   Solfege configuration
-     * @param   {string}                        directory       Configuration directory
+     * @param   {solfegejs/kernel/Application}      application     Solfege application
+     * @param   {solfegejs/kernel/Configuration}    configuration   Solfege configuration
      */
-    *onConfigurationLoaded(application, configuration, directory)
+    *onConfigurationLoaded(application, configuration)
     {
         this.container.setConfiguration(configuration);
-        this.container.setConfigurationDirectoryPath(directory);
     }
 
     /**

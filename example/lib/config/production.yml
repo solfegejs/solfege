@@ -4,3 +4,4 @@ imports:
 
 parameters:
     port: 8080
+    controllers_path: "controllers"

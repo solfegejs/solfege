@@ -5,6 +5,7 @@ import fs from "co-fs";
 import configYaml from "config-yaml";
 import {fn as isGenerator} from "is-generator";
 import EventEmitter from "./EventEmitter";
+import Configuration from "./Configuration";
 
 /**
  * An application
@@ -20,6 +21,7 @@ export default class Application extends EventEmitter
 
         // Configuration file path
         this.configurationFilePath;
+        this.configuration = new Configuration;
 
         // Initialize the bundle registry
         this.bundles = new Set();
@@ -37,7 +39,18 @@ export default class Application extends EventEmitter
     }
 
     /**
-     * Event name of the configuration load
+     * Event name of the configuration loading
+     *
+     * @constant    {String} solfege.kernel.Application.EVENT_CONFIGURATION_LOAD
+     * @default     "configuration_load"
+     */
+    static get EVENT_CONFIGURATION_LOAD()
+    {
+        return "configuration_load";
+    }
+
+    /**
+     * Event name of the end of configuration loading
      *
      * @constant    {String} solfege.kernel.Application.EVENT_CONFIGURATION_LOADED
      * @default     "configuration_loaded"
@@ -174,6 +187,16 @@ export default class Application extends EventEmitter
     }
 
     /**
+     * Get configuration
+     *
+     * @return  {Configuration}         Configuration instance
+     */
+    getConfiguration()
+    {
+        return this.configuration;
+    }
+
+    /**
      * Start the application
      *
      * @param   {Array}     parameters  Application parameters
@@ -197,18 +220,21 @@ export default class Application extends EventEmitter
             yield self.emit(Application.EVENT_BUNDLES_INITIALIZED, self);
 
             // Load configuration file
+            let configuration = self.getConfiguration();
             if (typeof self.configurationFilePath === "string") {
                 let configurationFileExists = yield fs.exists(self.configurationFilePath);
                 if (!configurationFileExists) {
                     throw new Error(`Configuration file not found: ${self.configurationFilePath}`);
                 }
-                let configuration = configYaml(self.configurationFilePath, {encoding: "utf8"});
-                let configurationDirectory:string = path.dirname(self.configurationFilePath);
 
-                yield self.emit(Application.EVENT_CONFIGURATION_LOADED, self, configuration, configurationDirectory);
-            } else {
-                yield self.emit(Application.EVENT_CONFIGURATION_LOADED, self, {}, null);
+                // Set the directory
+                let configurationDirectory:string = path.dirname(self.configurationFilePath);
+                configuration.setDirectoryPath(configurationDirectory);
+
+                // Delegate the loading and parsing
+                yield self.emit(Application.EVENT_CONFIGURATION_LOAD, self, configuration, self.configurationFilePath);
             }
+            yield self.emit(Application.EVENT_CONFIGURATION_LOADED, self, configuration);
 
             // Boot registered bundles
             for (let bundle of self.bundles) {
