@@ -2,6 +2,9 @@ imports:
     - { resource: "default.yml" }
     - { resource: "routing.yml", property: "routing.a.b.c" }
 
+a: first
+z: "%configuration_directory_path%"
+
 parameters:
     port: 8080
-    controllers_path: "controllers"
+    controllers_path: "%z%/../controllers"

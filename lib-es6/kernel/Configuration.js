@@ -43,7 +43,6 @@ export default class Configuration
         this.store = this.merge(this.store, properties);
 
         this.resolveProperties(this.store);
-        console.log(this.store);
     }
 
     /**
@@ -73,7 +72,7 @@ export default class Configuration
             propertyValue = property;
         }
 
-        return propertyValue;
+        return this.resolvePropertyValue(propertyValue);
     }
 
     /**

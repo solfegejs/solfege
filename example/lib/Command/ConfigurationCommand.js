@@ -53,7 +53,6 @@ class ConfigurationCommand extends _ContainerAwareCommand2.default {
   *execute() {
     console.log("foo:", this.foo);
     console.log("port:", this.port);
-    console.log("routing:", this.routing.a.b.c);
     console.log("route controller:", this.routing.a.b.c.route_2.controller);
   }
 }
