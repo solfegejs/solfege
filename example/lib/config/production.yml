@@ -1,5 +1,6 @@
 imports:
     - { resource: "default.yml" }
+    - { resource: "routing.yml", property: "routing.a.b.c" }
 
 parameters:
     port: 8080

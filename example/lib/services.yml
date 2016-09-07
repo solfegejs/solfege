@@ -4,5 +4,6 @@ services:
         arguments:
             - "%parameters.foo%"
             - "%parameters.port%"
+            - "%routing%"
         tags:
             - { name: "solfege.console.command" }

@@ -311,24 +311,23 @@ export default class Container
         }
 
         // Replace configuration properties
-        let resolvedParameter = parameter.replace(/%([^%]+)%/g, (match, propertyName) => {
-            let propertyValue = "";
-
-            // Find the property
-            let propertySplittedName = propertyName.split(".");
-            let property = this.configuration;
-            for (let name of propertySplittedName) {
-                if (typeof property !== "object" || !property.hasOwnProperty(name)) {
-                    console.error(`Property not found: ${propertyName}`);
+        // If the parameter contains only 1 property, then I replace it with the property value
+        // Otherwise, the parameter stays a string and the properties are replaced
+        let resolvedParameter;
+        let singlePropertyMatched = parameter.match(/^%([^%]+)%$/);
+        if (Array.isArray(singlePropertyMatched)) {
+            let propertyName = singlePropertyMatched[1];
+            resolvedParameter = this.resolveConfigurationProperty(propertyName);
+        } else {
+            resolvedParameter = parameter.replace(/%([^%]+)%/g, (match, propertyName) => {
+                let propertyValue = this.resolveConfigurationProperty(propertyName);
+                if (propertyValue === undefined) {
                     return "";
                 }
-                property = property[name];
-                propertyValue = property;
-            }
 
-            return propertyValue;
-        });
-
+                return propertyValue;
+            });
+        }
 
         // Check number
         let numberCast = Number(resolvedParameter);
@@ -337,5 +336,29 @@ export default class Container
         }
 
         return resolvedParameter;
+    }
+
+    /**
+     * Resolve a property name from configuration
+     *
+     * @param   {string}    propertyName    The property name
+     * @return  {*}                         The property value
+     */
+    resolveConfigurationProperty(propertyName:string)
+    {
+        let propertyValue = undefined;
+
+        let propertySplittedName = propertyName.split(".");
+        let property = this.configuration;
+        for (let name of propertySplittedName) {
+            if (typeof property !== "object" || !property.hasOwnProperty(name)) {
+                console.error(`Property not found: ${propertyName}`);
+                return undefined;
+            }
+            property = property[name];
+            propertyValue = property;
+        }
+
+        return propertyValue;
     }
 }
