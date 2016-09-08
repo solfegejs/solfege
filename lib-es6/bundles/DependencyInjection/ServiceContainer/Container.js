@@ -1,5 +1,7 @@
 import assert from "assert";
 import Reflect from "harmony-reflect";
+import {fn as isGenerator} from "is-generator";
+import bindGenerator from "bind-generator";
 import Definition from "./Definition";
 import Reference from "./Reference";
 
@@ -27,11 +29,21 @@ export default class Container
     /**
      * Set the configuration
      *
-     * @param   {object}    configuration       Solfege configuration
+     * @param   {Configuration}     configuration       Solfege configuration
      */
     setConfiguration(configuration)
     {
         this.configuration = configuration;
+    }
+
+    /**
+     * Get the configuration
+     *
+     * @return  {Configuration}     Solfege configuration
+     */
+    getConfiguration()
+    {
+        return this.configuration;
     }
 
     /**
@@ -234,23 +246,47 @@ export default class Container
      */
     *buildInstance(definition:Definition)
     {
-        let classPath = yield this.getDefinitionClassPath(definition);
-        let classArguments = definition.getArguments();
+        let instance;
+        let instanceArguments = definition.getArguments();
 
         // Resolve arguments
-        let classArgumentsResolved = [];
-        for (let classArgument of classArguments) {
-            let classArgumentResolved = yield this.resolveParameter(classArgument);
-            classArgumentsResolved.push(classArgumentResolved);
+        let instanceArgumentsResolved = [];
+        for (let instanceArgument of instanceArguments) {
+            let instanceArgumentResolved = yield this.resolveParameter(instanceArgument);
+            instanceArgumentsResolved.push(instanceArgumentResolved);
         }
 
-        // Instantiate
-        let instance;
-        try {
-            let classObject = require(classPath);
-            instance = Reflect.construct(classObject, classArgumentsResolved);
-        } catch (error) {
-            throw new Error(`Unable to instantiate service "${classPath}": ${error.message}`);
+        // Instantiate with a class
+        let classPath = yield this.getDefinitionClassPath(definition);
+        if (typeof classPath === "string") {
+            try {
+                let classObject = require(classPath);
+                instance = Reflect.construct(classObject, instanceArgumentsResolved);
+            } catch (error) {
+                throw new Error(`Unable to instantiate service "${classPath}": ${error.message}`);
+            }
+        }
+
+        // Instantiate with a factory
+        let factoryServiceReference = definition.getFactoryServiceReference();
+        if (!instance && factoryServiceReference instanceof Reference) {
+            let factoryServiceId = factoryServiceReference.getId();
+            let factoryService = yield this.get(factoryServiceId);
+            let factoryMethodName = definition.getFactoryMethodName();
+            let factoryMethod = factoryService[factoryMethodName];
+
+            if (isGenerator(factoryMethod)) {
+                instance = yield factoryMethod.apply(factoryService, instanceArgumentsResolved);
+            } else if (typeof factoryMethod === "function") {
+                instance = factoryMethod.apply(factoryService, instanceArgumentsResolved);
+            } else {
+                throw new Error(`Factory method must be a function: service ${definition.getId()}`);
+            }
+        }
+
+        // The instance must be created
+        if (!instance) {
+            throw new Error(`Unable to instantiate service: ${definition.getId()}`);
         }
 
         // Call methods

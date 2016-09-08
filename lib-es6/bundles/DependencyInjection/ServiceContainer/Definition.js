@@ -17,6 +17,8 @@ export default class Definition
         this.instance;
         this.classPath;
         this.classReference;
+        this.factoryServiceReference;
+        this.factoryMethodName;
         this.arguments = new Set();
         this.tags = new Set();
         this.methodCalls = new Set();
@@ -90,6 +92,38 @@ export default class Definition
     getClassReference()
     {
         return this.classReference;
+    }
+
+    /**
+     * Set factory method
+     *
+     * @param   {Reference}     serviceReference    Service reference
+     * @param   {string}        methodName          Method name
+     */
+    setFactory(serviceReference:Reference, methodName:string)
+    {
+        this.factoryServiceReference = serviceReference;
+        this.factoryMethodName = methodName;
+    }
+
+    /**
+     * Get factory service reference
+     *
+     * @return  {Reference}     Service reference
+     */
+    getFactoryServiceReference()
+    {
+        return this.factoryServiceReference;
+    }
+
+    /**
+     * Get factory method name
+     *
+     * @return  {string}        Method name
+     */
+    getFactoryMethodName()
+    {
+        return this.factoryMethodName;
     }
 
     /**

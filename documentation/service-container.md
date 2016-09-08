@@ -36,7 +36,7 @@ let foo = container.get("foo");
 let sameFoo = container.get("foo");
 ```
 
-A service is instantiate once.
+A service is instantiated once.
 
 Arguments
 ---------
@@ -68,4 +68,21 @@ services:
     foo:
         class: "Path/To/MyService"
 ```
+
+Service from a factory
+----------------------
+
+You can also define a service with a factory.
+
+Example:
+
+```yaml
+services:
+    my_service:
+        factory: ["@my_factory", create]
+        arguments:
+            - "foo"
+            - 42
+```
+
 

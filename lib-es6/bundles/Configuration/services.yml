@@ -1,1 +1,4 @@
 services:
+    # Expose Solfege configuration
+    solfege_configuration:
+        factory: ["@container", getConfiguration]
