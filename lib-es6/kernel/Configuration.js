@@ -42,7 +42,18 @@ export default class Configuration
     {
         this.store = this.merge(this.store, properties);
 
-        this.resolveProperties(this.store);
+        let iterationCount = 0;
+        while (true) {
+            iterationCount++;
+            if (iterationCount > 100) {
+                throw new Error("Recursion in configuration detected");
+            }
+
+            let dependencyCount = this.resolveProperties(this.store);
+            if (dependencyCount === 0) {
+                break;
+            }
+        }
     }
 
     /**
@@ -72,7 +83,8 @@ export default class Configuration
             propertyValue = property;
         }
 
-        return this.resolvePropertyValue(propertyValue);
+        return propertyValue;
+        //return this.resolvePropertyValue(propertyValue);
     }
 
     /**
@@ -117,24 +129,55 @@ export default class Configuration
      * Resolve properties in a store
      *
      * @private
-     * @param   {*}     store   The store (array or object)
+     * @param   {*}         store   The store (array or object)
+     * @return  {uint32}            The dependency count
      */
     resolveProperties(store)
     {
         if (!Array.isArray(store) && typeof store !== "object") {
-            return;
+            return 0;
         }
+
+        let dependencyCount = 0;
 
         for (let key in store) {
             let item = store[key];
 
             if (typeof item === "object") {
-                this.resolveProperties(item);
+                let subDependencyCount =  this.resolveProperties(item);
+                dependencyCount += subDependencyCount;
                 continue;
             }
 
-            store[key] = this.resolvePropertyValue(item);
+            let resolvedValue = this.resolvePropertyValue(item);
+            if (this.propertyHasDependency(resolvedValue)) {
+                dependencyCount++;
+            } else {
+                store[key] = resolvedValue;
+            }
         }
+
+        return dependencyCount;
+    }
+
+    /**
+     * Indicates that a property value has dependency with another property
+     *
+     * @param   {*}         propertyValue   PropertyValue
+     * @return  {boolean}                   true if the value has dependency, false otherwise
+     */
+    propertyHasDependency(propertyValue)
+    {
+        if (typeof propertyValue !== "string") {
+            return false;
+        }
+
+        let dependentPropertyNames = propertyValue.match(/%[^%]+%/g);
+        if (!Array.isArray(dependentPropertyNames)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
