@@ -305,7 +305,11 @@ export default class Container
             }
 
             // Call the method
-            method.apply(instance, parametersResolved);
+            if (isGenerator(method)) {
+                yield method.apply(instance, parametersResolved);
+            } else {
+                method.apply(instance, parametersResolved);
+            }
         }
 
         return instance;

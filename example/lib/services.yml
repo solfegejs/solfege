@@ -6,5 +6,7 @@ services:
             - "%parameters.port%"
             - "%routing%"
             - "@solfege_configuration"
+        calls:
+            - [addSomething, ["@solfege_configuration", "%parameters.foo%"]]
         tags:
             - { name: "solfege.console.command" }

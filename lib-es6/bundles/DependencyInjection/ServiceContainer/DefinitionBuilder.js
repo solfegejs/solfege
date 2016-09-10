@@ -48,7 +48,7 @@ export default class DefinitionBuilder
         }
 
         // Arguments for class constructor or factory method
-        if (configuration.arguments) {
+        if (Array.isArray(configuration.arguments)) {
             for (let argument of configuration.arguments) {
                 // The argument is a service reference
                 if (argument[0] === "@") {
@@ -59,6 +59,26 @@ export default class DefinitionBuilder
 
                 // The argument is a string
                 definition.addArgument(argument);
+            }
+        }
+
+        // Method calls
+        if (Array.isArray(configuration.calls)) {
+            for (let call of configuration.calls) {
+                let methodName = call[0];
+                let methodArguments = call[1] || [];
+
+                // Convert service reference
+                methodArguments = methodArguments.map((argument) => {
+                    if (typeof argument === "string" && argument[0] === "@") {
+                        let referenceArgument = new Reference(argument.substr(1));
+                        return referenceArgument;
+                    }
+                    return argument;
+                });
+
+                // Add method call to definition
+                definition.addMethodCall(methodName, methodArguments);
             }
         }
 

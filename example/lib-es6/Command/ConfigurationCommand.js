@@ -22,6 +22,11 @@ export default class ConfigurationCommand extends ContainerAwareCommand
         this.configuration = configuration;
     }
 
+    addSomething(config, foo)
+    {
+        console.log(config, foo);
+    }
+
     /**
      * Configure command
      */
