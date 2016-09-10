@@ -6,7 +6,15 @@ services:
             - "%parameters.port%"
             - "%routing%"
             - "@solfege_configuration"
+            - "@example_toc"
         calls:
             - [addSomething, ["@solfege_configuration", "%parameters.foo%"]]
         tags:
             - { name: "solfege.console.command" }
+
+
+    example_class:
+        class: "Klass/Toc"
+
+    example_toc:
+        class: "@example_class"

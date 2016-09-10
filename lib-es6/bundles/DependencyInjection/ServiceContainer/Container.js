@@ -335,6 +335,13 @@ export default class Container
             return parameter;
         }
 
+        // If the parameter is a service reference in string format, then return the serviec instance
+        if (parameter[0] === "@") {
+            let serviceId = parameter.substr(1);
+            let service = yield this.get(serviceId);
+            return service;
+        }
+
         // Replace configuration properties
         let resolvedParameter = this.configuration.resolvePropertyValue(parameter);
 

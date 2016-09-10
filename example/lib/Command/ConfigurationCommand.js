@@ -23,7 +23,7 @@ class ConfigurationCommand extends _ContainerAwareCommand2.default {
      * @param   {uint32}    port    Port property
      * @param   {object}    routing Routing property
      */
-    constructor(foo, port, routing, configuration) {
+    constructor(foo, port, routing, configuration, toc) {
         if (!(typeof foo === 'string')) {
             throw new TypeError("Value of argument \"foo\" violates contract.\n\nExpected:\nstring\n\nGot:\n" + _inspect(foo));
         }
@@ -38,11 +38,12 @@ class ConfigurationCommand extends _ContainerAwareCommand2.default {
         this.port = port;
         this.routing = routing;
         this.configuration = configuration;
+        this.toc = toc;
     }
 
-    addSomething(config, foo) {
-        console.log(config, foo);
-    }
+    addSomething(config, foo) {}
+    //console.log(config, foo);
+
 
     /**
      * Configure command
@@ -60,6 +61,7 @@ class ConfigurationCommand extends _ContainerAwareCommand2.default {
         console.log("port:", this.port);
         console.log("route controller:", this.routing.a.b.c.route_2.controller);
         console.log("foo from configuration service:", this.configuration.get("parameters.foo"));
+        console.log("toc", this.toc);
     }
 }
 exports.default = ConfigurationCommand;

@@ -130,7 +130,6 @@ export default class Bundle
                     let classConstructor = require(classPath);
                     serviceConfiguration.class = classPath;
                 } catch (error) {
-                    serviceConfiguration.class = serviceConfiguration.class;
                 }
             }
 
