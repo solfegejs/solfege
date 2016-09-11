@@ -1,3 +1,5 @@
+import nodePath from "path";
+
 /**
  * Application configuration
  */
@@ -66,8 +68,13 @@ export default class Configuration
     {
         // Defined properties
         switch (propertyName) {
+            // Directory path of the configuration file
             case "configuration_directory_path":
                 return this.getDirectoryPath();
+
+            // Directory path of the main file
+            case "main_directory_path":
+                return nodePath.dirname(require.main.filename);
         }
 
         // Find the property value
