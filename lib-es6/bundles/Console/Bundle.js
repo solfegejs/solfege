@@ -69,6 +69,9 @@ export default class Bundle
         let commandsRegistry = yield this.container.get("solfege_console_commands_registry");
         let commands = commandsRegistry.getCommands();
 
+        // Copy parameters
+        parameters = parameters.slice(0);
+
         // Configure commands
         // and create a map
         let commandMap = new Map;
@@ -88,13 +91,14 @@ export default class Bundle
 
         // Check if the user executes a command
         if (parameters.length > 0) {
-            let commandName = parameters[0];
+            let commandName = parameters.shift();
 
             if (commandMap.has(commandName)) {
                 let command = commandMap.get(commandName);
 
                 // Execute the command
-                yield command.execute();
+                let commandParameters = parameters.slice(0);
+                yield command.execute(commandParameters);
                 return;
             }
         }
