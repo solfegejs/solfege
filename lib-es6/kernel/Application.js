@@ -2,7 +2,6 @@ import assert from "assert";
 import path from "path";
 import co from "co";
 import fs from "co-fs";
-import configYaml from "config-yaml";
 import {fn as isGenerator} from "is-generator";
 import EventEmitter from "./EventEmitter";
 import Configuration from "./Configuration";
