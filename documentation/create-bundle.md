@@ -70,7 +70,7 @@ This file defines a command for the console bundle, see [Command Line Interface 
 
 
 ```javascript
-import ContainerAwareCommand from "solfegejs/lib/bundles/Console/Command/ContainerAwareCommand";
+import ContainerAwareCommand from "solfegejs-cli/lib/Command/ContainerAwareCommand";
 
 /**
  * Start command

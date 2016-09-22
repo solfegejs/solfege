@@ -1,4 +1,4 @@
-import ContainerAwareCommand from "../../../lib/bundles/Console/Command/ContainerAwareCommand";
+import ContainerAwareCommand from "solfegejs-cli/lib/Command/ContainerAwareCommand";
 
 /**
  * Configuration command

@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-var _ContainerAwareCommand = require("../../../lib/bundles/Console/Command/ContainerAwareCommand");
+var _ContainerAwareCommand = require("solfegejs-cli/lib/Command/ContainerAwareCommand");
 
 var _ContainerAwareCommand2 = _interopRequireDefault(_ContainerAwareCommand);
 

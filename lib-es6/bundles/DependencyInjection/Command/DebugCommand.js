@@ -1,5 +1,5 @@
 import colors from "colors";
-import ContainerAwareCommand from "../../Console/Command/ContainerAwareCommand";
+import ContainerAwareCommand from "solfegejs-cli/lib/Command/ContainerAwareCommand";
 
 /**
  * Debug command
