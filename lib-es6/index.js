@@ -1,6 +1,6 @@
 import description from "../package.json";
 import Application from "./kernel/Application";
-import DependencyInjectionBundle from "./bundles/DependencyInjection/Bundle";
+import DependencyInjectionBundle from "solfegejs-dependency-injection";
 import ConsoleBundle from "solfegejs-cli";
 import ConfigurationBundle from "./bundles/Configuration/Bundle";
 
