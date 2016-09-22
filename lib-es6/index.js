@@ -2,7 +2,7 @@ import description from "../package.json";
 import Application from "./kernel/Application";
 import DependencyInjectionBundle from "solfegejs-dependency-injection";
 import ConsoleBundle from "solfegejs-cli";
-import ConfigurationBundle from "./bundles/Configuration/Bundle";
+import ConfigurationBundle from "solfegejs-configuration";
 
 export default {
     // Solfege name

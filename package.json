@@ -2,7 +2,7 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "2.0.30",
+    "version"       : "2.0.31",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
@@ -24,7 +24,8 @@
         "colors"            : "^1.1",
         "minimist"          : "^1.2",
         "solfegejs-cli"     : "2.x",
-        "solfegejs-dependency-injection": "1.x"
+        "solfegejs-dependency-injection": "1.x",
+        "solfegejs-configuration": "1.x"
     },
     "devDependencies":
     {
