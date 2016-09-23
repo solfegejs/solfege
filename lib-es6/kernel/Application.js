@@ -11,6 +11,14 @@ import Configuration from "./Configuration";
  */
 export default class Application extends EventEmitter
 {
+    static EVENT_CONFIGURATION_LOAD     = "configuration_load";
+    static EVENT_CONFIGURATION_LOADED   = "configuration_loaded";
+    static EVENT_BUNDLES_INITIALIZED    = "bundles_initialized";
+    static EVENT_BUNDLES_BOOTED         = "bundles_booted";
+    static EVENT_START                  = "start";
+    static EVENT_END                    = "end";
+
+
     /**
      * Constructor
      */
@@ -35,72 +43,6 @@ export default class Application extends EventEmitter
 
         // Error handler
         process.on("uncaughtException", this.onErrorUnknown.bind(this));
-    }
-
-    /**
-     * Event name of the configuration loading
-     *
-     * @constant    {String} solfege.kernel.Application.EVENT_CONFIGURATION_LOAD
-     * @default     "configuration_load"
-     */
-    static get EVENT_CONFIGURATION_LOAD()
-    {
-        return "configuration_load";
-    }
-
-    /**
-     * Event name of the end of configuration loading
-     *
-     * @constant    {String} solfege.kernel.Application.EVENT_CONFIGURATION_LOADED
-     * @default     "configuration_loaded"
-     */
-    static get EVENT_CONFIGURATION_LOADED()
-    {
-        return "configuration_loaded";
-    }
-
-    /**
-     * Event name of the end of the bundles initialization
-     *
-     * @constant    {String} solfege.kernel.Application.EVENT_BUNDLES_INITALIZED
-     * @default     "bundles_initialized"
-     */
-    static get EVENT_BUNDLES_INITIALIZED()
-    {
-        return "bundles_initialized";
-    }
-
-    /**
-     * Event name of the end of the bundles boot
-     *
-     * @constant    {String} solfege.kernel.Application.EVENT_BUNDLES_BOOTED
-     * @default     "bundles_booted"
-     */
-    static get EVENT_BUNDLES_BOOTED()
-    {
-        return "bundles_booted";
-    }
-
-    /**
-     * Event name of the application start
-     *
-     * @constant    {String} solfege.kernel.Application.EVENT_START
-     * @default     "start"
-     */
-    static get EVENT_START()
-    {
-        return "start";
-    }
-
-    /**
-     * Event name of the application end
-     *
-     * @constant    {String} solfege.kernel.Application.EVENT_END
-     * @default     "end"
-     */
-    static get EVENT_END()
-    {
-        return "end";
     }
 
     /**
@@ -207,14 +149,22 @@ export default class Application extends EventEmitter
         // Start the generator based flow
         co(function *()
         {
+            // Install bundle dependencies
+            for (let bundle of self.bundles) {
+                if (isGenerator(bundle.installDependencies)) {
+                    yield bundle.installDependencies(self);
+                } else if (typeof bundle.installDependencies === "function") {
+                    bundle.installDependencies(self);
+                }
+            }
+
             // Initialize registered bundles
             for (let bundle of self.bundles) {
-
-                if (!isGenerator(bundle.initialize)) {
-                    continue;
+                if (isGenerator(bundle.initialize)) {
+                    yield bundle.initialize(self);
+                } else if (typeof bundle.initialize === "function") {
+                    bundle.initialize(self);
                 }
-
-                yield bundle.initialize(self);
             }
             yield self.emit(Application.EVENT_BUNDLES_INITIALIZED, self);
 
@@ -237,11 +187,11 @@ export default class Application extends EventEmitter
 
             // Boot registered bundles
             for (let bundle of self.bundles) {
-                if (!isGenerator(bundle.boot)) {
-                    continue;
+                if (isGenerator(bundle.boot)) {
+                    yield bundle.boot();
+                } else if (typeof bundle.boot === "function") {
+                    bundle.boot();
                 }
-
-                yield bundle.boot();
             }
             yield self.emit(Application.EVENT_BUNDLES_BOOTED, self);
 
