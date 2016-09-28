@@ -18,7 +18,5 @@ application.addBundle(new _Bundle2.default());
 application.loadConfiguration(__dirname + "/config/production.yml");
 
 // Start the application
-var parameters = process.argv;
-parameters.shift();
-parameters.shift();
+var parameters = process.argv.slice(2);
 application.start(parameters);

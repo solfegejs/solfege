@@ -111,9 +111,7 @@ let MyBundle = require("./lib/Bundle");
 let application = solfege.factory();
 application.addBundle(new MyBundle);
 
-let parameters = process.argv;
-parameters.shift();
-parameters.shift();
+let parameters = process.argv.slice(2);
 application.start(parameters);
 ```
 

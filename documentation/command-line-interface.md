@@ -21,9 +21,7 @@ let application = solfege.factory();
 
 // Get command line parameters
 // Remove 2 first parameters (node and the script)
-let parameters = process.argv;
-parameters.shift();
-parameters.shift();
+let parameters = process.argv.slice(2);
 
 // Start the application
 application.start(parameters);
@@ -52,9 +50,15 @@ export default class MyCommand
         return "my-command";
     }
 
-    *execute()
+    *execute(parameters, options)
     {
         console.log("My command executed");
     }
 }
+```
+
+Now you can call your command like that:
+
+```bash
+node console.js my-command
 ```

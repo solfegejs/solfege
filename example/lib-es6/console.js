@@ -9,7 +9,5 @@ application.addBundle(new MyBundle);
 application.loadConfiguration(`${__dirname}/config/production.yml`);
 
 // Start the application
-let parameters = process.argv;
-parameters.shift();
-parameters.shift();
+let parameters = process.argv.slice(2);
 application.start(parameters);
