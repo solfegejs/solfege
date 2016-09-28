@@ -25,8 +25,8 @@ Installation
 npm install solfegejs
 ```
 
-Example
--------
+Basic example
+-------------
 
 ```javascript
 import solfege from "solfegejs";
@@ -41,7 +41,7 @@ application.start();
 ```
 
 ```bash
-node --harmony start.js
+node start.js
 ```
 
 Documentation

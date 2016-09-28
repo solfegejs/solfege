@@ -42,14 +42,44 @@ services:
 
 And your class must implement 2 methods (`getName` and `execute`):
 
+| Method         | Description                 | Mandatory |
+| -------------- | --------------------------- | --------- |
+| getName        | Returns command name        | Yes       |
+| execute        | Execute the command         | Yes       |
+| getDescription | Returns command description | No        |
+
 ```javascript
+/**
+ * My command
+ */
 export default class MyCommand
 {
+    /**
+     * Get command name
+     *
+     * @return  {string}    Command name
+     */
     getName()
     {
         return "my-command";
     }
 
+    /**
+     * Get command description
+     *
+     * @return  {string}    Command description
+     */
+    getDescription()
+    {
+        return "My useful command";
+    }
+
+    /**
+     * Execute the command
+     *
+     * @param   {Array}     parameters      Parameters
+     * @param   {Array}     options         Optional parameters
+     */
     *execute(parameters, options)
     {
         console.log("My command executed");
@@ -57,8 +87,10 @@ export default class MyCommand
 }
 ```
 
+
 Now you can call your command like that:
 
 ```bash
 node console.js my-command
 ```
+

@@ -1,10 +1,10 @@
-import assert from "assert";
-import path from "path";
-import co from "co";
-import fs from "co-fs";
-import {fn as isGenerator} from "is-generator";
-import EventEmitter from "./EventEmitter";
-import Configuration from "./Configuration";
+import assert from "assert"
+import path from "path"
+import co from "co"
+import fs from "co-fs"
+import {fn as isGenerator} from "is-generator"
+import EventEmitter from "./EventEmitter"
+import Configuration from "./Configuration"
 
 /**
  * An application
@@ -28,6 +28,7 @@ export default class Application extends EventEmitter
 
         // Configuration file path
         this.configurationFilePath;
+        this.configurationFileFormat;
         this.configuration = new Configuration;
 
         // Initialize the bundle registry
@@ -121,10 +122,22 @@ export default class Application extends EventEmitter
      * Load configuration file
      *
      * @param   {string}    filePath    Configuration file path
+     * @param   {string}    format      File format
      */
-    loadConfiguration(filePath:string)
+    loadConfigurationFile(filePath:string, format:string)
     {
         this.configurationFilePath = path.resolve(filePath);
+        this.configurationFileFormat = format;
+    }
+
+    /**
+     * Load confguration
+     *
+     * @param   {object}    properties  Configuration properties
+     */
+    loadConfiguration(properties:Object)
+    {
+        this.configuration.addProperties(properties);
     }
 
     /**
@@ -181,7 +194,13 @@ export default class Application extends EventEmitter
                 configuration.setDirectoryPath(configurationDirectory);
 
                 // Delegate the loading and parsing
-                yield self.emit(Application.EVENT_CONFIGURATION_LOAD, self, configuration, self.configurationFilePath);
+                yield self.emit(
+                    Application.EVENT_CONFIGURATION_LOAD, 
+                    self, 
+                    configuration, 
+                    self.configurationFilePath,
+                    self.configurationFileFormat
+                );
             }
             yield self.emit(Application.EVENT_CONFIGURATION_LOADED, self, configuration);
 

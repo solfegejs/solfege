@@ -70,28 +70,40 @@ This file defines a command for the console bundle, see [Command Line Interface 
 
 
 ```javascript
-import ContainerAwareCommand from "solfegejs-cli/lib/Command/ContainerAwareCommand";
-
 /**
  * Start command
  */
 export default class StartCommand extends ContainerAwareCommand
 {
     /**
-     * Configure command
+     * Get command name
+     *
+     * @return  {string}    Command name
      */
-    *configure()
+    getName()
     {
-        this.setName("mybundle:start");
-        this.setDescription("Start my bundle");
+        return "mybundle:start";
+    }
+
+    /**
+     * Get command description
+     *
+     * @return  {string}    Command description
+     */
+    getDescription()
+    {
+        return "Start my bundle";
     }
 
     /**
      * Execute the command
+     *
+     * @param   {Array}     parameters      Parameters
+     * @param   {Array}     options         Optional parameters
      */
-    *execute()
+    *execute(parameters, options)
     {
-        console.info("My bundle started");
+        console.log("My bundle is started");
     }
 }
 ```

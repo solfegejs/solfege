@@ -19,7 +19,7 @@ let application = solfege.factory();
 application.addBundle(new MyBundle);
 
 // Load configuration
-application.loadConfiguration(`${__dirname}/config/production.yml`);
+application.loadConfigurationFile(`${__dirname}/config/production.yml`, "yaml");
 ```
 
 Now the properties are available in the service container:
@@ -62,4 +62,10 @@ server:
     port: 8080
 ```
 
+Preset properties
+-----------------
 
+| Name                           | Description                                       |
+| ------------------------------ | ------------------------------------------------- |
+| `main_directory_path`          | Directory of the main NodeJS file                 |
+| `configuration_directory_path` | Directory of the configuration file (if provided) |
