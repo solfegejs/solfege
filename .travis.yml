@@ -1,9 +1,10 @@
 language: node_js
 node_js:
-  - "5"
-  - "6"
+    - "5"
+    - "6"
+    - "7"
 
 branches:
-  only:
-    - master
-    - /^\d\.\d\.x$/
+    only:
+        - master
+        - /^\d\.\d\.x$/

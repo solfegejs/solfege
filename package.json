@@ -2,7 +2,7 @@
     "name"          : "solfegejs",
     "description"   : "The Solfege framework",
     "homepage"      : "http://solfegejs.com",
-    "version"       : "2.1.0",
+    "version"       : "2.1.1",
     "author"        : "neolao <contact@neolao.com>",
     "private"       : false,
     "repository"    : "https://github.com/neolao/solfege.git",
@@ -44,13 +44,13 @@
     },
     "scripts"       :
     {
-        "test"             : "mocha --harmony --compilers js:babel-core/register --recursive --reporter spec --bail",
-        "coverage"         : "node --harmony ./node_modules/istanbul/lib/cli.js cover -- ./node_modules/mocha/bin/_mocha --harmony --recursive",
-        "documentation"    : "jsdoc --recurse ./lib-es6 --destination ./documentation",
-        "watch"            : "babel --watch --out-dir lib lib-es6 --copy-files",
-        "compile"          : "babel --out-dir lib lib-es6 --copy-files",
-        "example-compile"  : "babel --out-dir example/lib example/lib-es6 --copy-files",
-        "example-console"  : "node --harmony  example/lib/console.js"
+        "prepare"           : "npm run compile",
+        "test"              : "mocha --harmony --compilers js:babel-core/register --recursive --reporter spec --bail",
+        "coverage"          : "node --harmony ./node_modules/istanbul/lib/cli.js cover -- ./node_modules/mocha/bin/_mocha --harmony --recursive",
+        "watch"             : "babel --watch --out-dir lib src --copy-files",
+        "compile"           : "babel --out-dir lib src --copy-files",
+        "example-compile"   : "babel --out-dir example/lib example/src --copy-files",
+        "example-console"   : "node --harmony  example/lib/console.js"
     },
     "babel": {
         "presets": ["stage-0"],
