@@ -10,13 +10,10 @@ var _Bundle2 = _interopRequireDefault(_Bundle);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Create application instance
 var application = _lib2.default.factory();
 application.addBundle(new _Bundle2.default());
 
-// Load configuration file
 application.loadConfigurationFile(__dirname + "/config/production.yml", "yaml");
 
-// Start the application
 var parameters = process.argv.slice(2);
 application.start(parameters);

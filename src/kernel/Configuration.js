@@ -1,3 +1,4 @@
+/* @flow */
 import nodePath from "path";
 
 /**
@@ -6,12 +7,20 @@ import nodePath from "path";
 export default class Configuration
 {
     /**
+     * Directory path of the configuration
+     */
+    directoryPath:string;
+
+    /**
+     * Store
+     */
+    store:Object;
+
+    /**
      * Constructor
      */
-    constructor()
+    constructor():void
     {
-        this.directoryPath;
-
         this.store = {};
     }
 
@@ -20,7 +29,7 @@ export default class Configuration
      *
      * @param   {string}    path    Directory path
      */
-    setDirectoryPath(path:string)
+    setDirectoryPath(path:string):void
     {
         this.directoryPath = path;
     }
@@ -30,7 +39,7 @@ export default class Configuration
      *
      * @return  {string}    Directory path
      */
-    getDirectoryPath()
+    getDirectoryPath():string
     {
         return this.directoryPath;
     }
@@ -38,20 +47,20 @@ export default class Configuration
     /**
      * Add properties
      *
-     * @param   {object}    properties  Properties
+     * @param   {Object}    properties  Properties
      */
-    addProperties(properties)
+    addProperties(properties:Object):void
     {
         this.store = this.merge(this.store, properties);
 
-        let iterationCount = 0;
+        let iterationCount:number = 0;
         while (true) {
             iterationCount++;
             if (iterationCount > 100) {
                 throw new Error("Recursion in configuration detected");
             }
 
-            let dependencyCount = this.resolveProperties(this.store);
+            let dependencyCount:number = this.resolveProperties(this.store);
             if (dependencyCount === 0) {
                 break;
             }
@@ -64,7 +73,7 @@ export default class Configuration
      * @param   {string}    propertyName    The property name
      * @return  {*}                         The property value
      */
-    get(propertyName:string)
+    get(propertyName:string):any
     {
         // Defined properties
         switch (propertyName) {
@@ -78,10 +87,10 @@ export default class Configuration
         }
 
         // Find the property value
-        let propertyValue = undefined;
-        let propertySplittedName = propertyName.split(".");
-        let property = this.store;
-        for (let name of propertySplittedName) {
+        let propertyValue:any = undefined;
+        let propertySplittedName:Array<string> = propertyName.split(".");
+        let property:Object = this.store;
+        for (let name:string of propertySplittedName) {
             if (typeof property !== "object" || !property.hasOwnProperty(name)) {
                 console.error(`Property not found: ${propertyName}`);
                 return undefined;
@@ -98,8 +107,9 @@ export default class Configuration
      * Resolve a property value
      *
      * @param   {*}     value   Property value
+     * @return  {*}             Resolved property value
      */
-    resolvePropertyValue(value)
+    resolvePropertyValue(value:any):any
     {
         if (typeof value !== "string") {
             return value;
@@ -113,7 +123,7 @@ export default class Configuration
             let propertyName = singlePropertyMatched[1];
             resolvedValue = this.get(propertyName);
         } else {
-            resolvedValue = value.replace(/%([^%]+)%/g, (match, propertyName) => {
+            resolvedValue = value.replace(/%([^%]+)%/g, (match, propertyName):any => {
                 let propertyValue = this.get(propertyName);
                 if (propertyValue === undefined) {
                     return "";
@@ -124,7 +134,7 @@ export default class Configuration
         }
 
         // Check number
-        let numberCast = Number(resolvedValue);
+        let numberCast:number = Number(resolvedValue);
         if (numberCast == resolvedValue) {
             return numberCast;
         }
@@ -137,21 +147,21 @@ export default class Configuration
      *
      * @private
      * @param   {*}         store   The store (array or object)
-     * @return  {uint32}            The dependency count
+     * @return  {number}            The dependency count
      */
-    resolveProperties(store)
+    resolveProperties(store:any):number
     {
         if (!Array.isArray(store) && typeof store !== "object") {
             return 0;
         }
 
-        let dependencyCount = 0;
+        let dependencyCount:number = 0;
 
-        for (let key in store) {
+        for (let key:string in store) {
             let item = store[key];
 
             if (typeof item === "object") {
-                let subDependencyCount =  this.resolveProperties(item);
+                let subDependencyCount:number =  this.resolveProperties(item);
                 dependencyCount += subDependencyCount;
                 continue;
             }
@@ -173,7 +183,7 @@ export default class Configuration
      * @param   {*}         propertyValue   PropertyValue
      * @return  {boolean}                   true if the value has dependency, false otherwise
      */
-    propertyHasDependency(propertyValue)
+    propertyHasDependency(propertyValue:any):boolean
     {
         if (typeof propertyValue !== "string") {
             return false;
@@ -194,7 +204,7 @@ export default class Configuration
      * @param   {object}    source          Source properties
      * @param   {object}    properties      New properties
      */
-    merge(source, properties)
+    merge(source:any, properties:any):any
     {
         let result;
 
@@ -206,7 +216,8 @@ export default class Configuration
             result = result.concat(source);
 
             // Merge new properties
-            for (let index in properties) {
+            for (let key:string in properties) {
+                let index:number = parseInt(key);
                 let item = properties[index];
 
                 if (typeof result[index] === "undefined") {
@@ -225,13 +236,13 @@ export default class Configuration
 
             // Copy source properties
             if (typeof source === "object") {
-                for (let key in source) {
+                for (let key:string in source) {
                     result[key] = source[key];
                 }
             }
 
             // Merge new properties
-            for (let key in properties) {
+            for (let key:string in properties) {
                 let item = properties[key];
 
                 if (typeof result[key] === "undefined") {

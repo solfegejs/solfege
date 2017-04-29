@@ -1,4 +1,5 @@
 .DS_Store
+yarn.lock
 
 lib-cov
 *.seed

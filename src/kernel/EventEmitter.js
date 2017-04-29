@@ -1,3 +1,4 @@
+/* @flow */
 import assert from "assert";
 
 /**
@@ -8,9 +9,14 @@ import assert from "assert";
 export default class EventEmitter
 {
     /**
+     * Listeners
+     */
+    listeners:*;
+
+    /**
      * Constructor
      */
-    constructor()
+    constructor():void
     {
         // Initialize the map of listeners
         this.listeners = new Map();
@@ -19,25 +25,24 @@ export default class EventEmitter
     /**
      * Emit an event
      *
-     * @public
-     * @param   {String}    name        The event name
+     * @param   {string}    name        The event name
      * @param   {...*}      parameter   A parameter
      */
-    *emit(name:string)
+    *emit(name:string):*
     {
         // Get the listeners
         let eventListeners = this.getEventListeners(name);
 
         // Build the handler arguments
-        let handlerArguments = [];
-        let argumentCount = arguments.length;
-        for (let argumentIndex = 1; argumentIndex < argumentCount; ++argumentIndex) {
+        let handlerArguments:Array<string> = [];
+        let argumentCount:number = arguments.length;
+        for (let argumentIndex:number = 1; argumentIndex < argumentCount; ++argumentIndex) {
             handlerArguments.push(arguments[argumentIndex]);
         }
 
         // Execute each handler
-        let listenerCount = eventListeners.length;
-        for (let listenerIndex = 0; listenerIndex < listenerCount; ++listenerIndex) {
+        let listenerCount:number = eventListeners.length;
+        for (let listenerIndex:number = 0; listenerIndex < listenerCount; ++listenerIndex) {
             let handler = eventListeners[listenerIndex];
             yield *handler.apply(this, handlerArguments);
         }
@@ -46,11 +51,10 @@ export default class EventEmitter
     /**
      * Add a listener
      *
-     * @public
-     * @param   {String}    name        The event name
+     * @param   {string}    name        The event name
      * @param   {Function}  handler     The listener function
      */
-    on(name:string, handler)
+    on(name:string, handler:Function):void
     {
         // Check the handler
         assert.strictEqual(typeof handler, 'function', 'The event handler must be a generator function');
@@ -64,17 +68,16 @@ export default class EventEmitter
      * Get the listeners of an event name
      *
      * @private
-     * @param   {String}        name    The event name
+     * @param   {string}        name    The event name
      * @return  {Function[]}            The listeners
      */
-    getEventListeners(name:string)
+    getEventListeners(name:string):*
     {
-        let eventListeners;
+        let eventListeners:* = [];
 
         if (this.listeners.has(name)) {
             eventListeners = this.listeners.get(name);
         } else {
-            eventListeners = [];
             this.listeners.set(name, eventListeners);
         }
 

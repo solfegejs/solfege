@@ -1,28 +1,49 @@
+/* @flow */
 import assert from "assert"
 import path from "path"
 import co from "co"
-import fs from "co-fs"
+import fs from "../util/fs"
 import {fn as isGenerator} from "is-generator"
 import EventEmitter from "./EventEmitter"
 import Configuration from "./Configuration"
+import type {BundleInterface} from "../../interface"
 
 /**
  * An application
  */
 export default class Application extends EventEmitter
 {
-    static EVENT_CONFIGURATION_LOAD     = "configuration_load";
-    static EVENT_CONFIGURATION_LOADED   = "configuration_loaded";
-    static EVENT_BUNDLES_INITIALIZED    = "bundles_initialized";
-    static EVENT_BUNDLES_BOOTED         = "bundles_booted";
-    static EVENT_START                  = "start";
-    static EVENT_END                    = "end";
+    static EVENT_CONFIGURATION_LOAD:string     = "configuration_load";
+    static EVENT_CONFIGURATION_LOADED:string   = "configuration_loaded";
+    static EVENT_BUNDLES_INITIALIZED:string    = "bundles_initialized";
+    static EVENT_BUNDLES_BOOTED:string         = "bundles_booted";
+    static EVENT_START:string                  = "start";
+    static EVENT_END:string                    = "end";
 
+    /**
+     * Format of the configuration file
+     */
+    configurationFileFormat:string;
+
+    /**
+     * Configuration file path
+     */
+    configurationFilePath:string;
+
+    /**
+     * Configuration instance
+     */
+    configuration:Configuration;
+
+    /**
+     * Bundle list
+     */
+    bundles:*;
 
     /**
      * Constructor
      */
-    constructor()
+    constructor():void
     {
         super();
 
@@ -35,8 +56,8 @@ export default class Application extends EventEmitter
         this.bundles = new Set();
 
         // Exit handler
-        let bindedExitHandler = this.onExit.bind(this);
-        let bindedKillHandler = this.onKill.bind(this);
+        let bindedExitHandler:Function = this.onExit.bind(this);
+        let bindedKillHandler:Function = this.onKill.bind(this);
         process.on("exit", bindedExitHandler);
         process.on("SIGINT", bindedKillHandler);
         process.on("SIGTERM", bindedKillHandler);
@@ -49,12 +70,12 @@ export default class Application extends EventEmitter
     /**
      * Add a bundle to the registry
      *
-     * @param   {*}     bundle  A bundle
+     * @param   {BundleInterface}   bundle  A bundle
      */
-    addBundle(bundle)
+    addBundle(bundle:BundleInterface):void
     {
         // Check the validity
-        assert.strictEqual(typeof bundle.getPath, 'function', `The bundle ${bundle} must implement getPath method`);
+        assert.strictEqual(typeof bundle.getPath, 'function', `The bundle ${bundle.toString()} must implement getPath method`);
 
         // Add to the registry
         this.bundles.add(bundle);
@@ -65,7 +86,7 @@ export default class Application extends EventEmitter
      *
      * @return  {Set}           The bundles
      */
-    getBundles()
+    getBundles():*
     {
         return this.bundles;
     }
@@ -73,10 +94,10 @@ export default class Application extends EventEmitter
     /**
      * Get bundle file path
      *
-     * @param   {object}    bundle  THe bundle instance
-     * @return  {string}            The bundle file path
+     * @param   {BundleInterface}   bundle  Bundle instance
+     * @return  {string}                    Bundle file path
      */
-    getBundleFilePath(bundle)
+    getBundleFilePath(bundle:BundleInterface):?string
     {
         /*
         // This trick works only on NodeJS 5
@@ -98,10 +119,10 @@ export default class Application extends EventEmitter
     /**
      * Get bundle directory path
      *
-     * @param   {object}    bundle  THe bundle instance
-     * @return  {string}            The bundle directory path
+     * @param   {BundleInterface}   bundle  Bundle instance
+     * @return  {string}                    Bundle directory path
      */
-    getBundleDirectoryPath(bundle)
+    getBundleDirectoryPath(bundle:BundleInterface):?string
     {
         /*
         let filePath = this.getBundleFilePath(bundle);
@@ -124,7 +145,7 @@ export default class Application extends EventEmitter
      * @param   {string}    filePath    Configuration file path
      * @param   {string}    format      File format
      */
-    loadConfigurationFile(filePath:string, format:string)
+    loadConfigurationFile(filePath:string, format:string):void
     {
         this.configurationFilePath = path.resolve(filePath);
         this.configurationFileFormat = format;
@@ -135,7 +156,7 @@ export default class Application extends EventEmitter
      *
      * @param   {object}    properties  Configuration properties
      */
-    loadConfiguration(properties:Object)
+    loadConfiguration(properties:Object):void
     {
         this.configuration.addProperties(properties);
     }
@@ -145,7 +166,7 @@ export default class Application extends EventEmitter
      *
      * @return  {Configuration}         Configuration instance
      */
-    getConfiguration()
+    getConfiguration():Configuration
     {
         return this.configuration;
     }
@@ -155,9 +176,9 @@ export default class Application extends EventEmitter
      *
      * @param   {Array}     parameters  Application parameters
      */
-    start(parameters:Array = [])
+    start(parameters:Array<string> = []):void
     {
-        let self = this;
+        let self:Application = this;
 
         // Start the generator based flow
         co(function *()
@@ -182,7 +203,7 @@ export default class Application extends EventEmitter
             yield self.emit(Application.EVENT_BUNDLES_INITIALIZED, self);
 
             // Load configuration file
-            let configuration = self.getConfiguration();
+            let configuration:Configuration = self.getConfiguration();
             if (typeof self.configurationFilePath === "string") {
                 let configurationFileExists = yield fs.exists(self.configurationFilePath);
                 if (!configurationFileExists) {
@@ -195,9 +216,9 @@ export default class Application extends EventEmitter
 
                 // Delegate the loading and parsing
                 yield self.emit(
-                    Application.EVENT_CONFIGURATION_LOAD, 
-                    self, 
-                    configuration, 
+                    Application.EVENT_CONFIGURATION_LOAD,
+                    self,
+                    configuration,
                     self.configurationFilePath,
                     self.configurationFileFormat
                 );
@@ -225,7 +246,7 @@ export default class Application extends EventEmitter
         })
 
         // Handle error
-        .catch(error => {
+        .catch((error):void => {
             console.error(error.message);
             console.error(error.stack);
         });
@@ -237,7 +258,7 @@ export default class Application extends EventEmitter
      * @private
      * @param   {Error}     error   Error instance
      */
-    onErrorUnknown(error)
+    onErrorUnknown(error:Error):void
     {
         console.error(error.message);
         if (error.stack) {
@@ -250,9 +271,9 @@ export default class Application extends EventEmitter
      *
      * @private
      */
-    onExit()
+    onExit():void
     {
-        let self = this;
+        let self:Application = this;
 
         co(function *()
         {
@@ -265,7 +286,7 @@ export default class Application extends EventEmitter
      *
      * @private
      */
-    onKill()
+    onKill():void
     {
         process.exit();
     }
