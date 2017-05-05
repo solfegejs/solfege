@@ -44,12 +44,13 @@
         "gnomon": "^1.5.0",
         "istanbul": "0.4.*",
         "jsdoc": "^3.4",
-        "mocha": "^3.0",
+        "mocha": "^3.3",
+        "co-mocha": "^1.2",
         "watch": "^1.0.2"
     },
     "scripts": {
         "prepare": "npm run build",
-        "test": "mocha --harmony --compilers js:babel-core/register --recursive --reporter spec --bail",
+        "test": "mocha --harmony --compilers js:babel-core/register --require co-mocha --recursive --reporter spec --bail",
         "coverage": "node --harmony ./node_modules/istanbul/lib/cli.js cover -- ./node_modules/mocha/bin/_mocha --harmony --recursive",
         "prebuild": "flow",
         "build": "babel --out-dir lib src --copy-files",
