@@ -3,7 +3,7 @@
 [![Build status](https://travis-ci.org/neolao/solfege.svg)](https://travis-ci.org/neolao/solfege)
 [![dependencies Status](https://david-dm.org/neolao/solfege/status.svg)](https://david-dm.org/neolao/solfege)
 [![devDependencies Status](https://david-dm.org/neolao/solfege/dev-status.svg)](https://david-dm.org/neolao/solfege?type=dev)
-[![Coverage Status](https://coveralls.io/repos/github/neolao/solfege/badge.svg)](https://coveralls.io/github/neolao/solfege)
+[![Coverage Status](https://coveralls.io/repos/github/neolao/solfege/badge.svg?branch=2.1.x)](https://coveralls.io/github/neolao/solfege)
 
 SolfegeJS
 =========
