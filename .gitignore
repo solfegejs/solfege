@@ -1,5 +1,6 @@
 .DS_Store
 yarn.lock
+.nyc_output
 
 lib-cov
 *.seed

@@ -8,3 +8,7 @@ branches:
     only:
         - master
         - /^\d\.\d\.x$/
+
+
+after_success: npm run coveralls
+
