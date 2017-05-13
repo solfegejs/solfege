@@ -2,7 +2,7 @@
     "name": "solfegejs",
     "description": "The Solfege framework",
     "homepage": "http://solfegejs.com",
-    "version": "2.1.2",
+    "version": "2.1.4",
     "author": "neolao <contact@neolao.com>",
     "private": false,
     "repository": "https://github.com/neolao/solfege.git",
@@ -13,6 +13,9 @@
         "symfony",
         "dependency",
         "injection"
+    ],
+    "files": [
+        "lib"
     ],
     "main": "lib/index.js",
     "engines": {
