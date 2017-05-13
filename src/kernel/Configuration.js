@@ -1,10 +1,15 @@
 /* @flow */
-import nodePath from "path";
+import nodePath from "path"
+import type {ConfigurationInterface} from "../../interface"
+
+// Private methods
+const resolveProperties = Symbol();
+const merge = Symbol();
 
 /**
  * Application configuration
  */
-export default class Configuration
+export default class Configuration implements ConfigurationInterface
 {
     /**
      * Directory path of the configuration
@@ -51,7 +56,7 @@ export default class Configuration
      */
     addProperties(properties:Object):void
     {
-        this.store = this.merge(this.store, properties);
+        this.store = this[merge](this.store, properties);
 
         let iterationCount:number = 0;
         while (true) {
@@ -60,7 +65,7 @@ export default class Configuration
                 throw new Error("Recursion in configuration detected");
             }
 
-            let dependencyCount:number = this.resolveProperties(this.store);
+            let dependencyCount:number = this[resolveProperties](this.store);
             if (dependencyCount === 0) {
                 break;
             }
@@ -149,7 +154,7 @@ export default class Configuration
      * @param   {*}         store   The store (array or object)
      * @return  {number}            The dependency count
      */
-    resolveProperties(store:any):number
+    [resolveProperties](store:any):number
     {
         if (!Array.isArray(store) && typeof store !== "object") {
             return 0;
@@ -161,7 +166,7 @@ export default class Configuration
             let item = store[key];
 
             if (typeof item === "object") {
-                let subDependencyCount:number =  this.resolveProperties(item);
+                let subDependencyCount:number =  this[resolveProperties](item);
                 dependencyCount += subDependencyCount;
                 continue;
             }
@@ -204,7 +209,7 @@ export default class Configuration
      * @param   {object}    source          Source properties
      * @param   {object}    properties      New properties
      */
-    merge(source:any, properties:any):any
+    [merge](source:any, properties:any):any
     {
         let result;
 
@@ -225,7 +230,7 @@ export default class Configuration
                     result[index] = item;
                 } else if (typeof item === "object") {
                     // The new property is an object
-                    result[index] = this.merge(source[index], item);
+                    result[index] = this[merge](source[index], item);
                 } else if (source.indexOf(item) === -1) {
                     // The new property is not in the list
                     result.push(item);
@@ -250,7 +255,7 @@ export default class Configuration
                     result[key] = item;
                 } else if (typeof item === "object") {
                     // The new property is an object
-                    result[key] = this.merge(source[key], item);
+                    result[key] = this[merge](source[key], item);
                 } else {
                     // Override value
                     result[key] = item;

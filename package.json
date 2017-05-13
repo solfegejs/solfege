@@ -2,7 +2,7 @@
     "name": "solfegejs",
     "description": "The Solfege framework",
     "homepage": "http://solfegejs.com",
-    "version": "2.1.5",
+    "version": "2.1.6",
     "author": "neolao <contact@neolao.com>",
     "private": false,
     "repository": "https://github.com/neolao/solfege.git",
@@ -15,6 +15,7 @@
         "injection"
     ],
     "files": [
+        "src",
         "lib",
         "interface.js"
     ],
@@ -57,6 +58,7 @@
         "presets": [
             "solfege"
         ],
-        "comments": false
+        "comments": false,
+        "plugins": []
     }
 }

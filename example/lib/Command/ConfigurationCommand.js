@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.default = undefined;
 
 var _ContainerAwareCommand = require("solfegejs-cli/lib/Command/ContainerAwareCommand");
 
@@ -10,7 +11,7 @@ var _ContainerAwareCommand2 = _interopRequireDefault(_ContainerAwareCommand);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-class ConfigurationCommand extends _ContainerAwareCommand2.default {
+var ConfigurationCommand = class ConfigurationCommand extends _ContainerAwareCommand2.default {
     constructor(foo, port, routing, configuration, toc) {
         super();
 
@@ -35,6 +36,6 @@ class ConfigurationCommand extends _ContainerAwareCommand2.default {
         console.log("foo from configuration service:", this.configuration.get("parameters.foo"));
         console.log("toc", this.toc);
     }
-}
+};
 exports.default = ConfigurationCommand;
 module.exports = exports["default"];
