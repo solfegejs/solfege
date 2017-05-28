@@ -14,6 +14,45 @@ export interface BundleInterface
 }
 
 /**
+ * Dependent bundle interface
+ *
+ * It installs bundle dependencies
+ */
+export interface DependentBundleInterface
+{
+    /**
+     * Install dependencies
+     *
+     * @param   {ApplicationInterface}  application     Solfege Application
+     */
+    installDependencies(application:ApplicationInterface):void|Generator<void,void,void>;
+}
+
+/**
+ * Initializable bundle interface
+ */
+export interface InitializableBundleInterface
+{
+    /**
+     * Initialize the bundle
+     *
+     * @param   {ApplicationInterface}  application     Solfege Application
+     */
+    initialize(application:ApplicationInterface):void|Generator<void,void,void>;
+}
+
+/**
+ * Bootable bundle interface
+ */
+export interface BootableBundleInterface
+{
+    /**
+     * Boot the bundle
+     */
+    boot():void|Generator<void,void,void>;
+}
+
+/**
  * Configuration interface
  */
 export interface ConfigurationInterface
@@ -62,4 +101,24 @@ export interface ConfigurationInterface
      * @return  {boolean}                   true if the value has dependency, false otherwise
      */
     propertyHasDependency(propertyValue:any):boolean;
+}
+
+/**
+ * Application interface
+ */
+export interface ApplicationInterface
+{
+    /**
+     * Add a bundle to the registry
+     *
+     * @param   {BundleInterface}   bundle  A bundle
+     */
+    addBundle(bundle:BundleInterface):void;
+
+    /**
+     * Get bundles
+     *
+     * @return  {Set}           The bundles
+     */
+    getBundles():Set<BundleInterface>;
 }

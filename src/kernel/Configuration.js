@@ -5,6 +5,8 @@ import type {ConfigurationInterface} from "../../interface"
 // Private methods
 const resolveProperties = Symbol();
 const merge = Symbol();
+const store = Symbol();
+const directoryPath = Symbol();
 
 /**
  * Application configuration
@@ -14,19 +16,25 @@ export default class Configuration implements ConfigurationInterface
     /**
      * Directory path of the configuration
      */
-    directoryPath:string;
+    // $FlowFixMe
+    [directoryPath]:string;
 
     /**
      * Store
      */
-    store:Object;
+    // $FlowFixMe
+    [store]:Object;
 
     /**
      * Constructor
      */
     constructor():void
     {
-        this.store = {};
+        // $FlowFixMe
+        this[store] = {};
+
+        // $FlowFixMe;
+        this[resolveProperties] = this[resolveProperties].bind(this);
     }
 
     /**
@@ -36,7 +44,8 @@ export default class Configuration implements ConfigurationInterface
      */
     setDirectoryPath(path:string):void
     {
-        this.directoryPath = path;
+        // $FlowFixMe
+        this[directoryPath] = path;
     }
 
     /**
@@ -46,7 +55,8 @@ export default class Configuration implements ConfigurationInterface
      */
     getDirectoryPath():string
     {
-        return this.directoryPath;
+        // $FlowFixMe
+        return this[directoryPath];
     }
 
     /**
@@ -56,7 +66,13 @@ export default class Configuration implements ConfigurationInterface
      */
     addProperties(properties:Object):void
     {
-        this.store = this[merge](this.store, properties);
+        // $FlowFixMe
+        const mergeMethod = this[merge];
+        // $FlowFixMe
+        const resolvePropertiesMethod = this[resolveProperties];
+
+        // $FlowFixMe
+        this[store] = mergeMethod(this[store], properties);
 
         let iterationCount:number = 0;
         while (true) {
@@ -65,7 +81,8 @@ export default class Configuration implements ConfigurationInterface
                 throw new Error("Recursion in configuration detected");
             }
 
-            let dependencyCount:number = this[resolveProperties](this.store);
+            // $FlowFixMe
+            let dependencyCount:number = resolvePropertiesMethod(this[store]);
             if (dependencyCount === 0) {
                 break;
             }
@@ -94,7 +111,8 @@ export default class Configuration implements ConfigurationInterface
         // Find the property value
         let propertyValue:any = undefined;
         let propertySplittedName:Array<string> = propertyName.split(".");
-        let property:Object = this.store;
+        // $FlowFixMe
+        let property:Object = this[store];
         for (let name:string of propertySplittedName) {
             if (typeof property !== "object" || !property.hasOwnProperty(name)) {
                 console.error(`Property not found: ${propertyName}`);
@@ -154,6 +172,7 @@ export default class Configuration implements ConfigurationInterface
      * @param   {*}         store   The store (array or object)
      * @return  {number}            The dependency count
      */
+    // $FlowFixMe
     [resolveProperties](store:any):number
     {
         if (!Array.isArray(store) && typeof store !== "object") {
@@ -209,6 +228,7 @@ export default class Configuration implements ConfigurationInterface
      * @param   {object}    source          Source properties
      * @param   {object}    properties      New properties
      */
+    // $FlowFixMe
     [merge](source:any, properties:any):any
     {
         let result;

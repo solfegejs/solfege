@@ -2,7 +2,7 @@
     "name": "solfegejs",
     "description": "The Solfege framework",
     "homepage": "http://solfegejs.com",
-    "version": "2.1.8",
+    "version": "2.1.9",
     "author": "neolao <contact@neolao.com>",
     "private": false,
     "repository": "https://github.com/neolao/solfege.git",
@@ -43,15 +43,18 @@
         "watch": "^1.0.2"
     },
     "scripts": {
-        "prepare": "npm build && npm test",
+        "flow-stop": "flow stop",
+        "flow-start": "flow start",
+        "flow-restart": "flow stop; flow start",
+        "prepare": "npm run build; npm test",
         "test": "mocha --harmony --compilers js:babel-core/register --require co-mocha --recursive --reporter spec --bail",
         "coverage": "nyc npm test",
         "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
         "prebuild": "flow",
         "build": "babel --out-dir lib src --copy-files",
-        "watch": "watch 'echo \"----------\"; npm run build | gnomon' ./src",
+        "watch": "watch 'echo \"----------\"; npm run build --silent | gnomon' ./src",
         "example-build": "flow; babel --out-dir example/lib example/src --copy-files",
-        "example-console": "node --harmony  example/lib/console.js"
+        "example-console": "node example/lib/console.js"
     },
     "babel": {
         "presets": [

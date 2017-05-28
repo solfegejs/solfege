@@ -6,12 +6,12 @@ import fs from "../util/fs"
 import {fn as isGenerator} from "is-generator"
 import EventEmitter from "./EventEmitter"
 import Configuration from "./Configuration"
-import type {BundleInterface} from "../../interface"
+import type {ApplicationInterface, BundleInterface, DependentBundleInterface} from "../../interface"
 
 /**
  * An application
  */
-export default class Application extends EventEmitter
+export default class Application extends EventEmitter implements ApplicationInterface
 {
     static EVENT_CONFIGURATION_LOAD:string     = "configuration_load";
     static EVENT_CONFIGURATION_LOADED:string   = "configuration_loaded";
@@ -38,7 +38,7 @@ export default class Application extends EventEmitter
     /**
      * Bundle list
      */
-    bundles:*;
+    bundles:Set<BundleInterface>;
 
     /**
      * Constructor
@@ -86,7 +86,7 @@ export default class Application extends EventEmitter
      *
      * @return  {Set}           The bundles
      */
-    getBundles():*
+    getBundles():Set<BundleInterface>
     {
         return this.bundles;
     }
@@ -184,7 +184,9 @@ export default class Application extends EventEmitter
         co(function *()
         {
             // Install bundle dependencies
+            // @todo Check DependentBundleInterface
             for (let bundle of self.bundles) {
+                // $FlowFixMe
                 if (isGenerator(bundle.installDependencies)) {
                     yield bundle.installDependencies(self);
                 } else if (typeof bundle.installDependencies === "function") {
@@ -194,6 +196,7 @@ export default class Application extends EventEmitter
 
             // Initialize registered bundles
             for (let bundle of self.bundles) {
+                // $FlowFixMe
                 if (isGenerator(bundle.initialize)) {
                     yield bundle.initialize(self);
                 } else if (typeof bundle.initialize === "function") {
@@ -227,6 +230,7 @@ export default class Application extends EventEmitter
 
             // Boot registered bundles
             for (let bundle of self.bundles) {
+                // $FlowFixMe
                 if (isGenerator(bundle.boot)) {
                     yield bundle.boot();
                 } else if (typeof bundle.boot === "function") {
