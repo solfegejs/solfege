@@ -223,6 +223,7 @@ export default class Configuration implements ConfigurationInterface
      * @private
      * @param   {object}    source          Source properties
      * @param   {object}    properties      New properties
+     * @return  {object}                    Merged properties
      */
     // $FlowFixMe
     [merge](source:any, properties:any):any
@@ -289,8 +290,10 @@ export default class Configuration implements ConfigurationInterface
      */
     inspect():string
     {
+        // $FlowFixMe
+        let properties = this[store];
         let output = "SolfegeJS/kernel/Configuration ";
-        output += JSON.stringify(this[store], null, "  ");
+        output += JSON.stringify(properties, null, "  ");
 
         return output;
     }
