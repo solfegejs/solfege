@@ -2,7 +2,7 @@
     "name": "solfegejs",
     "description": "The Solfege framework",
     "homepage": "http://solfegejs.com",
-    "version": "2.1.9",
+    "version": "2.1.10",
     "author": "neolao <contact@neolao.com>",
     "private": false,
     "repository": "https://github.com/neolao/solfege.git",
@@ -32,6 +32,8 @@
     "devDependencies": {
         "babel-cli": "^6.7",
         "babel-preset-solfege": "^1.0",
+        "eslint": "^3.19",
+        "eslint-plugin-solfege": "^1.0",
         "chai": "^3.5",
         "co-mocha": "^1.2",
         "coveralls": "^2.13.1",
@@ -47,10 +49,11 @@
         "flow-start": "flow start",
         "flow-restart": "flow stop; flow start",
         "prepare": "npm run build; npm test",
+        "lint": "eslint --ext .js src",
         "test": "mocha --harmony --compilers js:babel-core/register --require co-mocha --recursive --reporter spec --bail",
         "coverage": "nyc npm test",
         "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
-        "prebuild": "flow",
+        "prebuild": "npm run lint && flow",
         "build": "babel --out-dir lib src --copy-files",
         "watch": "watch 'echo \"----------\"; npm run build --silent | gnomon' ./src",
         "example-build": "flow; babel --out-dir example/lib example/src --copy-files",
@@ -62,5 +65,8 @@
         ],
         "comments": false,
         "plugins": []
+    },
+    "eslintConfig": {
+        "extends": ["eslint:recommended", "plugin:solfege/recommended"]
     }
 }

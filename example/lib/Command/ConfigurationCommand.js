@@ -35,6 +35,7 @@ var ConfigurationCommand = class ConfigurationCommand extends _ContainerAwareCom
         console.log("route controller:", this.routing.a.b.c.route_2.controller);
         console.log("foo from configuration service:", this.configuration.get("parameters.foo"));
         console.log("toc", this.toc);
+        console.log(this.configuration);
     }
 };
 exports.default = ConfigurationCommand;

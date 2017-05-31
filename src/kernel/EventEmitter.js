@@ -57,8 +57,8 @@ export default class EventEmitter
     on(name:string, handler:Function):void
     {
         // Check the handler
-        assert.strictEqual(typeof handler, 'function', 'The event handler must be a generator function');
-        assert.strictEqual(handler.constructor.name, 'GeneratorFunction', 'The event handler must be a generator function');
+        assert.strictEqual(typeof handler, "function", "The event handler must be a generator function");
+        assert.strictEqual(handler.constructor.name, "GeneratorFunction", "The event handler must be a generator function");
 
         let eventListeners = this.getEventListeners(name);
         eventListeners.push(handler);

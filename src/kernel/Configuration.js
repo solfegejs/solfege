@@ -74,19 +74,15 @@ export default class Configuration implements ConfigurationInterface
         // $FlowFixMe
         this[store] = mergeMethod(this[store], properties);
 
-        let iterationCount:number = 0;
-        while (true) {
-            iterationCount++;
-            if (iterationCount > 100) {
-                throw new Error("Recursion in configuration detected");
-            }
-
+        for (let i:number = 0; i < 100; i++) {
             // $FlowFixMe
             let dependencyCount:number = resolvePropertiesMethod(this[store]);
             if (dependencyCount === 0) {
-                break;
+                return;
             }
         }
+
+        throw new Error("Recursion in configuration detected");
     }
 
     /**
@@ -284,5 +280,18 @@ export default class Configuration implements ConfigurationInterface
         }
 
         return result;
+    }
+
+    /**
+     * Get string format of the instance
+     *
+     * @return  {string}    String format
+     */
+    inspect():string
+    {
+        let output = "SolfegeJS/kernel/Configuration ";
+        output += JSON.stringify(this[store], null, "  ");
+
+        return output;
     }
 }

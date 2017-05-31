@@ -6,7 +6,8 @@ import fs from "../util/fs"
 import {fn as isGenerator} from "is-generator"
 import EventEmitter from "./EventEmitter"
 import Configuration from "./Configuration"
-import type {ApplicationInterface, BundleInterface, DependentBundleInterface} from "../../interface"
+import type {ApplicationInterface, BundleInterface} from "../../interface"
+import packageJson from "../../package.json"
 
 /**
  * An application
@@ -75,7 +76,7 @@ export default class Application extends EventEmitter implements ApplicationInte
     addBundle(bundle:BundleInterface):void
     {
         // Check the validity
-        assert.strictEqual(typeof bundle.getPath, 'function', `The bundle ${bundle.toString()} must implement getPath method`);
+        assert.strictEqual(typeof bundle.getPath, "function", `The bundle ${bundle.toString()} must implement getPath method`);
 
         // Add to the registry
         this.bundles.add(bundle);
@@ -293,5 +294,23 @@ export default class Application extends EventEmitter implements ApplicationInte
     onKill():void
     {
         process.exit();
+    }
+
+    /**
+     * Get string format of the instance
+     *
+     * @return  {string}    String format
+     */
+    inspect():string
+    {
+        let properties = {
+            solfegeVersion: packageJson.version,
+            bundleCount: this.bundles.size,
+            configurationFilePath: this.configurationFilePath
+        };
+        let output = "SolfegeJS/kernel/Application ";
+        output += JSON.stringify(properties, null, "  ");
+
+        return output;
     }
 }
