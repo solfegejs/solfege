@@ -25,10 +25,10 @@ export default class EventEmitter
     /**
      * Emit an event
      *
-     * @param   {string}    name        The event name
-     * @param   {...*}      parameter   A parameter
+     * @param   {string}    name        Event name
+     * @param   {...*}      parameters  Parameters
      */
-    *emit(name:string):*
+    *emit(name:string, ...parameters:*):*
     {
         // Get the listeners
         let eventListeners = this.getEventListeners(name);

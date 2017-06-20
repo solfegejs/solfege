@@ -242,16 +242,11 @@ export default class Application extends EventEmitter implements ApplicationInte
 
             // Start the application
             yield self.emit(Application.EVENT_START, self, parameters);
-        })
-
-        // End
-        .then(function*()
-        {
+        }).then(function*() {
+            // End
             yield self.emit(Application.EVENT_END, self);
-        })
-
-        // Handle error
-        .catch((error):void => {
+        }).catch((error):void => {
+            // Handle error
             console.error(error.message);
             console.error(error.stack);
         });
