@@ -1,10 +1,10 @@
 /* @flow */
 import description from "../package.json"
-import Application from "./kernel/Application"
+import Application from "./Application"
 import DependencyInjectionBundle from "solfegejs-dependency-injection"
 import ConsoleBundle from "solfegejs-cli"
 import ConfigurationBundle from "solfegejs-configuration"
-import type {BundleInterface} from "../interface"
+import type {BundleInterface} from "./BundleInterface"
 
 export default {
     // Solfege name

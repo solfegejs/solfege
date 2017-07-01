@@ -1,29 +1,29 @@
 /* @flow */
 import nodePath from "path"
-import type {ConfigurationInterface} from "../../interface"
 
-// Private methods
-const resolveProperties = Symbol();
-const merge = Symbol();
-const store = Symbol();
-const directoryPath = Symbol();
+// Private properties and methods
+const _resolveProperties:Symbol = Symbol();
+const _merge:Symbol = Symbol();
+const _store:Symbol = Symbol();
+const _directoryPath:Symbol = Symbol();
 
 /**
  * Application configuration
  */
-export default class Configuration implements ConfigurationInterface
+export default class Configuration
 {
     /**
      * Directory path of the configuration
+     * @todo remove
      */
     // $FlowFixMe
-    [directoryPath]:string;
+    [_directoryPath]:string;
 
     /**
      * Store
      */
     // $FlowFixMe
-    [store]:Object;
+    [_store]:Object;
 
     /**
      * Constructor
@@ -31,10 +31,10 @@ export default class Configuration implements ConfigurationInterface
     constructor():void
     {
         // $FlowFixMe
-        this[store] = {};
+        this[_store] = {};
 
         // $FlowFixMe;
-        this[resolveProperties] = this[resolveProperties].bind(this);
+        this[_resolveProperties] = this[_resolveProperties].bind(this);
     }
 
     /**
@@ -45,7 +45,7 @@ export default class Configuration implements ConfigurationInterface
     setDirectoryPath(path:string):void
     {
         // $FlowFixMe
-        this[directoryPath] = path;
+        this[_directoryPath] = path;
     }
 
     /**
@@ -56,7 +56,7 @@ export default class Configuration implements ConfigurationInterface
     getDirectoryPath():string
     {
         // $FlowFixMe
-        return this[directoryPath];
+        return this[_directoryPath];
     }
 
     /**
@@ -67,16 +67,11 @@ export default class Configuration implements ConfigurationInterface
     addProperties(properties:Object):void
     {
         // $FlowFixMe
-        const mergeMethod = this[merge];
-        // $FlowFixMe
-        const resolvePropertiesMethod = this[resolveProperties];
-
-        // $FlowFixMe
-        this[store] = mergeMethod(this[store], properties);
+        this[_store] = this[_merge](this[_store], properties);
 
         for (let i:number = 0; i < 100; i++) {
             // $FlowFixMe
-            let dependencyCount:number = resolvePropertiesMethod(this[store]);
+            let dependencyCount:number = this[_resolveProperties](this[_store]);
             if (dependencyCount === 0) {
                 return;
             }
@@ -108,7 +103,7 @@ export default class Configuration implements ConfigurationInterface
         let propertyValue:any = undefined;
         let propertySplittedName:Array<string> = propertyName.split(".");
         // $FlowFixMe
-        let property:Object = this[store];
+        let property:Object = this[_store];
         for (let name:string of propertySplittedName) {
             if (typeof property !== "object" || !property.hasOwnProperty(name)) {
                 console.error(`Property not found: ${propertyName}`);
@@ -169,7 +164,7 @@ export default class Configuration implements ConfigurationInterface
      * @return  {number}            The dependency count
      */
     // $FlowFixMe
-    [resolveProperties](store:any):number
+    [_resolveProperties](store:any):number
     {
         if (!Array.isArray(store) && typeof store !== "object") {
             return 0;
@@ -181,7 +176,7 @@ export default class Configuration implements ConfigurationInterface
             let item = store[key];
 
             if (typeof item === "object") {
-                let subDependencyCount:number =  this[resolveProperties](item);
+                let subDependencyCount:number =  this[_resolveProperties](item);
                 dependencyCount += subDependencyCount;
                 continue;
             }
@@ -226,7 +221,7 @@ export default class Configuration implements ConfigurationInterface
      * @return  {object}                    Merged properties
      */
     // $FlowFixMe
-    [merge](source:any, properties:any):any
+    [_merge](source:any, properties:any):any
     {
         let result;
 
@@ -247,7 +242,7 @@ export default class Configuration implements ConfigurationInterface
                     result[index] = item;
                 } else if (typeof item === "object") {
                     // The new property is an object
-                    result[index] = this[merge](source[index], item);
+                    result[index] = this[_merge](source[index], item);
                 } else if (source.indexOf(item) === -1) {
                     // The new property is not in the list
                     result.push(item);
@@ -272,7 +267,7 @@ export default class Configuration implements ConfigurationInterface
                     result[key] = item;
                 } else if (typeof item === "object") {
                     // The new property is an object
-                    result[key] = this[merge](source[key], item);
+                    result[key] = this[_merge](source[key], item);
                 } else {
                     // Override value
                     result[key] = item;
@@ -291,8 +286,8 @@ export default class Configuration implements ConfigurationInterface
     inspect():string
     {
         // $FlowFixMe
-        let properties = this[store];
-        let output = "SolfegeJS/kernel/Configuration ";
+        let properties = this[_store];
+        let output = "SolfegeJS/Configuration ";
         output += JSON.stringify(properties, null, "  ");
 
         return output;

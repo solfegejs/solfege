@@ -2,17 +2,17 @@
 import assert from "assert"
 import path from "path"
 import co from "co"
-import fs from "../util/fs"
+import fs from "./util/fs"
 import {fn as isGenerator} from "is-generator"
-import EventEmitter from "./EventEmitter"
+import EventEmitter from "event-emitter-generator"
 import Configuration from "./Configuration"
-import type {ApplicationInterface, BundleInterface} from "../../interface"
-import packageJson from "../../package.json"
+import type {BundleInterface} from "./BundleInterface"
+import packageJson from "../package.json"
 
 /**
- * An application
+ * SolfegeJS application
  */
-export default class Application extends EventEmitter implements ApplicationInterface
+export default class Application extends EventEmitter
 {
     static EVENT_CONFIGURATION_LOAD:string     = "configuration_load";
     static EVENT_CONFIGURATION_LOADED:string   = "configuration_loaded";
@@ -20,6 +20,11 @@ export default class Application extends EventEmitter implements ApplicationInte
     static EVENT_BUNDLES_BOOTED:string         = "bundles_booted";
     static EVENT_START:string                  = "start";
     static EVENT_END:string                    = "end";
+
+    /**
+     * Parameters
+     */
+    parameters:Map<string, *>;
 
     /**
      * Format of the configuration file
@@ -48,6 +53,9 @@ export default class Application extends EventEmitter implements ApplicationInte
     {
         super();
 
+        // Initialize parameter list
+        this.parameters = new Map;
+
         // Configuration file path
         this.configurationFilePath;
         this.configurationFileFormat;
@@ -69,6 +77,33 @@ export default class Application extends EventEmitter implements ApplicationInte
     }
 
     /**
+     * Set parameter
+     *
+     * @param   {string}    name    Parameter name
+     * @param   {*}         value   Parameter value
+     */
+    setParameter(name:string, value:*):void
+    {
+        const nameType:string = typeof name;
+        if (nameType !== "string") {
+            throw new TypeError(`Parameter name should be a string, invalid type: ${nameType}`);
+        }
+
+        this.parameters.set(name, value);
+    }
+
+    /**
+     * Get parameter value
+     *
+     * @param   {string}    name    Parameter name
+     * @return  {*}         value   Parameter value
+     */
+    getParameter(name:string):*
+    {
+        return this.parameters.get(name);
+    }
+
+    /**
      * Add a bundle to the registry
      *
      * @param   {BundleInterface}   bundle  A bundle
@@ -76,6 +111,7 @@ export default class Application extends EventEmitter implements ApplicationInte
     addBundle(bundle:BundleInterface):void
     {
         // Check the validity
+        // @todo Check the other methods
         assert.strictEqual(typeof bundle.getPath, "function", `The bundle ${bundle.toString()} must implement getPath method`);
 
         // Add to the registry
@@ -197,7 +233,6 @@ export default class Application extends EventEmitter implements ApplicationInte
 
             // Initialize registered bundles
             for (let bundle of self.bundles) {
-                // $FlowFixMe
                 if (isGenerator(bundle.initialize)) {
                     yield bundle.initialize(self);
                 } else if (typeof bundle.initialize === "function") {
@@ -231,7 +266,6 @@ export default class Application extends EventEmitter implements ApplicationInte
 
             // Boot registered bundles
             for (let bundle of self.bundles) {
-                // $FlowFixMe
                 if (isGenerator(bundle.boot)) {
                     yield bundle.boot();
                 } else if (typeof bundle.boot === "function") {
@@ -303,7 +337,7 @@ export default class Application extends EventEmitter implements ApplicationInte
             bundleCount: this.bundles.size,
             configurationFilePath: this.configurationFilePath
         };
-        let output = "SolfegeJS/kernel/Application ";
+        let output = "SolfegeJS/Application ";
         output += JSON.stringify(properties, null, "  ");
 
         return output;

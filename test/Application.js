@@ -1,11 +1,65 @@
 import chai from "chai"
-import Application from "../../src/kernel/Application"
+import Application from "../src/Application"
 
 const expect = chai.expect;
 const should = chai.should;
 
-
+/**
+ * Test application
+ */
 describe("Application", () => {
+    /**
+     * Test "setParameter()" method
+     */
+    describe("#setParameter()", () => {
+        /**
+         * Add a symbol
+         */
+        it("should successfully set a parameter", function *() {
+            let application = new Application();
+            let symbol = Symbol();
+
+            expect(() => {
+                application.setParameter("foo", symbol);
+            }).to.not.throw(Error);
+        });
+
+        /**
+         * Parameter name should be a string
+         */
+        it("should fail if the parameter name is not a string", function *() {
+            let application = new Application();
+            let symbol = Symbol();
+
+            expect(() => {
+                application.setParameter(symbol, 42);
+            }).to.throw(Error);
+        });
+    });
+
+    /**
+     * Test "getParameter()" method
+     */
+    describe("#getParameter()", () => {
+        /**
+         * Get a symbol
+         */
+        it("should successfully retrieve a parameter previously set", function *() {
+            let application = new Application();
+            let bar = Symbol();
+
+            // Set parameter and get the same name
+            application.setParameter("foo", bar);
+            let fetched = application.getParameter("foo");
+
+            // Test
+            expect(fetched).to.equal(bar);
+        });
+    });
+
+    /**
+     * Test "addBundle()" method
+     */
     describe("#addBundle()", () => {
         it("should successfully add a valid bundle", function *() {
             let application = new Application;
