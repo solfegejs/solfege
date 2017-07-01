@@ -1,13 +1,15 @@
 /* @flow */
 import assert from "assert"
 import path from "path"
-import co from "co"
 import fs from "./util/fs"
 import {fn as isGenerator} from "is-generator"
-import EventEmitter from "event-emitter-generator"
+import EventEmitter from "events"
 import Configuration from "./Configuration"
 import type {BundleInterface} from "./BundleInterface"
 import packageJson from "../package.json"
+
+// Private properties and methods
+const _start:Symbol = Symbol();
 
 /**
  * SolfegeJS application
@@ -56,10 +58,9 @@ export default class Application extends EventEmitter
         // Initialize parameter list
         this.parameters = new Map;
 
-        // Configuration file path
-        this.configurationFilePath;
-        this.configurationFileFormat;
+        // Initialize configuration
         this.configuration = new Configuration;
+        this.configuration.set("main_directory_path", path.dirname(require.main.filename));
 
         // Initialize the bundle registry
         this.bundles = new Set();
@@ -217,73 +218,80 @@ export default class Application extends EventEmitter
     {
         let self:Application = this;
 
-        // Start the generator based flow
-        co(function *()
-        {
-            // Install bundle dependencies
-            // @todo Check DependentBundleInterface
-            for (let bundle of self.bundles) {
-                // $FlowFixMe
-                if (isGenerator(bundle.installDependencies)) {
-                    yield bundle.installDependencies(self);
-                } else if (typeof bundle.installDependencies === "function") {
-                    bundle.installDependencies(self);
-                }
+        // $FlowFixMe
+        this[_start](parameters)
+            .then(async () => {
+                await self.emit(Application.EVENT_END, self);
+            })
+            .catch(async (error) => {
+                console.error(error);
+            })
+        ;
+    }
+
+    /**
+     * Start the application in an async method
+     *
+     * @param   {Array<string>}     parameters  Parameters
+     */
+    // $FlowFixMe
+    async [_start](parameters:Array<String> = []):void
+    {
+        // Install bundle dependencies
+        // @todo Check DependentBundleInterface
+        for (let bundle of this.bundles) {
+            if (isGenerator(bundle.installDependencies)) {
+                await bundle.installDependencies(this);
+            } else if (typeof bundle.installDependencies === "function") {
+                bundle.installDependencies(this);
+            }
+        }
+
+        // Initialize registered bundles
+        for (let bundle of this.bundles) {
+            if (isGenerator(bundle.initialize)) {
+                await bundle.initialize(this);
+            } else if (typeof bundle.initialize === "function") {
+                bundle.initialize(this);
+            }
+        }
+        await this.emit(Application.EVENT_BUNDLES_INITIALIZED, this);
+
+        // Load configuration file
+        let configuration:Configuration = this.getConfiguration();
+        if (typeof this.configurationFilePath === "string") {
+            let configurationFileExists = await fs.exists(this.configurationFilePath);
+            if (!configurationFileExists) {
+                throw new Error(`Configuration file not found: ${this.configurationFilePath}`);
             }
 
-            // Initialize registered bundles
-            for (let bundle of self.bundles) {
-                if (isGenerator(bundle.initialize)) {
-                    yield bundle.initialize(self);
-                } else if (typeof bundle.initialize === "function") {
-                    bundle.initialize(self);
-                }
+            // Set the directory
+            let configurationDirectory:string = path.dirname(this.configurationFilePath);
+            configuration.setDirectoryPath(configurationDirectory);
+
+            // Delegate the loading and parsing
+            await this.emit(
+                Application.EVENT_CONFIGURATION_LOAD,
+                this,
+                configuration,
+                this.configurationFilePath,
+                this.configurationFileFormat
+            );
+        }
+        await this.emit(Application.EVENT_CONFIGURATION_LOADED, this, configuration);
+
+        // Boot registered bundles
+        for (let bundle of this.bundles) {
+            if (isGenerator(bundle.boot)) {
+                await bundle.boot();
+            } else if (typeof bundle.boot === "function") {
+                bundle.boot();
             }
-            yield self.emit(Application.EVENT_BUNDLES_INITIALIZED, self);
+        }
+        await this.emit(Application.EVENT_BUNDLES_BOOTED, this);
 
-            // Load configuration file
-            let configuration:Configuration = self.getConfiguration();
-            if (typeof self.configurationFilePath === "string") {
-                let configurationFileExists = yield fs.exists(self.configurationFilePath);
-                if (!configurationFileExists) {
-                    throw new Error(`Configuration file not found: ${self.configurationFilePath}`);
-                }
-
-                // Set the directory
-                let configurationDirectory:string = path.dirname(self.configurationFilePath);
-                configuration.setDirectoryPath(configurationDirectory);
-
-                // Delegate the loading and parsing
-                yield self.emit(
-                    Application.EVENT_CONFIGURATION_LOAD,
-                    self,
-                    configuration,
-                    self.configurationFilePath,
-                    self.configurationFileFormat
-                );
-            }
-            yield self.emit(Application.EVENT_CONFIGURATION_LOADED, self, configuration);
-
-            // Boot registered bundles
-            for (let bundle of self.bundles) {
-                if (isGenerator(bundle.boot)) {
-                    yield bundle.boot();
-                } else if (typeof bundle.boot === "function") {
-                    bundle.boot();
-                }
-            }
-            yield self.emit(Application.EVENT_BUNDLES_BOOTED, self);
-
-            // Start the application
-            yield self.emit(Application.EVENT_START, self, parameters);
-        }).then(function*() {
-            // End
-            yield self.emit(Application.EVENT_END, self);
-        }).catch((error):void => {
-            // Handle error
-            console.error(error.message);
-            console.error(error.stack);
-        });
+        // Start the application
+        this.emit(Application.EVENT_START, this, parameters);
     }
 
     /**
@@ -307,12 +315,7 @@ export default class Application extends EventEmitter
      */
     onExit():void
     {
-        let self:Application = this;
-
-        co(function *()
-        {
-            yield self.emit(Application.EVENT_END, self);
-        });
+        this.emit(Application.EVENT_END, this);
     }
 
     /**

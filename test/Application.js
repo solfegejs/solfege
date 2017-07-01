@@ -101,11 +101,13 @@ describe("Application", () => {
     describe("#start()", () => {
         it("should run the application", function (done) {
             let application = new Application;
-            application.on(Application.EVENT_START, function *() {
+
+            application.on(Application.EVENT_START, async (app, parameters) => {
+                expect(parameters).to.deep.equal(["a", "b"]);
                 done();
             });
 
-            application.start();
+            application.start(["a", "b"]);
         });
     });
 });

@@ -66,6 +66,10 @@ export default class Configuration
      */
     addProperties(properties:Object):void
     {
+        if (properties instanceof Object === false) {
+            throw new TypeError("Properties should be an object");
+        }
+
         // $FlowFixMe
         this[_store] = this[_merge](this[_store], properties);
 
@@ -78,6 +82,22 @@ export default class Configuration
         }
 
         throw new Error("Recursion in configuration detected");
+    }
+
+    /**
+     * Set a property
+     *
+     * @param   {string}    propertyName    Property name
+     * @param   {*}         value           Property value
+     */
+    set(propertyName:string, value:*):void
+    {
+        const nameType:string = typeof propertyName;
+        if (nameType !== "string") {
+            throw new TypeError(`Property name should be a string, invalid type: ${nameType}`);
+        }
+
+        this.addProperties({[propertyName]: value});
     }
 
     /**
@@ -106,7 +126,6 @@ export default class Configuration
         let property:Object = this[_store];
         for (let name:string of propertySplittedName) {
             if (typeof property !== "object" || !property.hasOwnProperty(name)) {
-                console.error(`Property not found: ${propertyName}`);
                 return undefined;
             }
             property = property[name];
@@ -114,7 +133,6 @@ export default class Configuration
         }
 
         return propertyValue;
-        //return this.resolvePropertyValue(propertyValue);
     }
 
     /**

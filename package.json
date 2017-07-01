@@ -20,24 +20,22 @@
     ],
     "main": "lib/index.js",
     "engines": {
-        "node": ">= 5"
+        "node": ">= 8"
     },
     "dependencies": {
-        "event-emitter-generator": "^1.0",
-        "co": "^4.6",
         "is-generator": "^1.0.3",
-        "solfegejs-cli": "2.x",
+        "solfegejs-cli": "^2.0.3",
         "solfegejs-configuration": "1.x",
-        "solfegejs-dependency-injection": "1.x"
+        "solfegejs-dependency-injection": "^1.0.10"
     },
     "devDependencies": {
         "babel-cli": "^6.7",
-        "babel-preset-solfege": "^1.0",
-        "eslint": "^4.0",
-        "eslint-plugin-solfege": "^1.0",
+        "babel-preset-solfege": "^1.1.1",
         "chai": "^4.0",
         "co-mocha": "^1.2",
         "coveralls": "^2.13.1",
+        "eslint": "^4.0",
+        "eslint-plugin-solfege": "1.0.*",
         "flow-bin": "^0.48",
         "gnomon": "^1.5.0",
         "jsdoc": "^3.4",
@@ -63,11 +61,16 @@
         "example-console": "node example/lib/console.js"
     },
     "babel": {
-        "presets": ["solfege"],
+        "presets": [
+            "solfege"
+        ],
         "comments": false,
         "plugins": []
     },
     "eslintConfig": {
-        "extends": ["eslint:recommended", "plugin:solfege/recommended"]
+        "extends": [
+            "eslint:recommended",
+            "plugin:solfege/recommended"
+        ]
     }
 }
