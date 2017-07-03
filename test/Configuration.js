@@ -1,5 +1,6 @@
 import chai from "chai"
 import Configuration from "../src/Configuration"
+import util from "util"
 
 const expect = chai.expect;
 const should = chai.should;
@@ -105,6 +106,79 @@ describe("Configuration", () => {
 
             // Test
             expect(fetched).to.equal(42);
+        });
+    });
+
+    /**
+     * Test "propertyHasDependency()" method
+     */
+    describe("#propertyHasDependency()", () => {
+        /**
+         * Non string value
+         */
+        it("should return false if the value is not a string", () => {
+            let config = new Configuration;
+
+            // Test
+            let fooHasDependency = config.propertyHasDependency(42);
+            expect(fooHasDependency).to.be.false;
+        });
+
+        /**
+         * Value without dependency
+         */
+        it("should return fase if the property has no dependency", () => {
+            let config = new Configuration;
+
+            let fooHasDependency = config.propertyHasDependency("foo");
+
+            // Test
+            expect(fooHasDependency).to.be.false;
+        });
+
+        /**
+         * Value with simple dependency
+         */
+        it("should return true if the property has a direct dependency", () => {
+            let config = new Configuration;
+
+            let fooHasDependency = config.propertyHasDependency("%foo%");
+
+            // Test
+            expect(fooHasDependency).to.be.true;
+        });
+    });
+
+    /**
+     * Test "inspect()" method
+     */
+    describe("#inspect()", () => {
+        /**
+         * Simple configuration
+         */
+        it("should return string output of the inspection", () => {
+            let config = new Configuration;
+
+            let output = util.inspect(config);
+
+            // Test
+            expect(output).to.equal("SolfegeJS/Configuration {}");
+        });
+
+        /**
+         * Configuration with some properties
+         */
+        it("should return string output with some properties", () => {
+            let config = new Configuration;
+            config.addProperties({
+                foo: "bar",
+                tic: "%foo%"
+            });
+
+            let output = util.inspect(config);
+
+            // Test
+            expect(output).to.equal("SolfegeJS/Configuration {\n  \"foo\": \"bar\",\n  \"tic\": \"bar\"\n}");
         });
     });
 });
