@@ -1,24 +1,15 @@
 /* @flow */
-import nodePath from "path"
 
 // Private properties and methods
 const _resolveProperties:Symbol = Symbol();
 const _merge:Symbol = Symbol();
 const _store:Symbol = Symbol();
-const _directoryPath:Symbol = Symbol();
 
 /**
  * Application configuration
  */
 export default class Configuration
 {
-    /**
-     * Directory path of the configuration
-     * @todo remove
-     */
-    // $FlowFixMe
-    [_directoryPath]:string;
-
     /**
      * Store
      */
@@ -35,28 +26,6 @@ export default class Configuration
 
         // $FlowFixMe;
         this[_resolveProperties] = this[_resolveProperties].bind(this);
-    }
-
-    /**
-     * Set the directory path of the configuration
-     *
-     * @param   {string}    path    Directory path
-     */
-    setDirectoryPath(path:string):void
-    {
-        // $FlowFixMe
-        this[_directoryPath] = path;
-    }
-
-    /**
-     * Get the directory path of the configuration
-     *
-     * @return  {string}    Directory path
-     */
-    getDirectoryPath():string
-    {
-        // $FlowFixMe
-        return this[_directoryPath];
     }
 
     /**
@@ -108,17 +77,6 @@ export default class Configuration
      */
     get(propertyName:string):any
     {
-        // Defined properties
-        switch (propertyName) {
-            // Directory path of the configuration file
-            case "configuration_directory_path":
-                return this.getDirectoryPath();
-
-            // Directory path of the main file
-            case "main_directory_path":
-                return nodePath.dirname(require.main.filename);
-        }
-
         // Find the property value
         let propertyValue:any = undefined;
         let propertySplittedName:Array<string> = propertyName.split(".");
@@ -184,10 +142,6 @@ export default class Configuration
     // $FlowFixMe
     [_resolveProperties](store:any):number
     {
-        if (!Array.isArray(store) && typeof store !== "object") {
-            return 0;
-        }
-
         let dependencyCount:number = 0;
 
         for (let key:string in store) {

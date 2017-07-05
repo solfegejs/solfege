@@ -70,6 +70,166 @@ describe("Configuration", () => {
                 config.addProperties(properties);
             }).to.throw(TypeError);
         });
+
+        /**
+         * Override properties
+         */
+        it("should override properties", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                foo: "bar",
+                tic: 42
+            });
+            config.addProperties({
+                tic: 1337
+            });
+
+            // Test
+            let foo = config.get("foo");
+            let tic = config.get("tic");
+            expect(foo).to.equal("bar");
+            expect(tic).to.equal(1337);
+        });
+
+        /**
+         * Merge objects
+         */
+        it("should merge objects", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                a: {
+                    b: {
+                        foo: "bar"
+                    },
+                    c: 42
+                }
+            });
+            config.addProperties({
+                a: {
+                    b: {
+                        tic: "tac"
+                    }
+                }
+            });
+
+            // Test
+            let foo = config.get("a.b.foo");
+            let tic = config.get("a.b.tic");
+            let c = config.get("a.c");
+            expect(foo).to.equal("bar");
+            expect(tic).to.equal("tac");
+            expect(c).to.equal(42);
+        });
+
+        /**
+         * Merge arrays
+         */
+        it("should merge arrays", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                a: [
+                    "tic",
+                    "tac"
+                ]
+            });
+            config.addProperties({
+                a: [
+                    "toc"
+                ]
+            });
+
+            // Test
+            let a = config.get("a");
+            expect(a).to.deep.equal(["tic", "tac", "toc"]);
+        });
+
+        /**
+         * Merge object in array
+         */
+        it("should merge object in array", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                a: [
+                    {
+                        foo: "bar"
+                    }
+                ]
+            });
+            config.addProperties({
+                a: [
+                    {
+                        tic: "tac"
+                    },
+                    42
+                ]
+            });
+
+            // Test
+            let a = config.get("a");
+            expect(a).to.deep.equal([{foo: "bar", tic: "tac"}, 42]);
+        });
+
+        /**
+         * Simple dependency
+         */
+        it("should resolve dependencies", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                foo: "bar"
+            });
+            config.addProperties({
+                tic: "%foo%"
+            });
+
+            // Test
+            let tic = config.get("tic");
+            expect(tic).to.equal("bar");
+        });
+
+        /**
+         * Deep dependency
+         */
+        it("should resolve deep dependencies", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                foo: "bar"
+            });
+            config.addProperties({
+                tac: "%tic%",
+                tic: "%foo%"
+            });
+
+            // Test
+            let tac = config.get("tac");
+            expect(tac).to.equal("bar");
+        });
+
+        /**
+         * Detect infinite recursion
+         */
+        it("should throw an error if infinite recursion is detected", () => {
+            let config = new Configuration;
+
+            expect(() => {
+                config.addProperties({
+                    a: "%b%",
+                    b: "%c%",
+                    c: "%a%"
+                });
+            }).to.throw(Error);
+        });
     });
 
     /**
@@ -106,6 +266,18 @@ describe("Configuration", () => {
 
             // Test
             expect(fetched).to.equal(42);
+        });
+
+        /**
+         * Non-existing value
+         */
+        it("should return undefined if the value does not exists", () => {
+            let config = new Configuration;
+
+            let fetched = config.get("foo");
+
+            // Test
+            expect(fetched).to.be.undefined;
         });
     });
 
@@ -146,6 +318,77 @@ describe("Configuration", () => {
 
             // Test
             expect(fooHasDependency).to.be.true;
+        });
+    });
+
+    /**
+     * Test "resolvePropertyValue()" method
+     */
+    describe("#resolvePropertyValue()", () => {
+        /**
+         * Resolve number
+         */
+        it("should resolve number", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                foo: 42
+            });
+
+            // Test
+            let resolved = config.resolvePropertyValue("%foo%");
+            expect(resolved).to.equal(42);
+        });
+
+        /**
+         * Resolve string
+         */
+        it("should resolve string", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                foo: "bar"
+            });
+
+            // Test
+            let resolved = config.resolvePropertyValue("%foo%");
+            expect(resolved).to.equal("bar");
+        });
+
+        /**
+         * Resolve composed string
+         */
+        it("should resolve composed string", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                foo: "bar",
+                tic: "tac"
+            });
+
+            // Test
+            let resolved = config.resolvePropertyValue("%foo%/%tic%");
+            expect(resolved).to.equal("bar/tac");
+        });
+
+        /**
+         * Resolve undefined value
+         */
+        it("should resolve undefined value", () => {
+            let config = new Configuration;
+
+            // Add properties
+            config.addProperties({
+                foo: undefined,
+                tic: "tac"
+            });
+
+            // Test
+            let resolved = config.resolvePropertyValue("%foo%/%tic%");
+            expect(resolved).to.equal("/tac");
         });
     });
 
