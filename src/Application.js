@@ -267,7 +267,7 @@ export default class Application extends EventEmitter
 
             // Set the directory
             let configurationDirectory:string = path.dirname(this.configurationFilePath);
-            configuration.setDirectoryPath(configurationDirectory);
+            configuration.set("configuration_directory_path", configurationDirectory);
 
             // Delegate the loading and parsing
             await this.emit(

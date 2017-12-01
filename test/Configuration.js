@@ -178,6 +178,35 @@ describe("Configuration", () => {
         });
 
         /**
+         * Merge array in array
+         */
+        it("should merge object in array", () => {
+            let config = new Configuration;
+            let a = Symbol();
+            let b = Symbol();
+
+            // Add properties
+            config.addProperties({
+                foo: [
+                    [
+                        a
+                    ]
+                ]
+            });
+            config.addProperties({
+                foo: [
+                    [
+                        b
+                    ]
+                ]
+            });
+
+            // Test
+            let foo = config.get("foo");
+            expect(foo).to.deep.equal([[a, b]]);
+        });
+
+        /**
          * Simple dependency
          */
         it("should resolve dependencies", () => {

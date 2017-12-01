@@ -11,4 +11,3 @@ var Bundle = class Bundle {
   }
 };
 exports.default = Bundle;
-module.exports = exports["default"];

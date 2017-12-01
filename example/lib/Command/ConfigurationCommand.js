@@ -39,4 +39,3 @@ var ConfigurationCommand = class ConfigurationCommand extends _ContainerAwareCom
     }
 };
 exports.default = ConfigurationCommand;
-module.exports = exports["default"];

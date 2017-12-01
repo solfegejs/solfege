@@ -5,4 +5,3 @@ Object.defineProperty(exports, "__esModule", {
 });
 var Toc = class Toc {};
 exports.default = Toc;
-module.exports = exports["default"];
