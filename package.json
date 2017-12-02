@@ -2,7 +2,7 @@
     "name": "solfegejs",
     "description": "The Solfege framework",
     "homepage": "http://solfegejs.com",
-    "version": "2.2.0",
+    "version": "3.0.0",
     "author": "neolao <contact@neolao.com>",
     "private": false,
     "repository": "https://github.com/neolao/solfege.git",
@@ -20,27 +20,21 @@
     ],
     "main": "lib/index.js",
     "engines": {
-        "node": ">= 8"
-    },
-    "dependencies": {
-        "is-generator": "^1.0.3",
-        "solfegejs-cli": "^2.0.3",
-        "solfegejs-configuration": "1.x",
-        "solfegejs-dependency-injection": "^1.0.10"
+        "node": ">= 9"
     },
     "devDependencies": {
-        "babel-cli": "^6.7",
+        "babel-cli": "^6.26.0",
         "babel-preset-solfege": "^1.1.1",
-        "chai": "^4.0",
-        "co-mocha": "^1.2",
-        "coveralls": "^2.13.1",
-        "eslint": "^4.0",
+        "chai": "^4.1.2",
+        "co-mocha": "^1.2.1",
+        "coveralls": "^2.13.3",
+        "eslint": "^4.12.1",
         "eslint-plugin-solfege": "1.0.*",
-        "flow-bin": "^0.48",
+        "flow-bin": "^0.60.1",
         "gnomon": "^1.5.0",
-        "jsdoc": "^3.4",
-        "mocha": "^3.3",
-        "nyc": "^11.0",
+        "jsdoc": "^3.5.5",
+        "mocha": "^3.5.3",
+        "nyc": "^11.4.0",
         "watch": "^1.0.2"
     },
     "scripts": {

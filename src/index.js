@@ -1,9 +1,6 @@
 /* @flow */
 import description from "../package.json"
 import Application from "./Application"
-import DependencyInjectionBundle from "solfegejs-dependency-injection"
-import ConsoleBundle from "solfegejs-cli"
-import ConfigurationBundle from "solfegejs-configuration"
 import type {BundleInterface} from "./BundleInterface"
 
 export default {
@@ -21,9 +18,6 @@ export default {
     // Use it to instanciate a new application with default bundles
     factory: (bundles:Array<BundleInterface> = []) => {
         let application:Application = new Application();
-        application.addBundle(new DependencyInjectionBundle());
-        application.addBundle(new ConsoleBundle());
-        application.addBundle(new ConfigurationBundle());
 
         for (let bundle:BundleInterface of bundles) {
             application.addBundle(bundle);

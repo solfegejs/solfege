@@ -5,8 +5,14 @@ import MyBundle from "./Bundle";
 let application = solfege.factory();
 application.addBundle(new MyBundle);
 
-// Load configuration file
-application.loadConfigurationFile(`${__dirname}/config/production.yml`, "yaml");
+// Set the configuration file to load
+application.addConfigurationProperties({
+    a: 42,
+    z: "d",
+    parameters: {
+        foo: "%z%essert"
+    }
+});
 
 // Start the application
 let parameters = process.argv.slice(2);

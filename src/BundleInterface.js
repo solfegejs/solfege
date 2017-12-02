@@ -12,25 +12,32 @@ export interface BundleInterface
      * @return  {string}    Directory path
      */
     getPath():string;
+}
 
-    /**
-     * Get dependencies
-     *
-     * @return  {Array<BundleInterface>}    Dependent bundles
-     */
-    getDependencies():Array<BundleInterface>;
-
+export interface InitializableBundleInterface
+{
     /**
      * Initialize the bundle
      *
      * @param   {Application}   application     Solfege application instance
      */
     initialize(application:Application):void | Generator<*,void,*>;
+}
 
+export interface DependentBundleInterface
+{
+    /**
+     * Get dependencies
+     *
+     * @return  {Array<BundleInterface>}    Dependent bundles
+     */
+    getDependencies():Array<BundleInterface>;
+}
+
+export interface BootableBundleInterface
+{
     /**
      * Boot the bundle
      */
     boot():void | Generator<*,void,*>;
 }
-
-

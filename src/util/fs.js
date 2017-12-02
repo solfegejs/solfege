@@ -2,12 +2,16 @@
 import fs from "fs"
 
 export default {
-    exists: function (path:string):Function
+    exists: function (path:string):Promise<boolean>
     {
-        return function(done:Function):void {
+        return new Promise((resolve:Function, reject:Function) => {
             fs.stat(path, function(err:?ErrnoError, res:any):void {
-                done(null, !err);
+                if (err) {
+                    resolve(false);
+                    return;
+                }
+                resolve(true);
             });
-        }
+        });
     }
 }

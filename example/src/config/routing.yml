@@ -1,9 +1,0 @@
-route_1:
-    path:       /
-    controller: aaa
-    index:      bbb
-
-route_2:
-    path:       /huhu
-    controller: "%parameters.controllers_path%/ccc/%a%"
-    index:      ddd

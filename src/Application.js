@@ -2,7 +2,6 @@
 import assert from "assert"
 import path from "path"
 import fs from "./util/fs"
-import {fn as isGenerator} from "is-generator"
 import EventEmitter from "events"
 import Configuration from "./Configuration"
 import type {BundleInterface} from "./BundleInterface"
@@ -10,6 +9,7 @@ import packageJson from "../package.json"
 
 // Private properties and methods
 const _start:Symbol = Symbol();
+const _consoleError:Symbol = Symbol();
 
 /**
  * SolfegeJS application
@@ -22,6 +22,7 @@ export default class Application extends EventEmitter
     static EVENT_BUNDLES_BOOTED:string         = "bundles_booted";
     static EVENT_START:string                  = "start";
     static EVENT_END:string                    = "end";
+    static EVENT_ERROR:string                  = "error";
 
     /**
      * Parameters
@@ -65,16 +66,25 @@ export default class Application extends EventEmitter
         // Initialize the bundle registry
         this.bundles = new Set();
 
-        // Exit handler
-        let bindedExitHandler:Function = this.onExit.bind(this);
-        let bindedKillHandler:Function = this.onKill.bind(this);
-        process.on("exit", bindedExitHandler);
-        process.on("SIGINT", bindedKillHandler);
-        process.on("SIGTERM", bindedKillHandler);
-        process.on("SIGHUP", bindedKillHandler);
+        this.enableDefaultErrorListener();
+    }
 
-        // Error handler
-        process.on("uncaughtException", this.onErrorUnknown.bind(this));
+    /**
+     * Enable default error listener
+     */
+    enableDefaultErrorListener():void
+    {
+        // $FlowFixMe
+        this.on(Application.EVENT_ERROR, this[_consoleError]);
+    }
+
+    /**
+     * Disable default error listener
+     */
+    disableDefaultErrorListener():void
+    {
+        // $FlowFixMe
+        this.removeListener(Application.EVENT_ERROR, this[_consoleError]);
     }
 
     /**
@@ -130,31 +140,6 @@ export default class Application extends EventEmitter
     }
 
     /**
-     * Get bundle file path
-     *
-     * @param   {BundleInterface}   bundle  Bundle instance
-     * @return  {string}                    Bundle file path
-     */
-    getBundleFilePath(bundle:BundleInterface):?string
-    {
-        /*
-        // This trick works only on NodeJS 5
-        try {
-            bundle.constructor();
-        } catch (error) {
-            let result = error.stack.match(/\((.*):\d+:\d+\)/);
-            if (result) {
-                let bundleFilePath = result[1];
-
-                return bundleFilePath;
-            }
-        }
-        */
-
-        return null;
-    }
-
-    /**
      * Get bundle directory path
      *
      * @param   {BundleInterface}   bundle  Bundle instance
@@ -162,39 +147,27 @@ export default class Application extends EventEmitter
      */
     getBundleDirectoryPath(bundle:BundleInterface):?string
     {
-        /*
-        let filePath = this.getBundleFilePath(bundle);
-        if (filePath) {
-            return path.dirname(filePath);
-        }
-        */
-
-        if (typeof bundle.getPath === "function") {
-            return bundle.getPath();
-        }
-
-
-        return null;
+        return bundle.getPath();
     }
 
     /**
-     * Load configuration file
+     * Set configuration file
      *
      * @param   {string}    filePath    Configuration file path
      * @param   {string}    format      File format
      */
-    loadConfigurationFile(filePath:string, format:string):void
+    setConfigurationFile(filePath:string, format:string):void
     {
         this.configurationFilePath = path.resolve(filePath);
         this.configurationFileFormat = format;
     }
 
     /**
-     * Load confguration
+     * Add confguration properties
      *
      * @param   {object}    properties  Configuration properties
      */
-    loadConfiguration(properties:Object):void
+    addConfigurationProperties(properties:Object):void
     {
         this.configuration.addProperties(properties);
     }
@@ -224,7 +197,7 @@ export default class Application extends EventEmitter
                 await self.emit(Application.EVENT_END, self);
             })
             .catch(async (error) => {
-                console.error(error);
+                await self.emit(Application.EVENT_ERROR, error);
             })
         ;
     }
@@ -240,19 +213,15 @@ export default class Application extends EventEmitter
         // Install bundle dependencies
         // @todo Check DependentBundleInterface
         for (let bundle of this.bundles) {
-            if (isGenerator(bundle.installDependencies)) {
+            if (typeof bundle.installDependencies === "function") {
                 await bundle.installDependencies(this);
-            } else if (typeof bundle.installDependencies === "function") {
-                bundle.installDependencies(this);
             }
         }
 
         // Initialize registered bundles
         for (let bundle of this.bundles) {
-            if (isGenerator(bundle.initialize)) {
+            if (typeof bundle.initialize === "function") {
                 await bundle.initialize(this);
-            } else if (typeof bundle.initialize === "function") {
-                bundle.initialize(this);
             }
         }
         await this.emit(Application.EVENT_BUNDLES_INITIALIZED, this);
@@ -282,50 +251,14 @@ export default class Application extends EventEmitter
 
         // Boot registered bundles
         for (let bundle of this.bundles) {
-            if (isGenerator(bundle.boot)) {
+            if (typeof bundle.boot === "function") {
                 await bundle.boot();
-            } else if (typeof bundle.boot === "function") {
-                bundle.boot();
             }
         }
         await this.emit(Application.EVENT_BUNDLES_BOOTED, this);
 
         // Start the application
         this.emit(Application.EVENT_START, this, parameters);
-    }
-
-    /**
-     * An unknown error occurred
-     *
-     * @private
-     * @param   {Error}     error   Error instance
-     */
-    onErrorUnknown(error:Error):void
-    {
-        console.error(error.message);
-        if (error.stack) {
-            console.error(error.stack);
-        }
-    }
-
-    /**
-     * The application is stopped
-     *
-     * @private
-     */
-    onExit():void
-    {
-        this.emit(Application.EVENT_END, this);
-    }
-
-    /**
-     * The application is killed
-     *
-     * @private
-     */
-    onKill():void
-    {
-        process.exit();
     }
 
     /**
@@ -344,5 +277,16 @@ export default class Application extends EventEmitter
         output += JSON.stringify(properties, null, "  ");
 
         return output;
+    }
+
+    /**
+     * Write an error to the stderr
+     *
+     * @param   {Error}     error   Error instance
+     */
+    // $FlowFixMe
+    [_consoleError](error)
+    {
+        console.error("[Solfege Error]", error);
     }
 }
