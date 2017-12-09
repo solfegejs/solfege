@@ -1,6 +1,6 @@
 /* @flow */
-import type Application from "../../src/Application"
-import type {BundleInterface, InitializableBundleInterface} from "../../src/BundleInterface"
+import type Application from "solfegejs-application/src/Application"
+import type {BundleInterface, InitializableBundleInterface} from "solfegejs-application/src/BundleInterface"
 
 /**
  * Example bundle
@@ -27,14 +27,9 @@ export default class Bundle implements BundleInterface, InitializableBundleInter
     initialize(app:Application)
     {
         app.on("start", this.onStart);
-        console.log("Bundle initialized");
     }
 
     onStart(app:Application, parameters:Array<String> = [])
     {
-        let config = app.getConfiguration();
-        console.log("a:", config.get("a"));
-        console.log("z:", config.get("z"));
-        console.log("parameters.foo:", config.get("parameters.foo"));
     }
 }

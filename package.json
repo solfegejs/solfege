@@ -2,7 +2,7 @@
     "name": "solfegejs",
     "description": "The Solfege framework",
     "homepage": "http://solfegejs.com",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "author": "neolao <contact@neolao.com>",
     "private": false,
     "repository": "https://github.com/neolao/solfege.git",
@@ -15,12 +15,17 @@
         "injection"
     ],
     "files": [
-        "lib",
-        "src"
+        "lib"
     ],
     "main": "lib/index.js",
     "engines": {
         "node": ">= 9"
+    },
+    "dependencies": {
+        "solfegejs-application": "^3.0.0",
+        "solfegejs-configuration": "^2.1.0",
+        "solfegejs-dependency-injection": "^2.1.0",
+        "solfegejs-cli": "^4.0.0"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",
@@ -41,14 +46,13 @@
         "flow-stop": "flow stop",
         "flow-start": "flow start",
         "flow-restart": "flow stop --quiet && flow start --quiet",
-        "prepare": "npm run build && npm test",
+        "prepare": "npm run build",
         "lint": "eslint --ext .js src",
         "test": "mocha --harmony --compilers js:babel-core/register --require co-mocha --recursive --reporter spec --bail",
         "coverage": "nyc --clean npm test",
         "coverage-check": "nyc --clean check-coverage npm test",
         "coveralls": "nyc npm test && nyc report --reporter=text-lcov | coveralls",
         "prebuild": "npm run lint && npm run flow-restart && flow",
-        "postbuild": "nyc --clean npm test && nyc check-coverage npm test",
         "build": "babel --out-dir lib src --copy-files",
         "watch": "watch 'echo \"----------\"; npm run build --silent' ./src ./test",
         "example-build": "flow; babel --out-dir example/lib example/src --copy-files",
