@@ -31,5 +31,6 @@ export default class Bundle implements BundleInterface, InitializableBundleInter
 
     onStart(app:Application, parameters:Array<String> = [])
     {
+        console.log("started");
     }
 }

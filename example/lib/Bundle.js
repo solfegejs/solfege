@@ -12,14 +12,12 @@ var Bundle = class Bundle {
 
     initialize(app) {
         app.on("start", this.onStart);
-        console.log("Bundle initialized");
     }
 
-    onStart(app, parameters) {
-        var config = app.getConfiguration();
-        console.log("a:", config.get("a"));
-        console.log("z:", config.get("z"));
-        console.log("parameters.foo:", config.get("parameters.foo"));
+    onStart(app) {
+        var parameters = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+        console.log("started");
     }
 };
 exports.default = Bundle;
