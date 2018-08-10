@@ -15,7 +15,7 @@ This is the main module that handles bundles.
 Requirements
 ------------
 
-- NodeJS >= 9
+- NodeJS >= 10
 
 
 Installation
