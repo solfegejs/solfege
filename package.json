@@ -20,11 +20,11 @@
   },
   "dependencies": {
     "@solfege/application": "^4.0.2",
-    "@solfege/cli": "^5.1.1",
+    "@solfege/cli": "^5.2.1",
     "@solfege/configuration": "^3.0.1",
     "@solfege/configuration-yaml-loader": "^2.0.1",
     "@solfege/dependency-injection": "^3.0.3",
-    "@solfege/dependency-injection-configuration-aware": "^1.0.0"
+    "@solfege/dependency-injection-configuration-aware": "^1.0.1"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
