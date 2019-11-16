@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@solfege/application": "^4.0.3",
-    "@solfege/cli": "^5.3.4",
+    "@solfege/cli": "^5.3.5",
     "@solfege/configuration": "^3.0.1",
     "@solfege/configuration-yaml-loader": "^2.0.1",
     "@solfege/dependency-injection": "^3.0.3",
