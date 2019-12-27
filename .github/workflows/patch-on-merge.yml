@@ -1,4 +1,4 @@
-name: Patch when updating dependencies
+name: Patch on merged PR
 
 on:
   pull_request:
