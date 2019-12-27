@@ -10,10 +10,13 @@ jobs:
     if: github.event.pull_request.labels[0].name == 'dependencies' && github.event.pull_request.merged == true
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1.0.0
+        uses: actions/checkout@v2.0.0
         
       - name: Patch version
-        run: git config --global user.email "support@github.com" && git config --global user.name "dependabot" && npm version patch
+        run: |
+          git config --global user.email "support@github.com"
+          git config --global user.name "dependabot"
+          npm version patch
 
       - name: Set up Node.js for NPM
         uses: actions/setup-node@v1.2.0
@@ -30,6 +33,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
       - name: Git push
-        run: git push origin HEAD:$GITHUB_REF
+        run: git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
