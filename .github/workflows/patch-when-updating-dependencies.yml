@@ -10,7 +10,7 @@ jobs:
     if: github.event.pull_request.labels[0].name == 'dependencies' && github.event.pull_request.merged == true
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2.0.0
+        uses: actions/checkout@v2
         
       - name: Patch version
         run: |
