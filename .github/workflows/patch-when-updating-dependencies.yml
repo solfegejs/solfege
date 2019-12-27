@@ -1,0 +1,35 @@
+name: Patch when updating dependencies
+
+on:
+  pull_request:
+    types: [closed] 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.labels[0].name == 'dependencies' && github.event.pull_request.merged == true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1.0.0
+        
+      - name: Patch version
+        run: git config --global user.email "support@github.com" && git config --global user.name "dependabot" && npm version patch
+
+      - name: Set up Node.js for NPM
+        uses: actions/setup-node@v1.2.0
+        with:
+          registry-url: 'https://registry.npmjs.org'
+          node-version: '10.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Publish package to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+      - name: Git push
+        run: git push origin HEAD:$GITHUB_REF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
