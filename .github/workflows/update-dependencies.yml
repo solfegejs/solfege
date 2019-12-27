@@ -2,10 +2,10 @@ name: Update dependencies
 
 on:
   schedule:
-  - cron: '*/3 * * * *'
+  - cron: 0 0 * * *
     
 jobs:
-  package-update:
+  update:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
