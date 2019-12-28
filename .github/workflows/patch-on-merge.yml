@@ -10,7 +10,7 @@ jobs:
     if: github.event.pull_request.labels[0].name == 'dependencies' && github.event.pull_request.merged == true
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         
       - name: set remote url
         run: git remote set-url --push origin https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
