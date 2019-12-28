@@ -21,15 +21,15 @@
   "dependencies": {
     "@solfege/application": "^4.0.3",
     "@solfege/cli": "^5.3.5",
-    "@solfege/configuration": "^3.0.1",
+    "@solfege/configuration": "^3.0.2",
     "@solfege/configuration-yaml-loader": "^2.0.1",
-    "@solfege/dependency-injection": "^3.0.3",
-    "@solfege/dependency-injection-configuration-aware": "^1.0.1"
+    "@solfege/dependency-injection": "^3.0.6",
+    "@solfege/dependency-injection-configuration-aware": "^1.0.2"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
-    "eslint-formatter-pretty": "^2.1.1",
-    "eslint-plugin-node": "^8.0.1",
+    "eslint": "^6.8.0",
+    "eslint-formatter-pretty": "^3.0.1",
+    "eslint-plugin-node": "^11.0.0",
     "jest": "^24.9.0",
     "watch": "^1.0.2"
   },
