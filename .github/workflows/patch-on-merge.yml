@@ -19,7 +19,7 @@ jobs:
         
       - name: Patch version
         run: |
-          git config --global user.email "bot@github.com"
+          git config --global user.email "contact@neolao.com"
           git config --global user.name "$GITHUB_ACTOR"
           npm version patch
       - name: Set up Node.js for NPM
