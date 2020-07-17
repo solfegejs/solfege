@@ -19,9 +19,9 @@
     "node": ">= 10"
   },
   "dependencies": {
-    "@solfege/application": "^4.0.6",
+    "@solfege/application": "^4.0.7",
     "@solfege/cli": "^5.3.16",
-    "@solfege/configuration": "^3.0.6",
+    "@solfege/configuration": "^3.0.7",
     "@solfege/configuration-yaml-loader": "^2.0.1",
     "@solfege/dependency-injection": "^3.0.7",
     "@solfege/dependency-injection-configuration-aware": "^1.0.2"
