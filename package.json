@@ -2,7 +2,7 @@
   "name": "solfegejs",
   "description": "The Solfege framework",
   "homepage": "http://solfegejs.com",
-  "version": "4.0.23",
+  "version": "4.0.24",
   "author": "neolao <contact@neolao.com>",
   "private": false,
   "repository": "https://github.com/solfegejs/solfege.git",
