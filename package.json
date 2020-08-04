@@ -27,10 +27,10 @@
     "@solfege/dependency-injection-configuration-aware": "^1.0.2"
   },
   "devDependencies": {
-    "eslint": "^7.5.0",
+    "eslint": "^7.6.0",
     "eslint-formatter-pretty": "^4.0.0",
     "eslint-plugin-node": "^11.1.0",
-    "jest": "^26.2.1",
+    "jest": "^26.2.2",
     "watch": "^1.0.2"
   },
   "scripts": {
