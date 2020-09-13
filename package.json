@@ -27,7 +27,7 @@
     "@solfege/dependency-injection-configuration-aware": "^1.0.2"
   },
   "devDependencies": {
-    "eslint": "^7.8.1",
+    "eslint": "^7.9.0",
     "eslint-formatter-pretty": "^4.0.0",
     "eslint-plugin-node": "^11.1.0",
     "jest": "^26.4.2",
